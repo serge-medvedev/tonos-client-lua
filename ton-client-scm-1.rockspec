@@ -14,7 +14,7 @@ dependencies = {
 }
 build = {
   type = "make",
-  build_target = "tc_lua_wrapper.so",
+  build_target = "tonclua.so",
   intall_target = ""
 }
 

@@ -1,16 +1,17 @@
 CFLAGS+=-fPIC -shared -I/usr/include/lua5.1 -L/usr/lib/x86_64-linux-gnu
 LDFLAGS+=-llua5.1 -lton_client
 
-tc_lua_wrapper.so: tc_lua_wrapper.c
-	$(CC) $(CFLAGS) tc_lua_wrapper.c -o $@ $(LDFLAGS)
+tonclua.so: tonclua.c
+	$(CC) $(CFLAGS) tonclua.c -o $@ $(LDFLAGS)
 
 install:
+	cp tonclua.so /usr/lib/x86_64-linux-gnu/lua/5.1/
 
 clean:
-	$(RM) tc_lua_wrapper.so
+	$(RM) tonclua.so
 
-test: tc_lua_wrapper.so
-	shake tc_lua_wrapper.test.lua
+test: tonclua.so
+	shake -r
 
 rock:
 	luarocks make ton-client-scm-1.rockspec

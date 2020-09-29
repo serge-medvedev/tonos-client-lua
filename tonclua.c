@@ -28,8 +28,8 @@ void tc_on_response(uint32_t request_id, tc_string_t result_json, tc_string_t er
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, cb.r_index);
     lua_pushinteger(L, request_id);
-    result_json.len > 0 ? lua_pushstring(L, result_json.content) : lua_pushnil(L);
-    error_json.len > 0 ? lua_pushstring(L, error_json.content) : lua_pushnil(L);
+    result_json.len > 0 ? lua_pushlstring(L, result_json.content, result_json.len) : lua_pushnil(L);
+    error_json.len > 0 ? lua_pushlstring(L, error_json.content, error_json.len) : lua_pushnil(L);
     lua_pushinteger(L, flags);
 
     if (0 != lua_pcall(L, 4, 0, 0)) {
@@ -110,13 +110,13 @@ int read_json_response(lua_State *L) {
     tc_response_t response = tc_read_json_response(response_handle);
 
     if (response.error_json.len > 0) {
-        lua_pushstring(L, response.error_json.content);
+        lua_pushlstring(L, response.error_json.content, response.error_json.len);
     }
     else {
         lua_pushnil(L);
     }
 
-    lua_pushstring(L, response.result_json.content);
+    lua_pushlstring(L, response.result_json.content, response.result_json.len);
 
     tc_destroy_json_response(response_handle);
 
@@ -132,7 +132,7 @@ static const struct luaL_Reg functions [] = {
     { NULL, NULL }
 };
 
-int luaopen_tc_lua_wrapper(lua_State *L) {
+int luaopen_tonclua(lua_State *L) {
     callbacks = kh_init(cb);
 
     lua_newtable(L);

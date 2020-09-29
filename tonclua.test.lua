@@ -1,15 +1,15 @@
-package.cpath = "./?.so"
-
-local tc = require "tc_lua_wrapper"
+local tc = require "tonclua"
 local json = require "json"
 
 function sleep(n)
   os.execute("sleep " .. tonumber(n))
 end
 
+local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+
 do
     print("Testing tc_create_context")
-    local h = tc.create_context('{"servers": "https://net.ton.dev"}')
+    local h = tc.create_context(config)
     local err, result = tc.read_json_response(h)
     result = json.decode(result)
     assert(nil == err and 1 == result.handle)

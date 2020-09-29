@@ -17,12 +17,13 @@ RUN cd TON-SDK \
 FROM debian:buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        liblua5.1-dev \
-        lua5.1 \
-        luarocks \
-        shake
+		ca-certificates \
+		build-essential \
+		git \
+		liblua5.1-dev \
+		lua5.1 \
+		luarocks \
+		shake
 
 COPY --from=ton-client /usr/src/TON-SDK/target/release/libton_client.so /usr/lib
 COPY --from=ton-client /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include
@@ -30,6 +31,8 @@ COPY --from=ton-client /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/inclu
 WORKDIR /usr/src
 
 COPY . .
+
+RUN make rock
 
 ENTRYPOINT /bin/bash
 
