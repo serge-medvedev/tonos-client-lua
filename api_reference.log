@@ -1,538 +1,184 @@
 {
   methods = { {
-      name = "boc.parse_transaction",
+      name = "crypto.convert_public_key_to_ton_safe_format",
       params = { {
-          description = " BOC encoded as base64",
-          name = "boc",
-          summary = " BOC encoded as base64",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " JSON containing parsed BOC",
-            name = "parsed",
-            summary = " JSON containing parsed BOC",
-            value = {
-              ref = "Value"
-            }
-          } }
-      }
-    }, {
-      name = "contracts.deploy.data",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.boc.hash",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.run.output",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.image.code",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.factorize",
-      params = { {
-          description = " Hexadecimal representation of u64 composite number.",
-          name = "composite",
-          summary = " Hexadecimal representation of u64 composite number.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Two factors of composite or empty if composite can't be factorized.",
-            name = "factors",
-            summary = " Two factors of composite or empty if composite can't be factorized.",
-            value = {
-              array = "string"
-            }
-          } }
-      }
-    }, {
-      name = "boc.parse_account",
-      params = { {
-          description = " BOC encoded as base64",
-          name = "boc",
-          summary = " BOC encoded as base64",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " JSON containing parsed BOC",
-            name = "parsed",
-            summary = " JSON containing parsed BOC",
-            value = {
-              ref = "Value"
-            }
-          } }
-      }
-    }, {
-      name = "contracts.deploy.address",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.sha512",
-      params = { {
-          description = " Input data for hash calculation. Encoded with `base64`.",
-          name = "data",
-          summary = " Input data for hash calculation. Encoded with `base64`.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Hex-encoded hash of input `data`.",
-            name = "hash",
-            summary = " Hex-encoded hash of input `data`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.nacl_secret_box",
-      params = { {
-          description = " Data that must be encrypted. Encoded with `base64`.",
-          name = "decrypted",
-          summary = " Data that must be encrypted. Encoded with `base64`.",
-          value = "string"
-        }, {
-          name = "nonce",
-          value = "string"
-        }, {
-          name = "key",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Encrypted data. Encoded with `base64`.",
-            name = "encrypted",
-            summary = " Encrypted data. Encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.hdkey_public_from_xprv",
-      params = { {
-          description = " serialized extended private key",
-          name = "xprv",
-          summary = " serialized extended private key",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " public key",
-            name = "public",
-            summary = " public key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "client.unregister_callback",
-      params = { {
-          description = " Registered callback ID",
-          name = "callback_id",
-          summary = " Registered callback ID",
-          value = "number"
-        } },
-      result = "none"
-    }, {
-      name = "crypto.nacl_secret_box_open",
-      params = { {
-          description = " Data that must be decrypted. Encoded with `base64`.",
-          name = "encrypted",
-          summary = " Data that must be decrypted. Encoded with `base64`.",
-          value = "string"
-        }, {
-          name = "nonce",
-          value = "string"
-        }, {
-          name = "key",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Decrypted data. Encoded with `base64`.",
-            name = "decrypted",
-            summary = " Decrypted data. Encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.nacl_box_open",
-      params = { {
-          description = " Data that must be decrypted. Encoded with `base64`.",
-          name = "encrypted",
-          summary = " Data that must be decrypted. Encoded with `base64`.",
-          value = "string"
-        }, {
-          name = "nonce",
-          value = "string"
-        }, {
-          name = "their_public",
-          value = "string"
-        }, {
-          name = "secret",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Decrypted data. Encoded with `base64`.",
-            name = "decrypted",
-            summary = " Decrypted data. Encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.mnemonic_from_random",
-      params = { {
-          description = " dictionary identifier",
-          name = "dictionary",
-          summary = " dictionary identifier",
+          description = " Public key.",
+          name = "public_key",
+          summary = " Public key.",
           value = {
-            optional = "number"
-          }
-        }, {
-          description = " mnemonic word count",
-          name = "word_count",
-          summary = " mnemonic word count",
-          value = {
-            optional = "number"
+            string = {}
           }
         } },
       result = {
         struct = { {
-            description = " string of mnemonic words",
-            name = "phrase",
-            summary = " string of mnemonic words",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "boc.parse_block",
-      params = { {
-          description = " BOC encoded as base64",
-          name = "boc",
-          summary = " BOC encoded as base64",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " JSON containing parsed BOC",
-            name = "parsed",
-            summary = " JSON containing parsed BOC",
+            description = " Public key represented in TON safe format.",
+            name = "ton_public_key",
+            summary = " Public key represented in TON safe format.",
             value = {
-              ref = "Value"
+              string = {}
             }
           } }
       }
-    }, {
-      name = "crypto.nacl_sign",
-      params = { {
-          description = " Data that must be signed. Encoded with `base64`.",
-          name = "unsigned",
-          summary = " Data that must be signed. Encoded with `base64`.",
-          value = "string"
-        }, {
-          description = " Signer's secret key.",
-          name = "secret",
-          summary = " Signer's secret key.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Signed data, encoded with `base64`.",
-            name = "signed",
-            summary = " Signed data, encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.mnemonic_from_entropy",
-      params = { {
-          name = "entropy",
-          value = "string"
-        }, {
-          name = "dictionary",
-          value = {
-            optional = "number"
-          }
-        }, {
-          name = "word_count",
-          value = {
-            optional = "number"
-          }
-        } },
-      result = {
-        struct = { {
-            name = "phrase",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.hdkey_xprv_from_mnemonic",
-      params = { {
-          description = "string with seed phrase",
-          name = "phrase",
-          summary = "string with seed phrase",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " serialized extended master private key",
-            name = "xprv",
-            summary = " serialized extended master private key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.nacl_box_keypair",
-      params = { {
-          name = "param",
-          value = "none"
-        } },
-      result = {
-        struct = { {
-            description = " public key",
-            name = "public",
-            summary = " public key",
-            value = "string"
-          }, {
-            description = " private key",
-            name = "secret",
-            summary = " private key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "contracts.send.message",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.process.transaction",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.run.fee.msg",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.deploy.message",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.find.shard",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.wait.transaction",
-      params = {},
-      result = "none"
-    }, {
-      name = "tvm.get",
-      params = {},
-      result = "none"
     }, {
       name = "crypto.scrypt",
       params = { {
           description = " The password bytes to be hashed.\n Must be encoded with `base64`.",
           name = "password",
           summary = " The password bytes to be hashed.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " A salt bytes that modifies the hash to protect against Rainbow table attacks.\n Must be encoded with `base64`.",
           name = "salt",
           summary = " A salt bytes that modifies the hash to protect against Rainbow table attacks.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " CPU/memory cost parameter",
           name = "log_n",
           summary = " CPU/memory cost parameter",
-          value = "number"
+          value = {
+            number = {}
+          }
         }, {
           description = " The block size parameter, which fine-tunes sequential memory read size and performance.\n 8 is commonly used",
           name = "r",
           summary = " The block size parameter, which fine-tunes sequential memory read size and performance.",
-          value = "number"
+          value = {
+            number = {}
+          }
         }, {
           description = " Parallelization parameter.",
           name = "p",
           summary = " Parallelization parameter.",
-          value = "number"
+          value = {
+            number = {}
+          }
         }, {
           description = " Intended output length in octets of the derived key.",
           name = "dk_len",
           summary = " Intended output length in octets of the derived key.",
-          value = "number"
+          value = {
+            number = {}
+          }
         } },
       result = {
         struct = { {
             description = " Derived key. Encoded with `hex`.",
             name = "key",
             summary = " Derived key. Encoded with `hex`.",
-            value = "string"
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
-      name = "contracts.run.unknown.input",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.resolve.error",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.hdkey_derive_from_xprv",
+      name = "crypto.nacl_box_keypair",
       params = { {
-          description = " serialized extended private key",
-          name = "xprv",
-          summary = " serialized extended private key",
-          value = "string"
-        }, {
-          description = " child index (see BIP-0032)",
-          name = "child_index",
-          summary = " child index (see BIP-0032)",
-          value = "number"
-        }, {
-          description = " indicates the derivation of hardened/not-hardened key (see BIP-0032)",
-          name = "hardened",
-          summary = " indicates the derivation of hardened/not-hardened key (see BIP-0032)",
-          value = "boolean"
-        } },
-      result = {
-        struct = { {
-            description = " serialized extended private key",
-            name = "xprv",
-            summary = " serialized extended private key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.hdkey_derive_from_xprv_path",
-      params = { {
-          description = " serialized extended private key",
-          name = "xprv",
-          summary = " serialized extended private key",
-          value = "string"
-        }, {
-          description = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
-          name = "path",
-          summary = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " derived serialized extended private key",
-            name = "xprv",
-            summary = " derived serialized extended private key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "contracts.run.encode_unsigned_message",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.function.id",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.address.convert",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.nacl_sign_keypair_from_secret",
-      params = { {
-          description = " secret key",
-          name = "secret",
-          summary = " secret key",
-          value = "string"
+          name = "param",
+          value = {
+            none = {}
+          }
         } },
       result = {
         struct = { {
             description = " public key",
             name = "public",
             summary = " public key",
-            value = "string"
+            value = {
+              string = {}
+            }
           }, {
             description = " private key",
             name = "secret",
             summary = " private key",
-            value = "string"
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
-      name = "crypto.hdkey_secret_from_xprv",
+      name = "crypto.mnemonic_verify",
       params = { {
-          description = " serialized extended private key",
-          name = "xprv",
-          summary = " serialized extended private key",
-          value = "string"
+          description = " phrase",
+          name = "phrase",
+          summary = " phrase",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " dictionary identifier",
+          name = "dictionary",
+          summary = " dictionary identifier",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        }, {
+          description = " word count",
+          name = "word_count",
+          summary = " word count",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
         } },
       result = {
         struct = { {
+            description = " flag indicating the mnemonic is valid or not",
+            name = "valid",
+            summary = " flag indicating the mnemonic is valid or not",
+            value = {
+              boolean = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.nacl_box_keypair_from_secret",
+      params = { {
+          description = " Hex encoded secret key.",
+          name = "secret",
+          summary = " Hex encoded secret key.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " public key",
+            name = "public",
+            summary = " public key",
+            value = {
+              string = {}
+            }
+          }, {
             description = " private key",
             name = "secret",
             summary = " private key",
-            value = "string"
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
-      name = "client.version",
-      params = { {
-          name = "param",
-          value = "none"
-        } },
+      name = "tvm.get",
+      params = {},
       result = {
-        struct = { {
-            description = " core version",
-            name = "version",
-            summary = " core version",
-            value = "string"
-          } }
+        none = {}
       }
     }, {
-      name = "crypto.modular_power",
-      params = { {
-          description = " `base` argument of calculation.",
-          name = "base",
-          summary = " `base` argument of calculation.",
-          value = "string"
-        }, {
-          description = " `exponent` argument of calculation.",
-          name = "exponent",
-          summary = " `exponent` argument of calculation.",
-          value = "string"
-        }, {
-          description = " `modulus` argument of calculation.",
-          name = "modulus",
-          summary = " `modulus` argument of calculation.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " result of modular exponentiation",
-            name = "modular_power",
-            summary = " result of modular exponentiation",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "queries.unsubscribe",
-      params = { {
-          description = " handle to subscription. It then can be used in `get_next_subscription_data` function\n and must be closed with `unsubscribe`",
-          name = "handle",
-          summary = " handle to subscription. It then can be used in `get_next_subscription_data` function",
-          value = "number"
-        } },
-      result = "none"
-    }, {
-      name = "queries.subscribe_collection",
+      name = "queries.wait_for_collection",
       params = { {
           description = " collection name (accounts, blocks, transactions, messages, block_signatures)",
           name = "collection",
           summary = " collection name (accounts, blocks, transactions, messages, block_signatures)",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " collection filter",
           name = "filter",
@@ -546,32 +192,154 @@
           description = " projection (result) string",
           name = "result",
           summary = " projection (result) string",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
-          description = " registered callback ID to receive subscription data",
-          name = "callback_id",
-          summary = " registered callback ID to receive subscription data",
-          value = "number"
+          description = " query timeout",
+          name = "timeout",
+          summary = " query timeout",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
         } },
       result = {
         struct = { {
-            description = " handle to subscription. It then can be used in `get_next_subscription_data` function\n and must be closed with `unsubscribe`",
-            name = "handle",
-            summary = " handle to subscription. It then can be used in `get_next_subscription_data` function",
-            value = "number"
+            description = " first found object that match provided criteria",
+            name = "result",
+            summary = " first found object that match provided criteria",
+            value = {
+              ref = "Value"
+            }
           } }
       }
     }, {
-      name = "contracts.encode_message_with_sign",
+      name = "crypto.mnemonic_derive_sign_keys",
+      params = { {
+          description = " phrase",
+          name = "phrase",
+          summary = " phrase",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
+          name = "path",
+          summary = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
+          value = {
+            optional = {
+              string = {}
+            }
+          }
+        }, {
+          description = " dictionary identifier",
+          name = "dictionary",
+          summary = " dictionary identifier",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        }, {
+          description = " word count",
+          name = "word_count",
+          summary = " word count",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        } },
+      result = {
+        struct = { {
+            description = " public key",
+            name = "public",
+            summary = " public key",
+            value = {
+              string = {}
+            }
+          }, {
+            description = " private key",
+            name = "secret",
+            summary = " private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.nacl_secret_box_open",
+      params = { {
+          description = " Data that must be decrypted. Encoded with `base64`.",
+          name = "encrypted",
+          summary = " Data that must be decrypted. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "nonce",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "key",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Decrypted data. Encoded with `base64`.",
+            name = "decrypted",
+            summary = " Decrypted data. Encoded with `base64`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.address.convert",
       params = {},
-      result = "none"
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.run.local",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "boc.parse_message",
+      params = { {
+          description = " BOC encoded as base64",
+          name = "boc",
+          summary = " BOC encoded as base64",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " JSON containing parsed BOC",
+            name = "parsed",
+            summary = " JSON containing parsed BOC",
+            value = {
+              ref = "Value"
+            }
+          } }
+      }
     }, {
       name = "crypto.sign",
       params = { {
           description = " Data that must be signed.\n Must be encoded with `base64`.",
           name = "unsigned",
           summary = " Data that must be signed.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " Sign keys.",
           name = "keys",
@@ -585,31 +353,575 @@
             description = " Signed data combined with signature. Encoded with `base64`.",
             name = "signed",
             summary = " Signed data combined with signature. Encoded with `base64`.",
-            value = "string"
+            value = {
+              string = {}
+            }
           }, {
             description = " Signature. Encoded with `base64`.",
             name = "signature",
             summary = " Signature. Encoded with `base64`.",
-            value = "string"
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
-      name = "crypto.generate_random_sign_keys",
+      name = "crypto.nacl_secret_box",
       params = { {
-          name = "param",
-          value = "none"
+          description = " Data that must be encrypted. Encoded with `base64`.",
+          name = "decrypted",
+          summary = " Data that must be encrypted. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "nonce",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "key",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Encrypted data. Encoded with `base64`.",
+            name = "encrypted",
+            summary = " Encrypted data. Encoded with `base64`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.find.shard",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.nacl_sign_keypair_from_secret",
+      params = { {
+          description = " secret key",
+          name = "secret",
+          summary = " secret key",
+          value = {
+            string = {}
+          }
         } },
       result = {
         struct = { {
             description = " public key",
             name = "public",
             summary = " public key",
-            value = "string"
+            value = {
+              string = {}
+            }
           }, {
             description = " private key",
             name = "secret",
             summary = " private key",
-            value = "string"
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.body",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.nacl_sign_open",
+      params = { {
+          description = " Signed data that must be unsigned. Encoded with `base64`.",
+          name = "signed",
+          summary = " Signed data that must be unsigned. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " Signer's public key.",
+          name = "public",
+          summary = " Signer's public key.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Unsigned data, encoded with `base64`.",
+            name = "unsigned",
+            summary = " Unsigned data, encoded with `base64`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.generate_random_sign_keys",
+      params = { {
+          name = "param",
+          value = {
+            none = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " public key",
+            name = "public",
+            summary = " public key",
+            value = {
+              string = {}
+            }
+          }, {
+            description = " private key",
+            name = "secret",
+            summary = " private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.unknown.input",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.nacl_sign_detached",
+      params = { {
+          description = " Data that must be signed. Encoded with `base64`.",
+          name = "unsigned",
+          summary = " Data that must be signed. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " Signer's secret key.",
+          name = "secret",
+          summary = " Signer's secret key.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Hex encoded sign.",
+            name = "signature",
+            summary = " Hex encoded sign.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.fee",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.wait.transaction",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "abi.decode_message",
+      params = { {
+          description = " contract ABI",
+          name = "abi",
+          summary = " contract ABI",
+          value = {
+            ref = "Abi"
+          }
+        }, {
+          description = " Message BOC",
+          name = "message",
+          summary = " Message BOC",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Type of the message body content.",
+            name = "content_type",
+            summary = " Type of the message body content.",
+            value = {
+              ref = "MessageContentType"
+            }
+          }, {
+            description = " Function or event name.",
+            name = "name",
+            summary = " Function or event name.",
+            value = {
+              string = {}
+            }
+          }, {
+            description = " Parameters or result value.",
+            name = "value",
+            summary = " Parameters or result value.",
+            value = {
+              ref = "Value"
+            }
+          } }
+      }
+    }, {
+      name = "contracts.boc.hash",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.hdkey_secret_from_xprv",
+      params = { {
+          description = " serialized extended private key",
+          name = "xprv",
+          summary = " serialized extended private key",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " private key",
+            name = "secret",
+            summary = " private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.deploy.message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "queries.unsubscribe",
+      params = { {
+          description = " handle to subscription. It then can be used in `get_next_subscription_data` function\n and must be closed with `unsubscribe`",
+          name = "handle",
+          summary = " handle to subscription. It then can be used in `get_next_subscription_data` function",
+          value = {
+            number = {}
+          }
+        } },
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.run.fee.msg",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "queries.query_collection",
+      params = { {
+          description = " collection name (accounts, blocks, transactions, messages, block_signatures)",
+          name = "collection",
+          summary = " collection name (accounts, blocks, transactions, messages, block_signatures)",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " collection filter",
+          name = "filter",
+          summary = " collection filter",
+          value = {
+            optional = {
+              ref = "Value"
+            }
+          }
+        }, {
+          description = " projection (result) string",
+          name = "result",
+          summary = " projection (result) string",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " sorting order",
+          name = "order",
+          summary = " sorting order",
+          value = {
+            optional = {
+              array = {
+                ref = "OrderBy"
+              }
+            }
+          }
+        }, {
+          description = " number of documents to return",
+          name = "limit",
+          summary = " number of documents to return",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        } },
+      result = {
+        struct = { {
+            description = " objects that match provided criteria",
+            name = "result",
+            summary = " objects that match provided criteria",
+            value = {
+              array = {
+                ref = "Value"
+              }
+            }
+          } }
+      }
+    }, {
+      name = "crypto.factorize",
+      params = { {
+          description = " Hexadecimal representation of u64 composite number.",
+          name = "composite",
+          summary = " Hexadecimal representation of u64 composite number.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Two factors of composite or empty if composite can't be factorized.",
+            name = "factors",
+            summary = " Two factors of composite or empty if composite can't be factorized.",
+            value = {
+              array = {
+                string = {}
+              }
+            }
+          } }
+      }
+    }, {
+      name = "crypto.sha512",
+      params = { {
+          description = " Input data for hash calculation. Encoded with `base64`.",
+          name = "data",
+          summary = " Input data for hash calculation. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Hex-encoded hash of input `data`.",
+            name = "hash",
+            summary = " Hex-encoded hash of input `data`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.mnemonic_words",
+      params = { {
+          description = " dictionary identifier",
+          name = "dictionary",
+          summary = " dictionary identifier",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        } },
+      result = {
+        struct = { {
+            description = " the list of mnemonic words",
+            name = "words",
+            summary = " the list of mnemonic words",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.encode_message_with_sign",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "client.get_api_reference",
+      params = { {
+          name = "param",
+          value = {
+            none = {}
+          }
+        } },
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.image.code",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "boc.parse_account",
+      params = { {
+          description = " BOC encoded as base64",
+          name = "boc",
+          summary = " BOC encoded as base64",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " JSON containing parsed BOC",
+            name = "parsed",
+            summary = " JSON containing parsed BOC",
+            value = {
+              ref = "Value"
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.unknown.output",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.mnemonic_from_random",
+      params = { {
+          description = " dictionary identifier",
+          name = "dictionary",
+          summary = " dictionary identifier",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        }, {
+          description = " mnemonic word count",
+          name = "word_count",
+          summary = " mnemonic word count",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        } },
+      result = {
+        struct = { {
+            description = " string of mnemonic words",
+            name = "phrase",
+            summary = " string of mnemonic words",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.deploy",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.ton_crc16",
+      params = { {
+          description = " Input data for CRC calculation. Encoded with `base64`.",
+          name = "data",
+          summary = " Input data for CRC calculation. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Calculated CRC for input data.",
+            name = "crc",
+            summary = " Calculated CRC for input data.",
+            value = {
+              number = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.local.msg",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.sha256",
+      params = { {
+          description = " Input data for hash calculation. Encoded with `base64`.",
+          name = "data",
+          summary = " Input data for hash calculation. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Hex-encoded hash of input `data`.",
+            name = "hash",
+            summary = " Hex-encoded hash of input `data`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.hdkey_public_from_xprv",
+      params = { {
+          description = " serialized extended private key",
+          name = "xprv",
+          summary = " serialized extended private key",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " public key",
+            name = "public",
+            summary = " public key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.nacl_sign",
+      params = { {
+          description = " Data that must be signed. Encoded with `base64`.",
+          name = "unsigned",
+          summary = " Data that must be signed. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " Signer's secret key.",
+          name = "secret",
+          summary = " Signer's secret key.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Signed data, encoded with `base64`.",
+            name = "signed",
+            summary = " Signed data, encoded with `base64`.",
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
@@ -626,7 +938,9 @@
           name = "address",
           summary = " Contract address.",
           value = {
-            optional = "string"
+            optional = {
+              string = {}
+            }
           }
         }, {
           description = " Deploy parameters.\n Must be specified in case of deploy message.",
@@ -648,10 +962,10 @@
           }
         }, {
           description = " Signing parameters.",
-          name = "signing",
+          name = "signer",
           summary = " Signing parameters.",
           value = {
-            ref = "MessageSigning"
+            ref = "Signer"
           }
         } },
       result = {
@@ -659,265 +973,203 @@
             description = " Message BOC encoded with `base64`.",
             name = "message",
             summary = " Message BOC encoded with `base64`.",
-            value = "string"
+            value = {
+              string = {}
+            }
           }, {
             description = " Optional data to sign. Encoded with `base64`.\n Presents when `message` is unsigned.\n Can be used for external message signing.\n Is this case you need to sing this data and\n produce signed message using `abi.attach_signature`.",
             name = "data_to_sign",
             summary = " Optional data to sign. Encoded with `base64`.",
             value = {
-              optional = "string"
+              optional = {
+                string = {}
+              }
             }
-          } }
-      }
-    }, {
-      name = "contracts.process.message",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.nacl_box",
-      params = { {
-          description = " Data that must be encrypted. Encoded with `base64`.",
-          name = "decrypted",
-          summary = " Data that must be encrypted. Encoded with `base64`.",
-          value = "string"
-        }, {
-          name = "nonce",
-          value = "string"
-        }, {
-          name = "their_public",
-          value = "string"
-        }, {
-          name = "secret",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Encrypted data. Encoded with `base64`.",
-            name = "encrypted",
-            summary = " Encrypted data. Encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.sha256",
-      params = { {
-          description = " Input data for hash calculation. Encoded with `base64`.",
-          name = "data",
-          summary = " Input data for hash calculation. Encoded with `base64`.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Hex-encoded hash of input `data`.",
-            name = "hash",
-            summary = " Hex-encoded hash of input `data`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.nacl_box_keypair_from_secret",
-      params = { {
-          description = " Hex encoded secret key.",
-          name = "secret",
-          summary = " Hex encoded secret key.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " public key",
-            name = "public",
-            summary = " public key",
-            value = "string"
           }, {
-            description = " private key",
-            name = "secret",
-            summary = " private key",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "contracts.run.local",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.parse.message",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.mnemonic_words",
-      params = { {
-          description = " dictionary identifier",
-          name = "dictionary",
-          summary = " dictionary identifier",
-          value = {
-            optional = "number"
-          }
-        } },
-      result = {
-        struct = { {
-            description = " the list of mnemonic words",
-            name = "words",
-            summary = " the list of mnemonic words",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.ton_crc16",
-      params = { {
-          description = " Input data for CRC calculation. Encoded with `base64`.",
-          name = "data",
-          summary = " Input data for CRC calculation. Encoded with `base64`.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Calculated CRC for input data.",
-            name = "crc",
-            summary = " Calculated CRC for input data.",
-            value = "number"
-          } }
-      }
-    }, {
-      name = "abi.decode_message",
-      params = { {
-          description = " contract ABI",
-          name = "abi",
-          summary = " contract ABI",
-          value = {
-            ref = "Abi"
-          }
-        }, {
-          description = " Message BOC",
-          name = "message",
-          summary = " Message BOC",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Type of the message body content.",
-            name = "content_type",
-            summary = " Type of the message body content.",
+            description = " Destination address.",
+            name = "address",
+            summary = " Destination address.",
             value = {
-              ref = "MessageContentType"
+              string = {}
             }
-          }, {
-            description = " Function or event name.",
-            name = "name",
-            summary = " Function or event name.",
-            value = "string"
-          }, {
-            description = " Parameters or result value.",
-            name = "value",
-            summary = " Parameters or result value.",
+          } }
+      }
+    }, {
+      name = "boc.parse_transaction",
+      params = { {
+          description = " BOC encoded as base64",
+          name = "boc",
+          summary = " BOC encoded as base64",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " JSON containing parsed BOC",
+            name = "parsed",
+            summary = " JSON containing parsed BOC",
             value = {
               ref = "Value"
             }
           } }
       }
     }, {
-      name = "crypto.mnemonic_derive_sign_keys",
+      name = "boc.parse_block",
       params = { {
-          description = " phrase",
-          name = "phrase",
-          summary = " phrase",
-          value = "string"
-        }, {
-          description = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
-          name = "path",
-          summary = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
+          description = " BOC encoded as base64",
+          name = "boc",
+          summary = " BOC encoded as base64",
           value = {
-            optional = "string"
-          }
-        }, {
-          description = " dictionary identifier",
-          name = "dictionary",
-          summary = " dictionary identifier",
-          value = {
-            optional = "number"
-          }
-        }, {
-          description = " word count",
-          name = "word_count",
-          summary = " word count",
-          value = {
-            optional = "number"
+            string = {}
           }
         } },
       result = {
         struct = { {
-            description = " public key",
-            name = "public",
-            summary = " public key",
-            value = "string"
-          }, {
-            description = " private key",
-            name = "secret",
-            summary = " private key",
-            value = "string"
+            description = " JSON containing parsed BOC",
+            name = "parsed",
+            summary = " JSON containing parsed BOC",
+            value = {
+              ref = "Value"
+            }
           } }
       }
     }, {
-      name = "crypto.mnemonic_verify",
+      name = "processing.send_message",
       params = { {
-          description = " phrase",
-          name = "phrase",
-          summary = " phrase",
-          value = "string"
-        }, {
-          description = " dictionary identifier",
-          name = "dictionary",
-          summary = " dictionary identifier",
+          description = " Message BOC.",
+          name = "message",
+          summary = " Message BOC.",
           value = {
-            optional = "number"
+            string = {}
           }
         }, {
-          description = " word count",
-          name = "word_count",
-          summary = " word count",
+          description = " Message expiration time.\n Used only for messages with `expiration` replay protection.",
+          name = "message_expiration_time",
+          summary = " Message expiration time.",
           value = {
-            optional = "number"
+            optional = {
+              bigInt = {}
+            }
+          }
+        }, {
+          description = " Processing callback.",
+          name = "callback",
+          summary = " Processing callback.",
+          value = {
+            optional = {
+              ref = "CallbackParams"
+            }
           }
         } },
       result = {
         struct = { {
-            description = " flag indicating the mnemonic is valid or not",
-            name = "valid",
-            summary = " flag indicating the mnemonic is valid or not",
-            value = "boolean"
+            name = "processing_state",
+            value = {
+              ref = "ProcessingState"
+            }
           } }
       }
     }, {
-      name = "contracts.run.local.msg",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.deploy",
-      params = {},
-      result = "none"
-    }, {
-      name = "contracts.run.unknown.output",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.convert_public_key_to_ton_safe_format",
+      name = "queries.subscribe_collection",
       params = { {
-          description = " Public key.",
-          name = "public_key",
-          summary = " Public key.",
-          value = "string"
+          description = " collection name (accounts, blocks, transactions, messages, block_signatures)",
+          name = "collection",
+          summary = " collection name (accounts, blocks, transactions, messages, block_signatures)",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " collection filter",
+          name = "filter",
+          summary = " collection filter",
+          value = {
+            optional = {
+              ref = "Value"
+            }
+          }
+        }, {
+          description = " projection (result) string",
+          name = "result",
+          summary = " projection (result) string",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " registered callback ID to receive subscription data",
+          name = "callback_id",
+          summary = " registered callback ID to receive subscription data",
+          value = {
+            number = {}
+          }
         } },
       result = {
         struct = { {
-            description = " Public key represented in TON safe format.",
-            name = "ton_public_key",
-            summary = " Public key represented in TON safe format.",
-            value = "string"
+            description = " handle to subscription. It then can be used in `get_next_subscription_data` function\n and must be closed with `unsubscribe`",
+            name = "handle",
+            summary = " handle to subscription. It then can be used in `get_next_subscription_data` function",
+            value = {
+              number = {}
+            }
           } }
       }
     }, {
-      name = "contracts.run.fee",
+      name = "contracts.resolve.error",
       params = {},
-      result = "none"
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.run.message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "client.unregister_callback",
+      params = { {
+          description = " Registered callback ID",
+          name = "callback_id",
+          summary = " Registered callback ID",
+          value = {
+            number = {}
+          }
+        } },
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.run",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.generate_random_bytes",
+      params = { {
+          description = " Size of random byte array.",
+          name = "length",
+          summary = " Size of random byte array.",
+          value = {
+            number = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Generated bytes, encoded with `base64`.",
+            name = "bytes",
+            summary = " Generated bytes, encoded with `base64`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.function.id",
+      params = {},
+      result = {
+        none = {}
+      }
     }, {
       name = "abi.attach_signature",
       params = { {
@@ -931,198 +1183,37 @@
           description = " Public key. Must be encoded with `hex`.",
           name = "public_key",
           summary = " Public key. Must be encoded with `hex`.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " Unsigned message BOC. Must be encoded with `base64`.",
           name = "message",
           summary = " Unsigned message BOC. Must be encoded with `base64`.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " Signature. Must be encoded with `hex`.",
           name = "signature",
           summary = " Signature. Must be encoded with `hex`.",
-          value = "string"
+          value = {
+            string = {}
+          }
         } },
       result = {
         struct = { {
             name = "message",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "boc.parse_message",
-      params = { {
-          description = " BOC encoded as base64",
-          name = "boc",
-          summary = " BOC encoded as base64",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " JSON containing parsed BOC",
-            name = "parsed",
-            summary = " JSON containing parsed BOC",
             value = {
-              ref = "Value"
+              string = {}
             }
           } }
       }
     }, {
-      name = "crypto.nacl_sign_open",
-      params = { {
-          description = " Signed data that must be unsigned. Encoded with `base64`.",
-          name = "signed",
-          summary = " Signed data that must be unsigned. Encoded with `base64`.",
-          value = "string"
-        }, {
-          description = " Signer's public key.",
-          name = "public",
-          summary = " Signer's public key.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Unsigned data, encoded with `base64`.",
-            name = "unsigned",
-            summary = " Unsigned data, encoded with `base64`.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "crypto.nacl_sign_detached",
-      params = { {
-          description = " Data that must be signed. Encoded with `base64`.",
-          name = "unsigned",
-          summary = " Data that must be signed. Encoded with `base64`.",
-          value = "string"
-        }, {
-          description = " Signer's secret key.",
-          name = "secret",
-          summary = " Signer's secret key.",
-          value = "string"
-        } },
-      result = {
-        struct = { {
-            description = " Hex encoded sign.",
-            name = "signature",
-            summary = " Hex encoded sign.",
-            value = "string"
-          } }
-      }
-    }, {
-      name = "queries.query_collection",
-      params = { {
-          description = " collection name (accounts, blocks, transactions, messages, block_signatures)",
-          name = "collection",
-          summary = " collection name (accounts, blocks, transactions, messages, block_signatures)",
-          value = "string"
-        }, {
-          description = " collection filter",
-          name = "filter",
-          summary = " collection filter",
-          value = {
-            optional = {
-              ref = "Value"
-            }
-          }
-        }, {
-          description = " projection (result) string",
-          name = "result",
-          summary = " projection (result) string",
-          value = "string"
-        }, {
-          description = " sorting order",
-          name = "order",
-          summary = " sorting order",
-          value = {
-            optional = {
-              array = {
-                ref = "OrderBy"
-              }
-            }
-          }
-        }, {
-          description = " number of documents to return",
-          name = "limit",
-          summary = " number of documents to return",
-          value = {
-            optional = "number"
-          }
-        } },
-      result = {
-        struct = { {
-            description = " objects that match provided criteria",
-            name = "result",
-            summary = " objects that match provided criteria",
-            value = {
-              array = {
-                ref = "Value"
-              }
-            }
-          } }
-      }
-    }, {
-      name = "contracts.run.body",
+      name = "contracts.run.output",
       params = {},
-      result = "none"
-    }, {
-      name = "queries.wait_for_collection",
-      params = { {
-          description = " collection name (accounts, blocks, transactions, messages, block_signatures)",
-          name = "collection",
-          summary = " collection name (accounts, blocks, transactions, messages, block_signatures)",
-          value = "string"
-        }, {
-          description = " collection filter",
-          name = "filter",
-          summary = " collection filter",
-          value = {
-            optional = {
-              ref = "Value"
-            }
-          }
-        }, {
-          description = " projection (result) string",
-          name = "result",
-          summary = " projection (result) string",
-          value = "string"
-        }, {
-          description = " query timeout",
-          name = "timeout",
-          summary = " query timeout",
-          value = {
-            optional = "number"
-          }
-        } },
       result = {
-        struct = { {
-            description = " first found object that match provided criteria",
-            name = "result",
-            summary = " first found object that match provided criteria",
-            value = {
-              ref = "Value"
-            }
-          } }
-      }
-    }, {
-      name = "contracts.run.message",
-      params = {},
-      result = "none"
-    }, {
-      name = "crypto.generate_random_bytes",
-      params = { {
-          description = " Size of random byte array.",
-          name = "length",
-          summary = " Size of random byte array.",
-          value = "number"
-        } },
-      result = {
-        struct = { {
-            description = " Generated bytes, encoded with `base64`.",
-            name = "bytes",
-            summary = " Generated bytes, encoded with `base64`.",
-            value = "string"
-          } }
+        none = {}
       }
     }, {
       name = "crypto.verify_signature",
@@ -1130,36 +1221,308 @@
           description = " Signed data that must be verified.\n Must be encoded with `base64`.",
           name = "signed",
           summary = " Signed data that must be verified.",
-          value = "string"
+          value = {
+            string = {}
+          }
         }, {
           description = " Signer's public key.\n Must be encoded with `hex`.",
           name = "public",
           summary = " Signer's public key.",
-          value = "string"
+          value = {
+            string = {}
+          }
         } },
       result = {
         struct = { {
             description = " Unsigned data.\n Encoded with `base64`.",
             name = "unsigned",
             summary = " Unsigned data.",
-            value = "string"
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.run.encode_unsigned_message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.deploy.address",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.parse.message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.send.message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.process.message",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "contracts.process.transaction",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.hdkey_derive_from_xprv",
+      params = { {
+          description = " serialized extended private key",
+          name = "xprv",
+          summary = " serialized extended private key",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " child index (see BIP-0032)",
+          name = "child_index",
+          summary = " child index (see BIP-0032)",
+          value = {
+            number = {}
+          }
+        }, {
+          description = " indicates the derivation of hardened/not-hardened key (see BIP-0032)",
+          name = "hardened",
+          summary = " indicates the derivation of hardened/not-hardened key (see BIP-0032)",
+          value = {
+            boolean = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " serialized extended private key",
+            name = "xprv",
+            summary = " serialized extended private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.modular_power",
+      params = { {
+          description = " `base` argument of calculation.",
+          name = "base",
+          summary = " `base` argument of calculation.",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " `exponent` argument of calculation.",
+          name = "exponent",
+          summary = " `exponent` argument of calculation.",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " `modulus` argument of calculation.",
+          name = "modulus",
+          summary = " `modulus` argument of calculation.",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " result of modular exponentiation",
+            name = "modular_power",
+            summary = " result of modular exponentiation",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.hdkey_xprv_from_mnemonic",
+      params = { {
+          description = "string with seed phrase",
+          name = "phrase",
+          summary = "string with seed phrase",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " serialized extended master private key",
+            name = "xprv",
+            summary = " serialized extended master private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.mnemonic_from_entropy",
+      params = { {
+          name = "entropy",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "dictionary",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        }, {
+          name = "word_count",
+          value = {
+            optional = {
+              number = {}
+            }
+          }
+        } },
+      result = {
+        struct = { {
+            name = "phrase",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.nacl_box",
+      params = { {
+          description = " Data that must be encrypted. Encoded with `base64`.",
+          name = "decrypted",
+          summary = " Data that must be encrypted. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "nonce",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "their_public",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "secret",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Encrypted data. Encoded with `base64`.",
+            name = "encrypted",
+            summary = " Encrypted data. Encoded with `base64`.",
+            value = {
+              string = {}
+            }
           } }
       }
     }, {
       name = "contracts.deploy.encode_unsigned_message",
       params = {},
-      result = "none"
+      result = {
+        none = {}
+      }
     }, {
-      name = "contracts.run",
-      params = {},
-      result = "none"
-    }, {
-      name = "client.get_api_reference",
+      name = "client.version",
       params = { {
           name = "param",
-          value = "none"
+          value = {
+            none = {}
+          }
         } },
-      result = "none"
+      result = {
+        struct = { {
+            description = " core version",
+            name = "version",
+            summary = " core version",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "contracts.deploy.data",
+      params = {},
+      result = {
+        none = {}
+      }
+    }, {
+      name = "crypto.nacl_box_open",
+      params = { {
+          description = " Data that must be decrypted. Encoded with `base64`.",
+          name = "encrypted",
+          summary = " Data that must be decrypted. Encoded with `base64`.",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "nonce",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "their_public",
+          value = {
+            string = {}
+          }
+        }, {
+          name = "secret",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " Decrypted data. Encoded with `base64`.",
+            name = "decrypted",
+            summary = " Decrypted data. Encoded with `base64`.",
+            value = {
+              string = {}
+            }
+          } }
+      }
+    }, {
+      name = "crypto.hdkey_derive_from_xprv_path",
+      params = { {
+          description = " serialized extended private key",
+          name = "xprv",
+          summary = " serialized extended private key",
+          value = {
+            string = {}
+          }
+        }, {
+          description = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
+          name = "path",
+          summary = " derivation path, for instance \"m/44'/396'/0'/0/0\"",
+          value = {
+            string = {}
+          }
+        } },
+      result = {
+        struct = { {
+            description = " derived serialized extended private key",
+            name = "xprv",
+            summary = " derived serialized extended private key",
+            value = {
+              string = {}
+            }
+          } }
+      }
     } },
   types = {},
   version = "1.0.0"

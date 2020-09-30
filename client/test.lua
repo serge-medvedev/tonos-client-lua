@@ -16,7 +16,9 @@ end
 do
 	print("Testing client.get_api_reference")
 	local result = client.get_api_reference(ctx)
-	-- print(inspect(result))
+	print(inspect(result))
 	assert(result.version == "1.0.0")
 end
+
+context.destroy(ctx)
 

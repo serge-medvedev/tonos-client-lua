@@ -15,3 +15,5 @@ do
         result.secret == "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d")
 end
 
+context.destroy(ctx)
+

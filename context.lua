@@ -14,5 +14,9 @@ function context.create(config)
     return json.decode(result)
 end
 
+function context.destroy(handle)
+    tc.destroy_context(handle)
+end
+
 return context
 

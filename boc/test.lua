@@ -14,3 +14,5 @@ do
     assert(result.parsed.value == "0x13c9e2af662000")
 end
 
+context.destroy(ctx)
+

@@ -25,3 +25,5 @@ do
     print(inspect(result))
 end
 
+context.destroy(ctx)
+

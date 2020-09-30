@@ -1,4 +1,4 @@
-FROM rust:1.46.0 as ton-client
+FROM rust:1.46.0 as sdk
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
@@ -20,13 +20,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
 		build-essential \
 		git \
+		libffcall-dev \
 		liblua5.1-dev \
 		lua5.1 \
 		luarocks \
 		shake
 
-COPY --from=ton-client /usr/src/TON-SDK/target/release/libton_client.so /usr/lib
-COPY --from=ton-client /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include
+COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib
+COPY --from=sdk /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include
 
 WORKDIR /usr/src
 
