@@ -1,4 +1,4 @@
-describe("a queries test suite", function()
+describe("a crypto test suite", function()
     local context = require "context"
     local crypto = require "crypto"
 
