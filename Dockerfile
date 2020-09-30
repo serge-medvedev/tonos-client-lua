@@ -24,16 +24,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		liblua5.1-dev \
 		lua5.1 \
 		luarocks \
-		shake
+    && luarocks install busted
 
-COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib
-COPY --from=sdk /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include
+COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib/
+COPY --from=sdk /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include/
 
 WORKDIR /usr/src
 
 COPY . .
 
-RUN make rock
+RUN make rock test
 
 ENTRYPOINT /bin/bash
 

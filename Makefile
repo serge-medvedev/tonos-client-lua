@@ -1,18 +1,18 @@
-CFLAGS+=-fPIC -shared -I/usr/include/lua5.1 -L/usr/lib/x86_64-linux-gnu
+CFLAGS+=-fPIC -shared -I/usr/include/lua5.1 -L/usr/local/lib/x86_64-linux-gnu
 LDFLAGS+=-lffcall -llua5.1 -lton_client
 
 tonclua.so: tonclua.c
 	$(CC) $(CFLAGS) tonclua.c -o $@ $(LDFLAGS)
 
-install:
-	cp tonclua.so /usr/lib/x86_64-linux-gnu/lua/5.1/
+install: tonclua.so
+	cp tonclua.so /usr/local/lib/lua/5.1/
 
 clean:
-	$(RM) tonclua.so
+	rm -f tonclua.so
 
 test: tonclua.so
-	shake -r
+	busted --lpath='./abi/?.lua;./boc/?.lua;./client/?.lua;./crypto/?.lua;./queries/?.lua' -- .
 
 rock:
-	luarocks make ton-client-scm-1.rockspec
+	luarocks make ton-client-scm-0.rockspec
 

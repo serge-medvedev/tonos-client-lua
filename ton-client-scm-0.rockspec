@@ -1,12 +1,12 @@
 package = "ton-client"
-version = "scm-1"
+version = "scm-0"
 source = {
   url = "git://github.com/..."
 }
 description = {
   summary = "TON Client for Lua",
   detailed = [[ ... ]],
-  license = "Apache-2.0",
+  license = "MIT",
   homepage = "http://github.com/..."
 }
 dependencies = {
