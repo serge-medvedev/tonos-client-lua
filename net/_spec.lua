@@ -57,5 +57,14 @@ describe("a net test suite", function()
             assert.is_true(cb_calls > 0)
         end)
     end)
+
+    describe("a net.wait_for_collection", function()
+        it("should wait for an incoming message", function()
+            local result = net.wait_for_collection(ctx, "messages", {}, "id", 0xbcde, 10000)
+            local id = lookup(result, "result", "id")
+
+            assert.is_not_nil(id)
+        end)
+    end)
 end)
 
