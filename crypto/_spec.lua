@@ -1,7 +1,6 @@
 describe("a crypto test suite #crypto", function()
     local context = require "context"
     local crypto = require "crypto"
-    local inspect = require "inspect"
     local tu = require "testutils"
 
     local ctx
