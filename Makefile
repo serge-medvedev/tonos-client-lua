@@ -11,7 +11,7 @@ clean:
 	rm -f tonclua.so
 
 test: tonclua.so
-	busted --lpath='./abi/?.lua;./boc/?.lua;./client/?.lua;./crypto/?.lua;./net/?.lua;./processing/?.lua' -- .
+	busted .
 
 rock:
 	luarocks make ton-client-scm-0.rockspec
