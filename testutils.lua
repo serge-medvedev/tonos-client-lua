@@ -3,6 +3,21 @@ local json = require "json"
 
 local tu = {}
 
+function tu.sleep(n)
+    os.execute("sleep " .. tonumber(n))
+end
+
+function tu.lookup(t, ...)
+    for _, k in ipairs{...} do
+        t = t[k]
+        if not t then
+            return nil
+        end
+    end
+
+    return t
+end
+
 tu.keys = {
     public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
     secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d"

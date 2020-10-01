@@ -5,10 +5,6 @@ describe("a processing test suite #processing", function()
     local json = require "json"
     local tu = require "testutils"
 
-    function sleep(n)
-        os.execute("sleep " .. tonumber(n))
-    end
-
     local ctx
 
     setup(function()
@@ -34,7 +30,7 @@ describe("a processing test suite #processing", function()
             local result = processing.send_message(
                 ctx, message, nil, { id = callback_id, stay_registered = false })
 
-            sleep(2)
+            tu.sleep(5)
 
             assert.is_true(sent)
         end)
