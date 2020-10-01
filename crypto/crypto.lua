@@ -12,13 +12,30 @@ end
 function crypto.hdkey_public_from_xprv(ctx, ...)
 end
 
-function crypto.nacl_sign_detached(ctx, ...)
+function crypto.nacl_sign_detached(ctx, unsigned, secret)
+    local params_json = json.encode({ unsigned = unsigned, secret = secret })
+    local response_handle = tc.json_request(ctx, "crypto.nacl_sign_detached", params_json)
+    local err, result = tc.read_json_response(response_handle)
+
+    if err then
+        error(err)
+    end
+
+    return json.decode(result)
 end
 
 function crypto.mnemonic_from_random(ctx, ...)
 end
 
-function crypto.generate_random_sign_keys(ctx, ...)
+function crypto.generate_random_sign_keys(ctx)
+    local response_handle = tc.json_request(ctx, "crypto.generate_random_sign_keys", "{}")
+    local err, result = tc.read_json_response(response_handle)
+
+    if err then
+        error(err)
+    end
+
+    return json.decode(result)
 end
 
 function crypto.nacl_box_keypair(ctx, ...)
