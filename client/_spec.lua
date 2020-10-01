@@ -1,4 +1,4 @@
-describe("a client test suite", function()
+describe("a client test suite #client", function()
     local context = require "context"
     local client= require "client"
     local inspect = require "inspect"

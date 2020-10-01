@@ -1,4 +1,4 @@
-describe("a net test suite", function()
+describe("a net test suite #net", function()
     local context = require "context"
     local net = require "net"
 

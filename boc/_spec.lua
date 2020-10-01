@@ -1,4 +1,4 @@
-describe("a boc test suite", function()
+describe("a boc test suite #boc", function()
 	local context = require "context"
 	local boc = require "boc"
 

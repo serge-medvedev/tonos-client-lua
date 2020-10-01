@@ -1,4 +1,4 @@
-describe("a client test suite", function()
+describe("a tonclua test suite #tonclua", function()
     local tc = require "tonclua"
     local json = require "json"
 
