@@ -28,9 +28,9 @@ function abi.attach_signature(ctx, abi, public_key, message, signature)
     return json.decode(result)
 end
 
-function abi.encode_message(ctx, abi, address, deploy_set, call_set, signing)
+function abi.encode_message(ctx, abi, address, deploy_set, call_set, signer)
     local params_json = json.encode(
-        { abi = abi, address = address, deploy_set = deploy_set, call_set = call_set, signing = signing })
+        { abi = abi, address = address, deploy_set = deploy_set, call_set = call_set, signer = signer })
     local response_handle = tc.json_request(ctx, "abi.encode_message", params_json)
     local err, result = tc.read_json_response(response_handle)
 
