@@ -25,8 +25,8 @@ function client.get_api_reference(ctx)
 	return check_response(response_handle)
 end
 
-function client.register_callback(ctx, params_json, request_id, on_result)
-	tc.json_request_async(ctx, "client.register_callback", params_json, request_id, on_result)
+function client.register_callback(ctx, params_json, on_result)
+    return tc.json_request_async(ctx, "client.register_callback", params_json, on_result)
 end
 
 function client.unregister_callback(ctx, callback_id)

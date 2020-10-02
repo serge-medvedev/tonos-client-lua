@@ -1,5 +1,5 @@
 CFLAGS+=-fPIC -shared -I/usr/include/lua5.1 -L/usr/local/lib/x86_64-linux-gnu
-LDFLAGS+=-lffcall -llua5.1 -lton_client
+LDFLAGS+=-llua5.1 -lton_client
 
 tonclua.so: tonclua.c
 	$(CC) $(CFLAGS) tonclua.c -o $@ $(LDFLAGS)

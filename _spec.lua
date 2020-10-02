@@ -46,17 +46,16 @@ describe("a tonclua test suite #tonclua", function()
                 error_json = error_json_
                 flags = flags_
             end
-
-            tc.json_request_async(ctx, "client.version", "{}", 666, on_response)
+            local rid = tc.json_request_async(ctx, "client.version", "{}", on_response)
 
             sleep(2)
 
             local version = json.decode(result_json or "{}").version
 
-            assert.equals(request_id, 666)
-            assert.equals(version, "1.0.0")
+            assert.same(request_id, rid)
+            assert.equals("1.0.0", version)
             assert.is_nil(error_json)
-            assert.equals(flags, 1)
+            assert.equals(1, flags)
         end)
     end)
 end)

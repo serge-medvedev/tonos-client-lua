@@ -27,9 +27,8 @@ function net.unsubscribe(ctx, handle)
 	tc.json_request(ctx, "net.unsubscribe", params_json)
 end
 
-function net.subscribe_collection(ctx, collection, filter, result, callback_id, on_result)
-	client.register_callback(ctx, "", callback_id, on_result)
-
+function net.subscribe_collection(ctx, collection, filter, result, on_result)
+    local callback_id = client.register_callback(ctx, "", on_result)
 	local params_json = json.encode(
 		{ collection = collection, filter = filter, result = result, callback_id = callback_id })
 	local response_handle = tc.json_request(ctx, "net.subscribe_collection", params_json)

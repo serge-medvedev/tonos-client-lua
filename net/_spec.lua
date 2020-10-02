@@ -34,7 +34,7 @@ describe("a net test suite #net", function()
                 cb_calls = cb_calls + 1
             end
             local subscription_handle = net.subscribe_collection(
-                ctx, "messages", {}, "id", 0xabcd, on_result)
+                ctx, "messages", {}, "id", on_result)
 
             tu.sleep(10) -- time enough to receive some messages
 
@@ -46,7 +46,7 @@ describe("a net test suite #net", function()
 
     describe("a net.wait_for_collection", function()
         it("should wait for an incoming message", function()
-            local result = net.wait_for_collection(ctx, "messages", {}, "id", 0xbcde, 10000)
+            local result = net.wait_for_collection(ctx, "messages", {}, "id", 10000)
             local id = tu.lookup(result, "result", "id")
 
             assert.is_not_nil(id)

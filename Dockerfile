@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
 		build-essential \
 		git \
-		libffcall-dev \
 		liblua5.1-dev \
 		lua5.1 \
 		luarocks \
