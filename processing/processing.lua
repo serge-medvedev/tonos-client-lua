@@ -16,5 +16,11 @@ function processing.send_message(ctx, message, message_expiration_time, callback
     return json.decode(result)
 end
 
+function processing.process_message(ctx, message, events_handler)
+end
+
+function processing.wait_for_transaction(ctx, abi, message, shard_block_id, events_handler)
+end
+
 return processing
 

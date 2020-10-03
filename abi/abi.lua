@@ -17,7 +17,7 @@ end
 
 function abi.attach_signature(ctx, abi, public_key, message, signature)
     local params_json = json.encode(
-		{ abi = abi, public_key = public_key, message = message, signature = signature })
+        { abi = abi, public_key = public_key, message = message, signature = signature })
     local response_handle = tc.json_request(ctx, "abi.attach_signature", params_json)
     local err, result = tc.read_json_response(response_handle)
 

@@ -21,7 +21,7 @@ describe("a tonclua test suite #tonclua", function()
 
         it("should return a context handle", function()
             assert.is_nil(err)
-            assert.equals(ctx, 1)
+            assert.is_true(ctx > 0)
         end)
     end)
 

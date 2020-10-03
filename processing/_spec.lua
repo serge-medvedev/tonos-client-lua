@@ -3,15 +3,15 @@ describe("a processing test suite #processing", function()
     local processing = require "processing"
     local client = require "client"
     local json = require "json"
-    local inspect = require "inspect"
     local tu = require "testutils"
 
-    local ctx
+    local ctx, message
 
     setup(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
         ctx = context.create(config).handle
+        message = tu:create_encoded_message(ctx, { WithKeys = tu.keys })
     end)
 
     teardown(function()
@@ -20,7 +20,6 @@ describe("a processing test suite #processing", function()
 
     describe("a processing.send_message", function()
         it("should send a message asynchronously", function()
-            local message = tu:create_encoded_message(ctx, { WithKeys = tu.keys })
             local sent = false
             local callback = function(request_id, result_json, error_json, flags)
                 sent = json.decode(result_json or "{}").DidSend ~= nil
@@ -33,6 +32,12 @@ describe("a processing test suite #processing", function()
 
             assert.is_true(sent)
         end)
+    end)
+
+    pending("a processing.process_message", function()
+    end)
+
+    pending("a processing.wait_for_transaction", function()
     end)
 end)
 
