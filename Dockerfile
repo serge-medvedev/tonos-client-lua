@@ -22,8 +22,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		git \
 		liblua5.1-dev \
 		lua5.1 \
-		luarocks \
-    && luarocks install busted
+        wget \
+        unzip
+
+ENV LUAROCKS_VERSION=3.4.0
+
+RUN wget https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
+    && tar zxpf luarocks-${LUAROCKS_VERSION}.tar.gz \
+    && cd luarocks-${LUAROCKS_VERSION} \
+    && ./configure && make && make install \
+    && rm -fr luarocks-${LUAROCKS_VERSION}
+
+RUN luarocks install busted
 
 COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib/
 COPY --from=sdk /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include/
@@ -32,7 +42,8 @@ WORKDIR /usr/src
 
 COPY . .
 
-RUN make rock test
+RUN luarocks make \
+    && luarocks test -- --keep-going .
 
 ENTRYPOINT /bin/bash
 

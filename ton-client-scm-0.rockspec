@@ -1,20 +1,24 @@
 package = "ton-client"
 version = "scm-0"
 source = {
-  url = "git://github.com/..."
+  url = "git://github.com:serge-medvedev/ton-client-lua.git",
+  branch = "master"
 }
 description = {
-  summary = "TON Client for Lua",
-  detailed = [[ ... ]],
-  license = "MIT",
-  homepage = "http://github.com/..."
+  summary = "Lua binding for TON SDK",
+  license = "MIT"
 }
 dependencies = {
   "lua >= 5.1"
 }
 build = {
-  type = "make",
-  build_target = "tonclua.so",
-  intall_target = ""
+  type = "builtin",
+  modules = {
+      ["tonclua"] = {
+          sources = { "tonclua.c" },
+          libraries = { "ton_client" },
+          libdirs = { "/usr/lib" }
+      }
+  }
 }
 
