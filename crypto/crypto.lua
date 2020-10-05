@@ -86,9 +86,9 @@ function crypto.nacl_box_keypair(ctx)
     return json.decode(result)
 end
 
-function crypto.nacl_sign_keypair_from_secret(ctx, secret)
+function crypto.nacl_sign_keypair_from_secret_key(ctx, secret)
     local params_json = json.encode({ secret = secret })
-    local response_handle = tc.json_request(ctx, "crypto.nacl_sign_keypair_from_secret", params_json)
+    local response_handle = tc.json_request(ctx, "crypto.nacl_sign_keypair_from_secret_key", params_json)
     local err, result = tc.read_json_response(response_handle)
 
     if err then
@@ -209,9 +209,9 @@ function crypto.nacl_sign_open(ctx, signed, public)
     return json.decode(result)
 end
 
-function crypto.nacl_box_keypair_from_secret(ctx, secret)
+function crypto.nacl_box_keypair_from_secret_key(ctx, secret)
     local params_json = json.encode({ secret = secret })
-    local response_handle = tc.json_request(ctx, "crypto.nacl_box_keypair_from_secret", params_json)
+    local response_handle = tc.json_request(ctx, "crypto.nacl_box_keypair_from_secret_key", params_json)
     local err, result = tc.read_json_response(response_handle)
 
     if err then

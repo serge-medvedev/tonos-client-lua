@@ -29,9 +29,7 @@ describe("a client test suite #client", function()
 
             -- print(inspect(result))
 
-            assert.is_not_nil(result.methods)
-            assert.is_not_nil(result.types)
-            assert.is_not_nil(result.version)
+            assert.is_not_nil(result.api)
         end)
     end)
 end)

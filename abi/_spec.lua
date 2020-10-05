@@ -28,7 +28,8 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.attach_signature", function()
         it("should return a signed message", function()
-            local encoded = tu:create_encoded_message(ctx, { External = tu.keys.public })
+            local encoded = tu:create_encoded_message(
+                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
             local signature = crypto.nacl_sign_detached(ctx, encoded, tu.keys.public .. tu.keys.secret).signature
             local result = abi.attach_signature(
                 ctx,

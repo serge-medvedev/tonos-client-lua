@@ -59,7 +59,8 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_sign_detached", function()
         it("should return a signature", function()
-            local unsigned_message = tu:create_encoded_message(ctx, { External = tu.keys.public })
+            local unsigned_message = tu:create_encoded_message(
+                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
             local secret = tu.keys.secret .. tu.keys.public
             local result = crypto.nacl_sign_detached(ctx, unsigned_message, secret)
 
@@ -96,13 +97,13 @@ describe("a crypto test suite #crypto", function()
         end)
     end)
 
-    describe("a crypto.nacl_sign_keypair_from_secret", function()
+    describe("a crypto.nacl_sign_keypair_from_secret_key", function()
         it("should return a signed key pair", function()
             local keys = {
                 public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
                 secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a"
             }
-            local result = crypto.nacl_sign_keypair_from_secret(ctx, tu.keys.secret)
+            local result = crypto.nacl_sign_keypair_from_secret_key(ctx, tu.keys.secret)
 
             assert.same(keys, result)
         end)
@@ -200,9 +201,9 @@ describe("a crypto test suite #crypto", function()
         end)
     end)
 
-    describe("a crypto.nacl_box_keypair_from_secret", function()
+    describe("a crypto.nacl_box_keypair_from_secret_key", function()
         it("should return a key pair", function()
-            local result = crypto.nacl_box_keypair_from_secret(ctx, tu.keys.secret)
+            local result = crypto.nacl_box_keypair_from_secret_key(ctx, tu.keys.secret)
 
             assert.equals(tu.keys.secret, result.secret)
         end)
@@ -246,6 +247,8 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_sign", function()
         it("should return a signed data", function()
+            local unsigned_message = tu:create_encoded_message(
+                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
             local secret =  tu.keys.secret .. tu.keys.public
             local result = crypto.nacl_sign(ctx, unsigned_message, secret)
 
@@ -274,6 +277,8 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.sign", function()
         it("should return a signed data", function()
+            local unsigned_message = tu:create_encoded_message(
+                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
             local result = crypto.sign(ctx, unsigned_message, tu.keys)
 
             assert.equals(signed_message, result.signed)
