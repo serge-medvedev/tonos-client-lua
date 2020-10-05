@@ -1,73 +1,83 @@
 #include <stdatomic.h>
+#include <threads.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <assert.h>
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 #include "khash.h"
-#include "klist.h"
 #include <tonclient.h>
 
-static char buffer[17];
+static const char K = 'K';
+
 atomic_uint_least32_t rid = 0;
+mtx_t guard;
 
 typedef struct {
     lua_State *L;
-    int ref;
-} callback_data_t;
+    uint32_t context;
+} contexts_t;
 
-KHASH_MAP_INIT_INT64(cd, callback_data_t)
+KHASH_MAP_INIT_INT64(r2c, contexts_t)
 
-    khash_t(cd) * cd;
-
-#define dummy(x)
-
-KLIST_INIT(reqs, uint32_t, dummy)
-KHASH_MAP_INIT_INT64(ctxs, klist_t(reqs) *)
-
-khash_t(ctxs) * ctxs;
+khash_t(r2c) * r2c;
 
 int create_context(lua_State *L) {
+    mtx_lock(&guard);
+
     const char * s = luaL_checkstring(L, 1);
     tc_string_t config = { s, strlen(s) };
     tc_response_handle_t * response_handle = tc_create_context(config);
 
     lua_pushlightuserdata(L, response_handle);
 
+    mtx_unlock(&guard);
+
     return 1;
 }
 
 int destroy_context(lua_State *L) {
+    mtx_lock(&guard);
+
     uint32_t context = luaL_checkinteger(L, 1);
 
     tc_destroy_context(context);
 
-    khiter_t k = kh_get(ctxs, ctxs, context);
+    lua_pushlightuserdata(L, (void *) &K);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+    lua_rawgeti(L, -1, context);
 
-    if (k != kh_end(ctxs)) {
-        klist_t(reqs) * l = kh_value(ctxs, k);
-        kliter_t(reqs) * p;
+    if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
 
-        for (p = kl_begin(l); p != kl_end(l); p = kl_next(p)) {
-            khiter_t k = kh_get(cd, cd, kl_val(p));
+        mtx_unlock(&guard);
 
-            if (kh_exist(cd, k)) {
-                callback_data_t data = kh_value(cd, k);
-
-                lua_getfield(L, LUA_REGISTRYINDEX, buffer);
-                luaL_unref(L, -1, data.ref);
-                lua_pop(L, 1);
-
-                kh_del(cd, cd, k);
-            }
-        }
-
-        kl_destroy(reqs, l);
-        kh_del(ctxs, ctxs, k);
+        return 0;
     }
+
+    lua_pushliteral(L, "callbacks");
+    lua_rawget(L, -2);
+    lua_pushnil(L);
+
+    while (lua_next(L, -2) != 0) {
+        lua_pop(L, 1);
+
+        uint32_t request_id = lua_tointeger(L, -1);
+        khiter_t k = kh_get(r2c, r2c, request_id);
+
+        if (k != kh_end(r2c)) {
+            kh_del(r2c, r2c, k);
+        }
+    }
+
+    lua_pop(L, 2);
+    lua_pushnil(L);
+    lua_rawseti(L, -1, context);
+    lua_pop(L, 1);
+
+    mtx_unlock(&guard);
 
     return 0;
 }
@@ -76,68 +86,105 @@ static uint32_t next_rid();
 static void on_response(uint32_t request_id, tc_string_t result_json, tc_string_t error_json, uint32_t flags);
 
 int json_request_async(lua_State *L) {
+    mtx_lock(&guard);
+
     uint32_t context = luaL_checkinteger(L, 1);
     const char * method_ = luaL_checkstring(L, 2);
     const char * params_json_ = luaL_checkstring(L, 3);
     uint32_t request_id = next_rid();
 
     if (0 == lua_isfunction(L, 4)) {
+        mtx_unlock(&guard);
+
         luaL_typerror(L, 4, "function");
     }
 
-    int ref, ret;
-    khiter_t k;
+    lua_State *L_;
 
-    lua_getfield(L, LUA_REGISTRYINDEX, buffer);
-    lua_pushvalue(L, 4);
-    ref = luaL_ref(L, -2);
-    lua_pop(L, 1);
+    lua_pushlightuserdata(L, (void *) &K);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+    lua_rawgeti(L, -1, context);
 
-    k = kh_get(ctxs, ctxs, context);
-
-    if (k == kh_end(ctxs)) {
-        k = kh_put(ctxs, ctxs, context, &ret);
-        kh_value(ctxs, k) = kl_init(reqs);
+    if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
+        lua_createtable(L, 0, 2);
+        lua_rawseti(L, -2, context);
+        lua_rawgeti(L, -1, context);
+        lua_pushliteral(L, "L");
+        L_ = lua_newthread(L);
+        lua_rawset(L, -3);
+        lua_pushliteral(L, "callbacks");
+        lua_newtable(L);
+        lua_rawset(L, -3);
     }
 
-    *kl_pushp(reqs, kh_value(ctxs, k)) = request_id;
+    lua_remove(L, -2);
+    lua_pushliteral(L, "L");
+    lua_rawget(L, -2);
+    L_ = lua_tothread(L, -1);
+    lua_pop(L, 1);
+    lua_pushliteral(L, "callbacks");
+    lua_rawget(L, -2);
+    lua_pushvalue(L, 4);
+    lua_rawseti(L, -2, request_id);
+    lua_pop(L, 2);
+
+    int ret;
+    khiter_t k = kh_put(r2c, r2c, request_id, &ret);
+    contexts_t data = { L_, context };
+
+    kh_value(r2c, k) = data;
 
     tc_string_t method = { method_, strlen(method_) };
     tc_string_t params_json = { params_json_, strlen(params_json_) };
-    callback_data_t data = { L, ref };
-
-    k = kh_put(cd, cd, request_id, &ret);
-    kh_value(cd, k) = data;
 
     tc_json_request_async(context, method, params_json, request_id, &on_response);
 
     lua_pushinteger(L, request_id);
 
+    mtx_unlock(&guard);
+
     return 1;
 }
 
 int json_request(lua_State *L) {
+    // ----------
+    mtx_lock(&guard);
+
     uint32_t context = luaL_checkinteger(L, 1);
     const char * method_ = luaL_checkstring(L, 2);
     const char * params_json_ = luaL_checkstring(L, 3);
     tc_string_t method = { method_, strlen(method_) };
     tc_string_t params_json = { params_json_, strlen(params_json_) };
+
+    mtx_unlock(&guard);
+    // ==========
+
     tc_response_handle_t * response_handle = tc_json_request(context, method, params_json);
 
+    // ----------
+    mtx_lock(&guard);
+
     lua_pushlightuserdata(L, response_handle);
+
+    mtx_unlock(&guard);
+    // ==========
 
     return 1;
 }
 
 int read_json_response(lua_State *L) {
+    mtx_lock(&guard);
+
     tc_response_handle_t * response_handle;
 
-    if (lua_islightuserdata(L, -1)) {
-        response_handle = (tc_response_handle_t *) lua_topointer(L, 1);
-    }
-    else {
+    if (0 == lua_islightuserdata(L, -1)) {
+        mtx_unlock(&guard);
+
         luaL_typerror(L, 1, "lightuserdata");
     }
+
+    response_handle = (tc_response_handle_t *) lua_topointer(L, 1);
 
     tc_response_t response = tc_read_json_response(response_handle);
 
@@ -152,6 +199,8 @@ int read_json_response(lua_State *L) {
 
     tc_destroy_json_response(response_handle);
 
+    mtx_unlock(&guard);
+
     return 2;
 }
 
@@ -165,13 +214,13 @@ static const struct luaL_Reg functions [] = {
 };
 
 int luaopen_tonclua(lua_State *L) {
-    sprintf(buffer, "tonclua_%08p", &buffer);
-
+    lua_pushlightuserdata(L, (void *) &K);
     lua_newtable(L);
-    lua_setfield(L, LUA_REGISTRYINDEX, buffer);
+    lua_rawset(L, LUA_REGISTRYINDEX);
 
-    cd = kh_init(cd);
-    ctxs = kh_init(ctxs);
+    mtx_init(&guard, mtx_plain);
+
+    r2c = kh_init(r2c);
 
     lua_newtable(L);
     luaL_register(L, 0, functions);
@@ -186,27 +235,39 @@ static uint32_t next_rid() {
 }
 
 static void on_response(uint32_t request_id, tc_string_t result_json, tc_string_t error_json, uint32_t flags) {
-    khiter_t k = kh_get(cd, cd, request_id);
+    mtx_lock(&guard);
 
-    if (k == kh_end(cd)) {
+    khiter_t k = kh_get(r2c, r2c, request_id);
+
+    if (k == kh_end(r2c)) {
+        mtx_unlock(&guard);
+
         return;
     }
 
-    callback_data_t data = kh_value(cd, k);
+    contexts_t data = kh_value(r2c, k);
     lua_State *L = data.L;
 
-    lua_pushstring(L, buffer);
+    lua_pushlightuserdata(L, (void *) &K);
     lua_rawget(L, LUA_REGISTRYINDEX);
-    lua_rawgeti(L, -1, data.ref);
+    lua_rawgeti(L, -1, data.context);
+    lua_remove(L, -2);
+    lua_pushliteral(L, "callbacks");
+    lua_rawget(L, -2);
+    lua_rawgeti(L, -1, request_id);
+    lua_remove(L, -2);
+    lua_remove(L, -2);
     lua_pushinteger(L, request_id);
     result_json.len > 0 ? lua_pushlstring(L, result_json.content, result_json.len) : lua_pushnil(L);
     error_json.len > 0 ? lua_pushlstring(L, error_json.content, error_json.len) : lua_pushnil(L);
     lua_pushinteger(L, flags);
 
     if (0 != lua_pcall(L, 4, 0, 0)) {
+        mtx_unlock(&guard);
+
         lua_error(L);
     }
 
-    lua_pop(L, 1);
+    mtx_unlock(&guard);
 }
 
