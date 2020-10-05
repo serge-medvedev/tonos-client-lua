@@ -26,7 +26,7 @@ describe("a processing test suite #processing", function()
             end
             local callback_id = client.register_callback(ctx, "", callback)
             local result = processing.send_message(
-                ctx, message, nil, { id = callback_id, stay_registered = false })
+                ctx, message, { id = callback_id, stay_registered = false }, tu.abi)
 
             tu.sleep(5)
 

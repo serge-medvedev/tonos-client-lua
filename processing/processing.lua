@@ -3,9 +3,9 @@ local json = require "json"
 
 local processing = {}
 
-function processing.send_message(ctx, message, message_expiration_time, callback)
+function processing.send_message(ctx, message, events_handler, abi)
     local params_json = json.encode(
-        { message = message, message_expiration_time = message_expiration_time, callback = callback })
+        { message = message, events_handler = events_handler, abi = abi })
     local response_handle = tc.json_request(ctx, "processing.send_message", params_json)
     local err, result = tc.read_json_response(response_handle)
 
