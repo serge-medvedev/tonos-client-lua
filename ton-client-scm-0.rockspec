@@ -14,10 +14,10 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-      ["tonclua"] = {
-          sources = { "tonclua.c" },
-          libraries = { "ton_client" },
-          libdirs = { "/usr/lib" }
+      tonclua = {
+          sources = { "tonclua/tonclua.c" },
+          incdirs = { "tonclua/include" },
+          libraries = { "ton_client" }
       }
   }
 }
