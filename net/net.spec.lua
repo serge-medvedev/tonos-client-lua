@@ -30,13 +30,11 @@ describe("a net test suite #net", function()
     describe("a net.subscribe_collection", function()
         it("should receive incoming messages being subscribed", function()
             local cb_calls = 0
-            local on_result = function (request_id, result_json, error_json, flags)
+            local subscription_handle = net.subscribe_collection(ctx, "messages", {}, "id", function()
                 cb_calls = cb_calls + 1
-            end
-            local subscription_handle = net.subscribe_collection(
-                ctx, "messages", {}, "id", on_result)
+			end)
 
-            tu.sleep(10) -- time enough to receive some messages
+            tu.sleep(5) -- time enough to receive some messages
 
             net.unsubscribe(ctx, subscription_handle)
 

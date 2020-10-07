@@ -5,7 +5,7 @@ local boc = {}
 
 function parse(ctx, method, boc)
     local params_json = json.encode({ boc = boc })
-    local response_handle = tc.json_request(ctx, method, params_json)
+    local response_handle = tc.json_request_sync(ctx, method, params_json)
     local err, result = tc.read_json_response(response_handle)
 
     if err then

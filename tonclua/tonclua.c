@@ -1,14 +1,15 @@
-#include <stdatomic.h>
 #include <threads.h>
-#include <string.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <stdio.h>
+#include <stdatomic.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <tonclient.h>
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 #include "khash.h"
-#include <tonclient.h>
 
 static const char K = 'K';
 
@@ -39,11 +40,18 @@ int create_context(lua_State *L) {
 }
 
 int destroy_context(lua_State *L) {
+    // ----------
     mtx_lock(&guard);
 
     uint32_t context = luaL_checkinteger(L, 1);
 
+    mtx_unlock(&guard);
+    // ==========
+
     tc_destroy_context(context);
+
+    // ----------
+    mtx_lock(&guard);
 
     lua_pushlightuserdata(L, (void *) &K);
     lua_rawget(L, LUA_REGISTRYINDEX);
@@ -78,14 +86,15 @@ int destroy_context(lua_State *L) {
     lua_pop(L, 1);
 
     mtx_unlock(&guard);
+    // ==========
 
     return 0;
 }
 
 static uint32_t next_rid();
-static void on_response(uint32_t request_id, tc_string_t result_json, tc_string_t error_json, uint32_t flags);
+static void on_response(uint32_t request_id, tc_string_t params_json, uint32_t response_type, bool finished);
 
-int json_request_async(lua_State *L) {
+int json_request(lua_State *L) {
     mtx_lock(&guard);
 
     uint32_t context = luaL_checkinteger(L, 1);
@@ -138,7 +147,7 @@ int json_request_async(lua_State *L) {
     tc_string_t method = { method_, strlen(method_) };
     tc_string_t params_json = { params_json_, strlen(params_json_) };
 
-    tc_json_request_async(context, method, params_json, request_id, &on_response);
+    tc_json_request(context, method, params_json, request_id, &on_response);
 
     lua_pushinteger(L, request_id);
 
@@ -147,7 +156,7 @@ int json_request_async(lua_State *L) {
     return 1;
 }
 
-int json_request(lua_State *L) {
+int json_request_sync(lua_State *L) {
     // ----------
     mtx_lock(&guard);
 
@@ -160,7 +169,7 @@ int json_request(lua_State *L) {
     mtx_unlock(&guard);
     // ==========
 
-    tc_response_handle_t * response_handle = tc_json_request(context, method, params_json);
+    tc_response_handle_t * response_handle = tc_json_request_sync(context, method, params_json);
 
     // ----------
     mtx_lock(&guard);
@@ -207,8 +216,8 @@ int read_json_response(lua_State *L) {
 static const struct luaL_Reg functions [] = {
     { "create_context", create_context },
     { "destroy_context", destroy_context },
-    { "json_request_async", json_request_async },
     { "json_request", json_request },
+    { "json_request_sync", json_request_sync },
     { "read_json_response", read_json_response },
     { NULL, NULL }
 };
@@ -234,7 +243,7 @@ static uint32_t next_rid() {
     return rid;
 }
 
-static void on_response(uint32_t request_id, tc_string_t result_json, tc_string_t error_json, uint32_t flags) {
+static void on_response(uint32_t request_id, tc_string_t params_json, uint32_t response_type, bool finished) {
     mtx_lock(&guard);
 
     khiter_t k = kh_get(r2c, r2c, request_id);
@@ -258,9 +267,9 @@ static void on_response(uint32_t request_id, tc_string_t result_json, tc_string_
     lua_remove(L, -2);
     lua_remove(L, -2);
     lua_pushinteger(L, request_id);
-    result_json.len > 0 ? lua_pushlstring(L, result_json.content, result_json.len) : lua_pushnil(L);
-    error_json.len > 0 ? lua_pushlstring(L, error_json.content, error_json.len) : lua_pushnil(L);
-    lua_pushinteger(L, flags);
+    params_json.len > 0 ? lua_pushlstring(L, params_json.content, params_json.len) : lua_pushnil(L);
+    lua_pushinteger(L, response_type);
+    lua_pushboolean(L, finished);
 
     if (0 != lua_pcall(L, 4, 0, 0)) {
         mtx_unlock(&guard);

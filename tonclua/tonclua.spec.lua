@@ -26,7 +26,7 @@ describe("a tonclua test suite #tonclua", function()
     end)
 
     describe("a tc_json_request", function()
-        local h = tc.json_request(ctx, "client.version", "{}")
+        local h = tc.json_request_sync(ctx, "client.version", "{}")
         local err, result = tc.read_json_response(h)
 
         result = json.decode(result)
@@ -39,23 +39,23 @@ describe("a tonclua test suite #tonclua", function()
 
     describe("a tc_json_request_async", function()
         it("should accept and invoke a callback", function()
-            local request_id, result_json, error_json, flags;
-            local on_response = function (request_id_, result_json_, error_json_, flags_)
+            local request_id, params_json, response_type, finished;
+            local on_response = function (request_id_, params_json_, response_type_, finished_)
                 request_id = request_id_
-                result_json = result_json_
-                error_json = error_json_
-                flags = flags_
+                params_json = params_json_
+                response_type = response_type_
+                finished = finished_
             end
-            local rid = tc.json_request_async(ctx, "client.version", "{}", on_response)
+            local rid = tc.json_request(ctx, "client.version", "{}", on_response)
 
             sleep(2)
 
-            local version = json.decode(result_json or "{}").version
+            local version = json.decode(params_json or "{}").version
 
             assert.same(request_id, rid)
             assert.equals("1.0.0", version)
-            assert.is_nil(error_json)
-            assert.equals(1, flags)
+            assert.equals(0, response_type)
+            assert.is_true(finished)
         end)
     end)
 end)
