@@ -22,44 +22,61 @@ describe("a processing test suite #processing", function()
     describe("a processing.send_message", function()
         it("should send a message asynchronously", function()
             local sent = false
-            local callback = function(request_id, result_json, error_json, flags)
-                sent = json.decode(result_json or "{}").DidSend ~= nil
-            end
-            local callback_id = client.register_callback(ctx, "", callback)
-            local result = processing.send_message(
-                ctx, message, { id = callback_id, stay_registered = false }, tu.abi)
+            local shard_block_id
+            local callback = function(request_id, params_json, response_type, finished)
+                if 0 == response_type then
+                    shard_block_id = json.decode(params_json or "{}").shard_block_id
+                end
 
-            tu.sleep(5)
+                sent = finished
+            end
+
+            processing.send_message(ctx, message, tu.abi, true, callback)
+
+            tu.sleep(3)
+
+            assert.is_true(sent)
+            assert.is_true(string.len(shard_block_id) > 0)
+        end)
+    end)
+
+    describe("a processing.wait_for_transaction", function()
+        it("should wait for a transaction", function()
+            local cb_calls = 0
+            local callback = function(request_id, params_json, response_type, finished)
+                cb_calls = cb_calls + 1
+            end
+            local on_sent = function(request_id, params_json, response_type, finished)
+                if 0 == response_type then
+                    local result = json.decode(params_json)
+
+                    processing.wait_for_transaction(ctx, tu.abi, message, result.shard_block_id, true, callback)
+                end
+            end
+
+            processing.send_message(ctx, message, tu.abi, true, callback)
+
+            tu.sleep(3)
+
+            assert.is_true(cb_calls > 0)
+        end)
+    end)
+
+    describe("a processing.process_message", function()
+        it("should process a message asynchronously", function()
+            local sent = false
+            local callback = function(request_id, params_json, response_type, finished)
+                if json.decode(params_json or "{}").DidSend then
+                    sent = true
+                end
+            end
+
+            processing.process_message(ctx, { message = message, abi = tu.abi }, true, callback)
+
+            tu.sleep(3)
 
             assert.is_true(sent)
         end)
-    end)
-
-    pending("a processing.wait_for_transaction", function()
-        it("should wait for a transaction", function()
-        end)
-    end)
-
-    pending("a processing.process_message", function()
-        it("should process a message asynchronously", function()
-            local callback = function(request_id, result_json, error_json, flags)
-                print(inspect({ request_id = request_id, result_json = result_json, error_json = error_json, flags = flags }))
-            end
-            local callback_id = client.register_callback(ctx, "", callback)
-            local result = processing.process_message(
-                ctx,
-                { message = message, abi = tu.abi },
-                { id = callback_id, stay_registered = false })
-
-            tu.sleep(5)
-
-            client.unregister_callback(ctx, callback_id)
-
-            print(inspect(result))
-        end)
-    end)
-
-    pending("a processing.wait_for_transaction", function()
     end)
 end)
 

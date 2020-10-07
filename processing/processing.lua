@@ -3,23 +3,25 @@ local json = require "json"
 
 local processing = {}
 
-function processing.send_message(ctx, message, events_handler, abi)
+function processing.send_message(ctx, message, abi, send_events, on_response)
     local params_json = json.encode(
-        { message = message, events_handler = events_handler, abi = abi })
-    local response_handle = tc.json_request(ctx, "processing.send_message", params_json)
-    local err, result = tc.read_json_response(response_handle)
+        { message = message, abi = abi, send_events = send_events })
 
-    if err then
-        error(err)
-    end
-
-    return json.decode(result)
+    tc.json_request(ctx, "processing.send_message", params_json, on_response)
 end
 
-function processing.process_message(ctx, message, events_handler)
+function processing.wait_for_transaction(ctx, abi, message, shard_block_id, send_events, on_response)
+    local params_json = json.encode(
+        { abi = abi, message = message, shard_block_id = shard_block_id, send_events = send_events })
+
+    tc.json_request(ctx, "processing.wait_for_transaction", params_json, on_response)
 end
 
-function processing.wait_for_transaction(ctx, abi, message, shard_block_id, events_handler)
+function processing.process_message(ctx, message, send_events, on_response)
+    local params_json = json.encode(
+        { message = { Encoded = message }, send_events = send_events })
+
+    tc.json_request(ctx, "processing.process_message", params_json, on_response)
 end
 
 return processing
