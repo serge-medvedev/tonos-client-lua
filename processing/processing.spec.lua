@@ -11,7 +11,7 @@ describe("a processing test suite #processing", function()
     setup(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
-        ctx = context.create(config).handle
+        ctx = context.create(config)
         message = tu:create_encoded_message(ctx, { WithKeys = tu.keys })
     end)
 

@@ -8,7 +8,7 @@ describe("a net test suite #net", function()
     setup(function()
         local config = '{"network": {"server_address": "https://main.ton.dev"}}'
 
-        ctx = context.create(config).handle
+        ctx = context.create(config)
     end)
 
     teardown(function()
@@ -32,7 +32,7 @@ describe("a net test suite #net", function()
             local cb_calls = 0
             local subscription_handle = net.subscribe_collection(ctx, "messages", {}, "id", function()
                 cb_calls = cb_calls + 1
-			end)
+            end)
 
             tu.sleep(5) -- time enough to receive some messages
 

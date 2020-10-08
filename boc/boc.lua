@@ -1,34 +1,37 @@
 local tc = require "tonclua"
 local json = require "json"
 
-local boc = {}
-
-function parse(ctx, method, boc)
+local function parse_impl(ctx, method, boc)
     local params_json = json.encode({ boc = boc })
-    local response_handle = tc.json_request_sync(ctx, method, params_json)
-    local err, result = tc.read_json_response(response_handle)
+    local response_handle = tc.request_sync(ctx, method, params_json)
+    local _, result = tc.read_string(response_handle)
+    local decoded = json.decode(result)
 
-    if err then
-        error(err)
+    if decoded == nil then
+        error("no response")
+    elseif decoded.error then
+        error(decoded.error)
     end
 
-    return json.decode(result)
+    return decoded.result
 end
 
-function boc.parse_transaction(ctx, boc) 
-    return parse(ctx, "boc.parse_transaction", boc)
+local boc = {}
+
+function boc.parse_transaction(ctx, transaction)
+    return parse_impl(ctx, "boc.parse_transaction", transaction)
 end
 
-function boc.parse_block(ctx, boc)
-    return parse(ctx, "boc.parse_block", boc)
+function boc.parse_block(ctx, block)
+    return parse_impl(ctx, "boc.parse_block", block)
 end
 
-function boc.parse_account(ctx, boc)
-    return parse(ctx, "boc.parse_account", boc)
+function boc.parse_account(ctx, account)
+    return parse_impl(ctx, "boc.parse_account", account)
 end
 
-function boc.parse_message(ctx, boc)
-    return parse(ctx, "boc.parse_message", boc)
+function boc.parse_message(ctx, message)
+    return parse_impl(ctx, "boc.parse_message", message)
 end
 
 return boc

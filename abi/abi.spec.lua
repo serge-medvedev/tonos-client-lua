@@ -10,7 +10,7 @@ describe("an abi test suite #abi", function()
     setup(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
-        ctx = context.create(config).handle
+        ctx = context.create(config)
     end)
 
     teardown(function()
