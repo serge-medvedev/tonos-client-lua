@@ -1,6 +1,6 @@
 return {
     _all = {
-        lpath = "./abi/?.lua;./boc/?.lua;./client/?.lua;./common/?.lua;./crypto/?.lua;./net/?.lua;./processing/?.lua;./tvm/?.lua"
+        lpath = "./abi/?.lua;./boc/?.lua;./client/?.lua;./common/?.lua;./crypto/?.lua;./net/?.lua;./processing/?.lua;./utils/?.lua;./tvm/?.lua"
     }
 }
 
