@@ -44,5 +44,13 @@ function abi.encode_message(ctx, abi, address, deploy_set, call_set, signer, pro
     return check_response(response_handle)
 end
 
+function abi.encode_account(ctx, state_init, balance, last_trans_lt, last_paid)
+    local params_json = json.encode(
+        { state_init = state_init, balance = balance, last_trans_lt = last_trans_lt, last_paid = last_paid })
+    local response_handle = tc.request_sync(ctx, "abi.encode_account", params_json)
+
+    return check_response(response_handle)
+end
+
 return abi
 

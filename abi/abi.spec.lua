@@ -56,5 +56,10 @@ describe("an abi test suite #abi", function()
             assert.is_not_nil(result.message)
         end)
     end)
+
+    pending("an abi.encode_account", function()
+        it("should return encoded account data", function()
+        end)
+    end)
 end)
 
