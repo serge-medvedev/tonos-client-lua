@@ -1,9 +1,7 @@
 local tc = require "tonclua"
 local json = require "json"
 
-local function parse_impl(ctx, method, boc)
-    local params_json = json.encode({ boc = boc })
-    local response_handle = tc.request_sync(ctx, method, params_json)
+local function check_response(response_handle)
     local _, result = tc.read_string(response_handle)
     local decoded = json.decode(result)
 
@@ -19,19 +17,38 @@ end
 local boc = {}
 
 function boc.parse_transaction(ctx, transaction)
-    return parse_impl(ctx, "boc.parse_transaction", transaction)
+    local params_json = json.encode({ boc = transaction })
+    local response_handle = tc.request_sync(ctx, "boc.parse_transaction", params_json)
+
+    return check_response(response_handle)
 end
 
 function boc.parse_block(ctx, block)
-    return parse_impl(ctx, "boc.parse_block", block)
+    local params_json = json.encode({ boc = block })
+    local response_handle = tc.request_sync(ctx, "boc.parse_block", params_json)
+
+    return check_response(response_handle)
 end
 
 function boc.parse_account(ctx, account)
-    return parse_impl(ctx, "boc.parse_account", account)
+    local params_json = json.encode({ boc = account })
+    local response_handle = tc.request_sync(ctx, "boc.parse_account", params_json)
+
+    return check_response(response_handle)
 end
 
 function boc.parse_message(ctx, message)
-    return parse_impl(ctx, "boc.parse_message", message)
+    local params_json = json.encode({ boc = message })
+    local response_handle = tc.request_sync(ctx, "boc.parse_message", params_json)
+
+    return check_response(response_handle)
+end
+
+function boc.get_blockchain_config(ctx, block_boc)
+    local params_json = json.encode({ block_boc = block_boc })
+    local response_handle = tc.request_sync(ctx, "boc.get_blockchain_config", params_json)
+
+    return check_response(response_handle)
 end
 
 return boc

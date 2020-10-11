@@ -58,5 +58,10 @@ describe("a boc test suite #boc", function()
 			assert.equals("0x13c9e2af662000", parsed_value)
 		end)
 	end)
+
+	pending("a boc.get_blockchain_config", function()
+		it("should return a parsed value", function()
+        end)
+    end)
 end)
 
