@@ -2,6 +2,7 @@ describe("a net test suite #net", function()
     local context = require "context"
     local net = require "net"
     local tu = require "testutils"
+    local json = require "json"
 
     local ctx
 
@@ -27,18 +28,26 @@ describe("a net test suite #net", function()
         end)
     end)
 
-    describe("a net.subscribe_collection", function()
+    describe("a net.subscribe_collection #slow", function()
         it("should receive incoming messages being subscribed", function()
-            local cb_calls = 0
-            local subscription_handle = net.subscribe_collection(ctx, "messages", {}, "id", function()
+            local cb_calls, max_cb_calls, subscription_handle = 0, 3
+
+            for request_id, params_json, response_type, finished
+                in net.subscribe_collection(ctx, "messages", {}, "id") do
+
                 cb_calls = cb_calls + 1
-            end)
 
-            tu.sleep(5) -- time enough to receive some messages
+                if subscription_handle == nil and response_type == 0 then
+                    subscription_handle = json.decode(params_json).handle
+                end
 
-            net.unsubscribe(ctx, subscription_handle)
+                if cb_calls == max_cb_calls then
+                    net.unsubscribe(ctx, subscription_handle)
+                end
+            end
 
-            assert.is_true(cb_calls > 0)
+            assert.is_not_nil(subscription_handle)
+            assert.is_true(cb_calls >= max_cb_calls) -- events might have been queued before subscription was canceled
         end)
     end)
 

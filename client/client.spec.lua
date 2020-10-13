@@ -1,7 +1,7 @@
 describe("a client test suite #client", function()
     local context = require "context"
     local client= require "client"
-    local inspect = require "inspect"
+    local tu = require "testutils"
 
     local ctx
 
@@ -27,7 +27,7 @@ describe("a client test suite #client", function()
         it("should return the API Reference", function()
             local result = client.get_api_reference(ctx)
 
-            -- print(inspect(result))
+            -- print(tu.inspect(result))
 
             assert.is_not_nil(result.api)
         end)

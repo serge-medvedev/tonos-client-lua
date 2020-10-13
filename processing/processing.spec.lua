@@ -1,18 +1,25 @@
-describe("a processing test suite #processing", function()
+describe("a processing test suite #processing #slow", function()
     local context = require "context"
     local processing = require "processing"
     local client = require "client"
+    local crypto = require "crypto"
     local json = require "json"
     local tu = require "testutils"
-    local inspect = require "inspect"
 
-    local ctx, message
+    local ctx, encoded
 
     setup(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
         ctx = context.create(config)
-        message = tu:create_encoded_message(ctx, { WithKeys = tu.keys })
+    end)
+
+    before_each(function()
+        local keys = crypto.generate_random_sign_keys(ctx)
+
+        encoded = tu:create_encoded_message(ctx, { WithKeys = keys })
+
+        tu:fund_account(ctx, encoded.address)
     end)
 
     teardown(function()
@@ -20,62 +27,74 @@ describe("a processing test suite #processing", function()
     end)
 
     describe("a processing.send_message", function()
-        it("should send a message asynchronously", function()
-            local sent = false
-            local shard_block_id
-            local callback = function(request_id, params_json, response_type, finished)
-                if 0 == response_type then
-                    shard_block_id = json.decode(params_json or "{}").shard_block_id
+        it("should send a message and receive a sequence of responses", function()
+            local sent, shard_block_id = false
+
+            for request_id, params_json, response_type, finished
+                in processing.send_message(ctx, encoded.message, tu.abi, true) do
+
+                if shard_block_id == nil and response_type == 0 then
+                    shard_block_id = json.decode(params_json).shard_block_id
                 end
 
                 sent = finished
             end
 
-            processing.send_message(ctx, message, tu.abi, true, callback)
-
-            tu.sleep(3)
-
             assert.is_true(sent)
-            assert.is_true(string.len(shard_block_id) > 0)
+            assert.is_not_nil(string.match(shard_block_id, "^[0-9a-zA-Z]+$"))
         end)
     end)
 
     describe("a processing.wait_for_transaction", function()
-        it("should wait for a transaction", function()
-            local cb_calls = 0
-            local callback = function(request_id, params_json, response_type, finished)
-                cb_calls = cb_calls + 1
-            end
-            local on_sent = function(request_id, params_json, response_type, finished)
-                if 0 == response_type then
-                    local result = json.decode(params_json)
+        it("should receive a transaction confirmation", function()
+            local shard_block_id
 
-                    processing.wait_for_transaction(ctx, tu.abi, message, result.shard_block_id, true, callback)
+            for request_id, params_json, response_type, finished
+                in processing.send_message(ctx, encoded.message, tu.abi, true) do
+
+                if shard_block_id == nil and response_type == 0 then
+                    shard_block_id = json.decode(params_json).shard_block_id
+
+                    break
                 end
             end
 
-            processing.send_message(ctx, message, tu.abi, true, callback)
+            local received = false
 
-            tu.sleep(3)
+            for request_id, params_json, response_type, finished
+                in processing.wait_for_transaction(ctx, tu.abi, encoded.message, shard_block_id, true) do
 
-            assert.is_true(cb_calls > 0)
+                local succeeded, result = pcall(json.decode, params_json)
+
+                if succeeded and not received then
+                    received = result.TransactionReceived ~= nil
+                end
+            end
+
+            assert.is_true(received)
         end)
     end)
 
     describe("a processing.process_message", function()
-        it("should process a message asynchronously", function()
-            local sent = false
-            local callback = function(request_id, params_json, response_type, finished)
-                if json.decode(params_json or "{}").DidSend then
-                    sent = true
+        it("should process a message in stages", function()
+            local DidSend, TransactionReceived
+
+            for request_id, params_json, response_type, finished
+                in processing.process_message(ctx, { message = encoded.message, abi = tu.abi }, true) do
+
+                local succeeded, result = pcall(json.decode, params_json)
+
+                if succeeded and not DidSend then
+                    DidSend = result.DidSend ~= nil
+                end
+
+                if succeeded and not TransactionReceived then
+                    TransactionReceived = result.TransactionReceived ~= nil
                 end
             end
 
-            processing.process_message(ctx, { message = message, abi = tu.abi }, true, callback)
-
-            tu.sleep(3)
-
-            assert.is_true(sent)
+            assert.is_true(DidSend)
+            assert.is_true(TransactionReceived)
         end)
     end)
 end)

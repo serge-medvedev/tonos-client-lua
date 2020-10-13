@@ -44,7 +44,7 @@ WORKDIR /usr/src
 COPY . .
 
 RUN luarocks make \
-    && luarocks test -- --pattern='.+%.spec.lua' --keep-going .
+    && luarocks test -- --pattern='.+%.spec.lua' --exclude-tags 'slow' .
 
 ENTRYPOINT /bin/bash
 
