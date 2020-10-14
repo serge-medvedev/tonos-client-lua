@@ -1,7 +1,7 @@
 describe("a crypto test suite #crypto", function()
-    local context = require "context"
-    local crypto = require "crypto"
-    local tu = require "testutils"
+    local context = require "ton.context"
+    local crypto = require "ton.crypto"
+    local tu = require "test.utils"
 
     function count_words(s)
         local _, n = string.gsub(s, "%S+", "")

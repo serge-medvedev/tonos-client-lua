@@ -1,6 +1,6 @@
 describe("a net test suite #net", function()
-    local context = require "context"
-    local net = require "net"
+    local context = require "ton.context"
+    local net = require "ton.net"
     local json = require "dkjson"
 
     local ctx

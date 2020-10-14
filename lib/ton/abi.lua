@@ -1,4 +1,4 @@
-local tc_await = require "tc_await"
+local async = require "ton.commons.async"
 local json = require "dkjson"
 
 local abi = {}
@@ -9,7 +9,7 @@ function abi.decode_message(ctx, abi, message)
         message = message
     })
 
-    return tc_await(ctx, "abi.decode_message", params_json)
+    return async.wait(ctx, "abi.decode_message", params_json)
 end
 
 function abi.attach_signature(ctx, abi, public_key, message, signature)
@@ -20,7 +20,7 @@ function abi.attach_signature(ctx, abi, public_key, message, signature)
         signature = signature
     })
 
-    return tc_await(ctx, "abi.attach_signature", params_json)
+    return async.wait(ctx, "abi.attach_signature", params_json)
 end
 
 function abi.encode_message(ctx, abi, address, deploy_set, call_set, signer, processing_try_index)
@@ -33,7 +33,7 @@ function abi.encode_message(ctx, abi, address, deploy_set, call_set, signer, pro
         processing_try_index = processing_try_index
     })
 
-    return tc_await(ctx, "abi.encode_message", params_json)
+    return async.wait(ctx, "abi.encode_message", params_json)
 end
 
 function abi.encode_account(ctx, state_init, balance, last_trans_lt, last_paid)
@@ -44,7 +44,7 @@ function abi.encode_account(ctx, state_init, balance, last_trans_lt, last_paid)
         last_paid = last_paid
     })
 
-    return tc_await(ctx, "abi.encode_account", params_json)
+    return async.wait(ctx, "abi.encode_account", params_json)
 end
 
 return abi

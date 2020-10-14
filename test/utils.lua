@@ -1,6 +1,6 @@
-local abi = require "abi"
-local net = require "net"
-local processing = require "processing"
+local abi = require "ton.abi"
+local net = require "ton.net"
+local processing = require "ton.processing"
 local json = require "dkjson"
 local inspect = require "inspect"
 

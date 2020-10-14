@@ -1,5 +1,4 @@
-local tc_await = require "tc_await"
-local async_iterator_factory = require "async_iterator_factory"
+local async = require "ton.commons.async"
 local json = require "dkjson"
 
 local net = {}
@@ -14,13 +13,13 @@ function net.query_collection(ctx, collection, filter, result, order, limit)
         limit = limit
     })
 
-    return tc_await(ctx, "net.query_collection", params_json, "result")
+    return async.wait(ctx, "net.query_collection", params_json, "result")
 end
 
 function net.unsubscribe(ctx, handle)
     local params_json = json.encode({ handle = handle })
 
-    tc_await(ctx, "net.unsubscribe", params_json)
+    async.wait(ctx, "net.unsubscribe", params_json)
 end
 
 --! Subscribes you to the stream of collection-dependent events.
@@ -35,7 +34,7 @@ function net.subscribe_collection(ctx, collection, filter, result)
         result = result
     })
 
-    return async_iterator_factory(ctx, "net.subscribe_collection", params_json)
+    return async.iterator_factory(ctx, "net.subscribe_collection", params_json)
 end
 
 --! @param collection might be "accounts", "blocks", "transactions", "messages" or "block_signatures"
@@ -47,7 +46,7 @@ function net.wait_for_collection(ctx, collection, filter, result, timeout)
         timeout = timeout
     })
 
-    return tc_await(ctx, "net.wait_for_collection", params_json, "result")
+    return async.wait(ctx, "net.wait_for_collection", params_json, "result")
 end
 
 return net

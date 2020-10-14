@@ -1,9 +1,9 @@
 describe("an abi test suite #abi", function()
-    local context = require "context"
-    local abi= require "abi"
-    local crypto = require "crypto"
+    local context = require "ton.context"
+    local abi= require "ton.abi"
+    local crypto = require "ton.crypto"
     local json = require "dkjson"
-    local tu = require "testutils"
+    local tu = require "test.utils"
 
     local ctx
 

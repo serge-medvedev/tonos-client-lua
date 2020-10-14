@@ -1,6 +1,6 @@
 describe("a boc test suite #boc", function()
-	local context = require "context"
-	local boc = require "boc"
+	local context = require "ton.context"
+	local boc = require "ton.boc"
 
 	local ctx
 

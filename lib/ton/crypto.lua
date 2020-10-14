@@ -1,4 +1,4 @@
-local tc_await = require "tc_await"
+local async = require "ton.commons.async"
 local json = require "dkjson"
 
 local crypto = {}
@@ -9,7 +9,7 @@ function crypto.hdkey_derive_from_xprv_path(ctx, xprv, path)
         path = path
     })
 
-    return tc_await(ctx, "crypto.hdkey_derive_from_xprv_path", params_json)
+    return async.wait(ctx, "crypto.hdkey_derive_from_xprv_path", params_json)
 end
 
 function crypto.nacl_box(ctx, decrypted, nonce, their_public, secret)
@@ -20,13 +20,13 @@ function crypto.nacl_box(ctx, decrypted, nonce, their_public, secret)
         secret = secret
     })
 
-    return tc_await(ctx, "crypto.nacl_box", params_json)
+    return async.wait(ctx, "crypto.nacl_box", params_json)
 end
 
 function crypto.hdkey_public_from_xprv(ctx, xprv)
     local params_json = json.encode({ xprv = xprv })
 
-    return tc_await(ctx, "crypto.hdkey_public_from_xprv", params_json)
+    return async.wait(ctx, "crypto.hdkey_public_from_xprv", params_json)
 end
 
 function crypto.nacl_sign_detached(ctx, unsigned, secret)
@@ -35,7 +35,7 @@ function crypto.nacl_sign_detached(ctx, unsigned, secret)
         secret = secret
     })
 
-    return tc_await(ctx, "crypto.nacl_sign_detached", params_json)
+    return async.wait(ctx, "crypto.nacl_sign_detached", params_json)
 end
 
 function crypto.mnemonic_from_random(ctx, dictionary, word_count)
@@ -44,39 +44,39 @@ function crypto.mnemonic_from_random(ctx, dictionary, word_count)
         word_count = word_count
     })
 
-    return tc_await(ctx, "crypto.mnemonic_from_random", params_json)
+    return async.wait(ctx, "crypto.mnemonic_from_random", params_json)
 end
 
 function crypto.generate_random_sign_keys(ctx)
-    return tc_await(ctx, "crypto.generate_random_sign_keys")
+    return async.wait(ctx, "crypto.generate_random_sign_keys")
 end
 
 function crypto.nacl_box_keypair(ctx)
-    return tc_await(ctx, "crypto.nacl_box_keypair")
+    return async.wait(ctx, "crypto.nacl_box_keypair")
 end
 
 function crypto.nacl_sign_keypair_from_secret_key(ctx, secret)
     local params_json = json.encode({ secret = secret })
 
-    return tc_await(ctx, "crypto.nacl_sign_keypair_from_secret_key", params_json)
+    return async.wait(ctx, "crypto.nacl_sign_keypair_from_secret_key", params_json)
 end
 
 function crypto.hdkey_secret_from_xprv(ctx, xprv)
     local params_json = json.encode({ xprv = xprv })
 
-    return tc_await(ctx, "crypto.hdkey_secret_from_xprv", params_json)
+    return async.wait(ctx, "crypto.hdkey_secret_from_xprv", params_json)
 end
 
 function crypto.generate_random_bytes(ctx, length)
     local params_json = json.encode({ length = length })
 
-    return tc_await(ctx, "crypto.generate_random_bytes", params_json)
+    return async.wait(ctx, "crypto.generate_random_bytes", params_json)
 end
 
 function crypto.mnemonic_words(ctx, dictionary)
     local params_json = json.encode({ dictionary = dictionary })
 
-    return tc_await(ctx, "crypto.mnemonic_words", params_json)
+    return async.wait(ctx, "crypto.mnemonic_words", params_json)
 end
 
 function crypto.verify_signature(ctx, signed, public)
@@ -85,7 +85,7 @@ function crypto.verify_signature(ctx, signed, public)
         public = public
     })
 
-    return tc_await(ctx, "crypto.verify_signature", params_json)
+    return async.wait(ctx, "crypto.verify_signature", params_json)
 end
 
 function crypto.nacl_box_open(ctx, encrypted, nonce, their_public, secret)
@@ -96,7 +96,7 @@ function crypto.nacl_box_open(ctx, encrypted, nonce, their_public, secret)
         secret = secret
     })
 
-    return tc_await(ctx, "crypto.nacl_box_open", params_json)
+    return async.wait(ctx, "crypto.nacl_box_open", params_json)
 end
 
 function crypto.mnemonic_derive_sign_keys(ctx, phrase, path, dictionary, word_count)
@@ -107,7 +107,7 @@ function crypto.mnemonic_derive_sign_keys(ctx, phrase, path, dictionary, word_co
         word_count = word_count
     })
 
-    return tc_await(ctx, "crypto.mnemonic_derive_sign_keys", params_json)
+    return async.wait(ctx, "crypto.mnemonic_derive_sign_keys", params_json)
 end
 
 function crypto.nacl_secret_box(ctx, decrypted, nonce, key)
@@ -117,13 +117,13 @@ function crypto.nacl_secret_box(ctx, decrypted, nonce, key)
         key = key
     })
 
-    return tc_await(ctx, "crypto.nacl_secret_box", params_json)
+    return async.wait(ctx, "crypto.nacl_secret_box", params_json)
 end
 
 function crypto.sha256(ctx, data)
     local params_json = json.encode({ data = data })
 
-    return tc_await(ctx, "crypto.sha256", params_json)
+    return async.wait(ctx, "crypto.sha256", params_json)
 end
 
 function crypto.nacl_sign_open(ctx, signed, public)
@@ -132,13 +132,13 @@ function crypto.nacl_sign_open(ctx, signed, public)
         public = public
     })
 
-    return tc_await(ctx, "crypto.nacl_sign_open", params_json)
+    return async.wait(ctx, "crypto.nacl_sign_open", params_json)
 end
 
 function crypto.nacl_box_keypair_from_secret_key(ctx, secret)
     local params_json = json.encode({ secret = secret })
 
-    return tc_await(ctx, "crypto.nacl_box_keypair_from_secret_key", params_json)
+    return async.wait(ctx, "crypto.nacl_box_keypair_from_secret_key", params_json)
 end
 
 function crypto.nacl_secret_box_open(ctx, encrypted, nonce, key)
@@ -148,13 +148,13 @@ function crypto.nacl_secret_box_open(ctx, encrypted, nonce, key)
         key = key
     })
 
-    return tc_await(ctx, "crypto.nacl_secret_box_open", params_json)
+    return async.wait(ctx, "crypto.nacl_secret_box_open", params_json)
 end
 
 function crypto.factorize(ctx, composite)
     local params_json = json.encode({ composite = composite })
 
-    return tc_await(ctx, "crypto.factorize", params_json)
+    return async.wait(ctx, "crypto.factorize", params_json)
 end
 
 function crypto.mnemonic_from_entropy(ctx, entropy, dictionary, word_count)
@@ -164,7 +164,7 @@ function crypto.mnemonic_from_entropy(ctx, entropy, dictionary, word_count)
         word_count = word_count
     })
 
-    return tc_await(ctx, "crypto.mnemonic_from_entropy", params_json)
+    return async.wait(ctx, "crypto.mnemonic_from_entropy", params_json)
 end
 
 function crypto.nacl_sign(ctx, unsigned, secret)
@@ -173,13 +173,13 @@ function crypto.nacl_sign(ctx, unsigned, secret)
         secret = secret
     })
 
-    return tc_await(ctx, "crypto.nacl_sign", params_json)
+    return async.wait(ctx, "crypto.nacl_sign", params_json)
 end
 
 function crypto.hdkey_xprv_from_mnemonic(ctx, phrase)
     local params_json = json.encode({ phrase = phrase })
 
-    return tc_await(ctx, "crypto.hdkey_xprv_from_mnemonic", params_json)
+    return async.wait(ctx, "crypto.hdkey_xprv_from_mnemonic", params_json)
 end
 
 function crypto.mnemonic_verify(ctx, phrase, dictionary, word_count)
@@ -189,7 +189,7 @@ function crypto.mnemonic_verify(ctx, phrase, dictionary, word_count)
         word_count = word_count
     })
 
-    return tc_await(ctx, "crypto.mnemonic_verify", params_json)
+    return async.wait(ctx, "crypto.mnemonic_verify", params_json)
 end
 
 function crypto.sign(ctx, unsigned, keys)
@@ -198,19 +198,19 @@ function crypto.sign(ctx, unsigned, keys)
         keys = keys
     })
 
-    return tc_await(ctx, "crypto.sign", params_json)
+    return async.wait(ctx, "crypto.sign", params_json)
 end
 
 function crypto.convert_public_key_to_ton_safe_format(ctx, public_key)
     local params_json = json.encode({ public_key = public_key })
 
-    return tc_await(ctx, "crypto.convert_public_key_to_ton_safe_format", params_json)
+    return async.wait(ctx, "crypto.convert_public_key_to_ton_safe_format", params_json)
 end
 
 function crypto.ton_crc16(ctx, data)
     local params_json = json.encode({ data = data })
 
-    return tc_await(ctx, "crypto.ton_crc16", params_json)
+    return async.wait(ctx, "crypto.ton_crc16", params_json)
 end
 
 function crypto.modular_power(ctx, base, exponent, modulus)
@@ -220,13 +220,13 @@ function crypto.modular_power(ctx, base, exponent, modulus)
         modulus = modulus
     })
 
-    return tc_await(ctx, "crypto.modular_power", params_json)
+    return async.wait(ctx, "crypto.modular_power", params_json)
 end
 
 function crypto.sha512(ctx, data)
     local params_json = json.encode({ data = data })
 
-    return tc_await(ctx, "crypto.sha512", params_json)
+    return async.wait(ctx, "crypto.sha512", params_json)
 end
 
 function crypto.scrypt(ctx, password, salt, log_n, r, p, dk_len)
@@ -239,7 +239,7 @@ function crypto.scrypt(ctx, password, salt, log_n, r, p, dk_len)
         dk_len = dk_len
     })
 
-    return tc_await(ctx, "crypto.scrypt", params_json)
+    return async.wait(ctx, "crypto.scrypt", params_json)
 end
 
 function crypto.hdkey_derive_from_xprv(ctx, xprv, child_index, hardened)
@@ -249,7 +249,7 @@ function crypto.hdkey_derive_from_xprv(ctx, xprv, child_index, hardened)
         hardened = hardened
     })
 
-    return tc_await(ctx, "crypto.hdkey_derive_from_xprv", params_json)
+    return async.wait(ctx, "crypto.hdkey_derive_from_xprv", params_json)
 end
 
 return crypto

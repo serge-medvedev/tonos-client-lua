@@ -1,6 +1,12 @@
 return {
     _all = {
-        lpath = "./abi/?.lua;./boc/?.lua;./client/?.lua;./common/?.lua;./crypto/?.lua;./net/?.lua;./processing/?.lua;./utils/?.lua;./tvm/?.lua"
+        lpath = "./test/?.lua"
+    },
+    fast = {
+        ["exclude-tags"] = "slow"
+    },
+    slow = {
+        tags = "slow"
     }
 }
 

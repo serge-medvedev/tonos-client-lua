@@ -1,6 +1,6 @@
 describe("a utils test suite #utils", function()
-    local context = require "context"
-    local utils = require "utils"
+    local context = require "ton.context"
+    local utils = require "ton.utils"
 
     local ctx
 

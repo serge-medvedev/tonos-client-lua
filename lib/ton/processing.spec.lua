@@ -1,10 +1,10 @@
 describe("a processing test suite #processing #slow", function()
-    local context = require "context"
-    local processing = require "processing"
-    local client = require "client"
-    local crypto = require "crypto"
+    local context = require "ton.context"
+    local processing = require "ton.processing"
+    local client = require "ton.client"
+    local crypto = require "ton.crypto"
     local json = require "dkjson"
-    local tu = require "testutils"
+    local tu = require "test.utils"
 
     local ctx, encoded
 

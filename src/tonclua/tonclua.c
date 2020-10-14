@@ -1,7 +1,7 @@
 #include <threads.h>
+#include <stdatomic.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdatomic.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,4 +1,4 @@
-local async_iterator_factory = require "async_iterator_factory"
+local async = require "ton.commons.async"
 local json = require "dkjson"
 
 local processing = {}
@@ -10,7 +10,7 @@ function processing.send_message(ctx, message, abi, send_events)
         send_events = send_events
     })
 
-    return async_iterator_factory(ctx, "processing.send_message", params_json)
+    return async.iterator_factory(ctx, "processing.send_message", params_json)
 end
 
 function processing.wait_for_transaction(ctx, abi, message, shard_block_id, send_events)
@@ -21,7 +21,7 @@ function processing.wait_for_transaction(ctx, abi, message, shard_block_id, send
         send_events = send_events
     })
 
-    return async_iterator_factory(ctx, "processing.wait_for_transaction", params_json)
+    return async.iterator_factory(ctx, "processing.wait_for_transaction", params_json)
 end
 
 function processing.process_message(ctx, message, send_events)
@@ -30,7 +30,7 @@ function processing.process_message(ctx, message, send_events)
         send_events = send_events
     })
 
-    return async_iterator_factory(ctx, "processing.process_message", params_json)
+    return async.iterator_factory(ctx, "processing.process_message", params_json)
 end
 
 return processing
