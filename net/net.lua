@@ -31,7 +31,10 @@ function net.unsubscribe(ctx, handle)
     tc.request_sync(ctx, "net.unsubscribe", params_json)
 end
 
---! The first successful response will contain the subscription handle
+--! Subscribes you to the stream of collection-dependent items.
+--! The first successful response will contain the subscription handle.
+--! Don't forget to unsubscribe to prevent the buffering of unnecessary items.
+--! @param collection might be "accounts", "blocks", "transactions", "messages" or "block_signatures"
 --! @return iterator factory which can be traversed via generic for loop
 function net.subscribe_collection(ctx, collection, filter, result)
     local params_json = json.encode({

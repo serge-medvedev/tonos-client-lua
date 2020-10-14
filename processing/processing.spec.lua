@@ -64,9 +64,9 @@ describe("a processing test suite #processing #slow", function()
             for request_id, params_json, response_type, finished
                 in processing.wait_for_transaction(ctx, tu.abi, encoded.message, shard_block_id, true) do
 
-                local succeeded, result = pcall(json.decode, params_json)
+                local result = json.decode(params_json)
 
-                if succeeded and not received then
+                if result and not received then
                     received = result.TransactionReceived ~= nil
                 end
             end
@@ -82,13 +82,13 @@ describe("a processing test suite #processing #slow", function()
             for request_id, params_json, response_type, finished
                 in processing.process_message(ctx, { message = encoded.message, abi = tu.abi }, true) do
 
-                local succeeded, result = pcall(json.decode, params_json)
+                local result = json.decode(params_json)
 
-                if succeeded and not DidSend then
+                if result and not DidSend then
                     DidSend = result.DidSend ~= nil
                 end
 
-                if succeeded and not TransactionReceived then
+                if result and not TransactionReceived then
                     TransactionReceived = result.TransactionReceived ~= nil
                 end
             end

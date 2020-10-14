@@ -16,8 +16,6 @@ describe("a net test suite #net", function()
         context.destroy(ctx)
     end)
 
-    -- collection names: accounts, blocks, transactions, messages, block_signatures
-
     describe("a net.query_collection", function()
         it("should return positive account balance", function()
             local addr = "0:7866e5e4edc40639331140807d2a2dc7d4bc53005bb34d71428cdd250c91b404"

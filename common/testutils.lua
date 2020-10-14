@@ -89,9 +89,9 @@ function tu:fund_account(ctx, account, value)
     for request_id, params_json, response_type, finished
         in processing.process_message(ctx, { message = encoded.message, abi = Abi }, false) do
 
-        local succeeded, result = pcall(json.decode, params_json)
+        local result = json.decode(params_json)
 
-        if not succeeded then result = {} end
+        if not result then result = {} end
 
         for _, m in pairs(result.out_messages or {}) do
             if m.msg_type_name == "internal" then

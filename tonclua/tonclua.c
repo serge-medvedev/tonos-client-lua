@@ -131,12 +131,11 @@ int read_string(lua_State *L) {
 
     tc_string_data_t response = tc_read_string(string_handle);
 
-    lua_pushnil(L); // TODO: remove it and fix the function usage everywhere
     lua_pushlstring(L, response.content, response.len);
 
     tc_destroy_string(string_handle);
 
-    return 2;
+    return 1;
 }
 
 int fetch_response_data(lua_State *L) {
