@@ -1,7 +1,7 @@
 describe("a crypto test suite #crypto", function()
     local context = require "ton.context"
     local crypto = require "ton.crypto"
-    local tu = require "test.utils"
+    local tt = require "test.tools"
 
     function count_words(s)
         local _, n = string.gsub(s, "%S+", "")
@@ -15,7 +15,7 @@ describe("a crypto test suite #crypto", function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
         ctx = context.create(config)
-        unsigned = tu:create_encoded_message(ctx, { External = tu.keys.public })
+        unsigned = tt:create_encoded_message(ctx, { External = tt.keys.public })
         signed = "/OE+67uuV/OHBFkVq0PLxUu7oWUlnV3TdEzjlnkz8yC5i5blGQDuxgJxR81idAwpASeHXhFW82YoojRbotKmBLXunHIBAhcBAANoAAKniABnZBHo62O5aNgkdvrHxcq27e5QqqlPEJBFusYHFDUhTBGRNMZ5EKoL1EEOC2I3nVF68T35m6BHZLygbguobHNrgKAAABdGcly4NfVcxkaLVfP4BgEBAcACAgPPIAUDAQHeBAAD0CAAQdiaYzyIVQXqIIcFsRvOqL14nvzN0COyXlA3BdQ2ObXAVAIm/wD0pCAiwAGS9KDhiu1TWDD0oQkHAQr0pCD0oQgAAAIBIAwKAcj/fyHtRNAg10nCAY4Q0//TP9MA0X/4Yfhm+GP4Yo4Y9AVwAYBA9A7yvdcL//hicPhjcPhmf/hh4tMAAY4dgQIA1xgg+QEB0wABlNP/AwGTAvhC4iD4ZfkQ8qiV0wAB8nri0z8BCwBqjh74QyG5IJ8wIPgjgQPoqIIIG3dAoLnekvhj4IA08jTY0x8B+CO88rnTHwHwAfhHbpLyPN4CASASDQIBIA8OAL26i1Xz/4QW6ONe1E0CDXScIBjhDT/9M/0wDRf/hh+Gb4Y/hijhj0BXABgED0DvK91wv/+GJw+GNw+GZ/+GHi3vhG8nNx+GbR+AD4QsjL//hDzws/+EbPCwDJ7VR/+GeAIBIBEQAOW4gAa1vwgt0cJ9qJoaf/pn+mAaL/8MPwzfDH8MW99IMrqaOh9IG/o/CKQN0kYOG98IV15cDJ8AGRk/YIQZGfChGdGggQH0AAAAAAAAAAAAAAAAAAgZ4tkwIBAfYAYfCFkZf/8IeeFn/wjZ4WAZPaqP/wzwAMW5k8Ki3wgt0cJ9qJoaf/pn+mAaL/8MPwzfDH8MW9rhv/K6mjoaf/v6PwAZEXuAAAAAAAAAAAAAAAACGeLZ8DnyOPLGL0Q54X/5Lj9gBh8IWRl//wh54Wf/CNnhYBk9qo//DPACAUgWEwEJuLfFglAUAfz4QW6OE+1E0NP/0z/TANF/+GH4Zvhj+GLe1w3/ldTR0NP/39H4AMiL3AAAAAAAAAAAAAAAABDPFs+Bz5HHljF6Ic8L/8lx+wDIi9wAAAAAAAAAAAAAAAAQzxbPgc+SVviwSiHPC//JcfsAMPhCyMv/+EPPCz/4Rs8LAMntVH8VAAT4ZwBy3HAi0NYCMdIAMNwhxwCS8jvgIdcNH5LyPOFTEZLyO+HBBCKCEP////28sZLyPOAB8AH4R26S8jze"
     end)
 
@@ -59,9 +59,9 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_sign_detached", function()
         it("should return a signature", function()
-            local unsigned = tu:create_encoded_message(
-                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
-            local secret = tu.keys.secret .. tu.keys.public
+            local unsigned = tt:create_encoded_message(
+                ctx, { External = tt.keys.public }, 1599458364291, 1599458404)
+            local secret = tt.keys.secret .. tt.keys.public
             local result = crypto.nacl_sign_detached(ctx, unsigned.message, secret)
 
             assert.equals(
@@ -103,7 +103,7 @@ describe("a crypto test suite #crypto", function()
                 public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
                 secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a"
             }
-            local result = crypto.nacl_sign_keypair_from_secret_key(ctx, tu.keys.secret)
+            local result = crypto.nacl_sign_keypair_from_secret_key(ctx, tt.keys.secret)
 
             assert.same(keys, result)
         end)
@@ -152,7 +152,7 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.verify_signature", function()
         it("should return unsigned message", function()
-            local result = crypto.verify_signature(ctx, signed, tu.keys.public)
+            local result = crypto.verify_signature(ctx, signed, tt.keys.public)
 
             assert(unsigned.message, result.unsigned)
         end)
@@ -195,7 +195,7 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_sign_open", function()
         it("should return unsigned message", function()
-            local result = crypto.nacl_sign_open(ctx, signed, tu.keys.public)
+            local result = crypto.nacl_sign_open(ctx, signed, tt.keys.public)
 
             assert(unsigned.message, result.unsigned)
         end)
@@ -203,9 +203,9 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_box_keypair_from_secret_key", function()
         it("should return a key pair", function()
-            local result = crypto.nacl_box_keypair_from_secret_key(ctx, tu.keys.secret)
+            local result = crypto.nacl_box_keypair_from_secret_key(ctx, tt.keys.secret)
 
-            assert.equals(tu.keys.secret, result.secret)
+            assert.equals(tt.keys.secret, result.secret)
         end)
     end)
 
@@ -247,9 +247,9 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.nacl_sign", function()
         it("should return a signed data", function()
-            local unsigned = tu:create_encoded_message(
-                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
-            local secret =  tu.keys.secret .. tu.keys.public
+            local unsigned = tt:create_encoded_message(
+                ctx, { External = tt.keys.public }, 1599458364291, 1599458404)
+            local secret =  tt.keys.secret .. tt.keys.public
             local result = crypto.nacl_sign(ctx, unsigned.message, secret)
 
             assert.equals(signed, result.signed)
@@ -277,9 +277,9 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.sign", function()
         it("should return a signed data", function()
-            local unsigned = tu:create_encoded_message(
-                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
-            local result = crypto.sign(ctx, unsigned.message, tu.keys)
+            local unsigned = tt:create_encoded_message(
+                ctx, { External = tt.keys.public }, 1599458364291, 1599458404)
+            local result = crypto.sign(ctx, unsigned.message, tt.keys)
 
             assert.equals(signed, result.signed)
         end)
@@ -287,7 +287,7 @@ describe("a crypto test suite #crypto", function()
 
     describe("a crypto.convert_public_key_to_ton_safe_format", function()
         it("should convert a public key", function()
-            local result = crypto.convert_public_key_to_ton_safe_format(ctx, tu.keys.public)
+            local result = crypto.convert_public_key_to_ton_safe_format(ctx, tt.keys.public)
 
             assert.equals("PuYTTGeRCqC9RBDgtiN51RevE9-ZugR2S8oG4LqGxza4Cv_l", result.ton_public_key)
         end)

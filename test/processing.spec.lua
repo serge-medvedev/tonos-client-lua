@@ -4,7 +4,7 @@ describe("a processing test suite #processing #slow", function()
     local client = require "ton.client"
     local crypto = require "ton.crypto"
     local json = require "dkjson"
-    local tu = require "test.utils"
+    local tt = require "test.tools"
 
     local ctx, encoded
 
@@ -17,9 +17,9 @@ describe("a processing test suite #processing #slow", function()
     before_each(function()
         local keys = crypto.generate_random_sign_keys(ctx)
 
-        encoded = tu:create_encoded_message(ctx, { WithKeys = keys })
+        encoded = tt:create_encoded_message(ctx, { WithKeys = keys })
 
-        tu:fund_account(ctx, encoded.address)
+        tt:fund_account(ctx, encoded.address)
     end)
 
     teardown(function()
@@ -31,7 +31,7 @@ describe("a processing test suite #processing #slow", function()
             local sent, shard_block_id = false
 
             for request_id, params_json, response_type, finished
-                in processing.send_message(ctx, encoded.message, tu.abi, true) do
+                in processing.send_message(ctx, encoded.message, tt.abi, true) do
 
                 if shard_block_id == nil and response_type == 0 then
                     shard_block_id = json.decode(params_json).shard_block_id
@@ -50,7 +50,7 @@ describe("a processing test suite #processing #slow", function()
             local shard_block_id
 
             for request_id, params_json, response_type, finished
-                in processing.send_message(ctx, encoded.message, tu.abi, true) do
+                in processing.send_message(ctx, encoded.message, tt.abi, true) do
 
                 if shard_block_id == nil and response_type == 0 then
                     shard_block_id = json.decode(params_json).shard_block_id
@@ -62,7 +62,7 @@ describe("a processing test suite #processing #slow", function()
             local received = false
 
             for request_id, params_json, response_type, finished
-                in processing.wait_for_transaction(ctx, tu.abi, encoded.message, shard_block_id, true) do
+                in processing.wait_for_transaction(ctx, tt.abi, encoded.message, shard_block_id, true) do
 
                 local result = json.decode(params_json)
 
@@ -80,7 +80,7 @@ describe("a processing test suite #processing #slow", function()
             local DidSend, TransactionReceived
 
             for request_id, params_json, response_type, finished
-                in processing.process_message(ctx, { message = encoded.message, abi = tu.abi }, true) do
+                in processing.process_message(ctx, { message = encoded.message, abi = tt.abi }, true) do
 
                 local result = json.decode(params_json)
 

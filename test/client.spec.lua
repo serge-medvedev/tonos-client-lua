@@ -1,7 +1,7 @@
 describe("a client test suite #client", function()
     local context = require "ton.context"
     local client= require "ton.client"
-    local tu = require "test.utils"
+    local json = require "dkjson"
 
     local ctx
 
@@ -27,7 +27,7 @@ describe("a client test suite #client", function()
         it("should return the API Reference", function()
             local result = client.get_api_reference(ctx)
 
-            -- print(tu.inspect(result))
+            -- print(json.encode(result, { indent = true }))
 
             assert.is_not_nil(result.api)
         end)

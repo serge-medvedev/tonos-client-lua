@@ -3,7 +3,7 @@ describe("an abi test suite #abi", function()
     local abi= require "ton.abi"
     local crypto = require "ton.crypto"
     local json = require "dkjson"
-    local tu = require "test.utils"
+    local tt = require "test.tools"
 
     local ctx
 
@@ -19,8 +19,8 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.decode_message", function()
         it("should return decoded data", function()
-            local encoded = tu:create_encoded_message(ctx, { WithKeys = tu.keys })
-            local result = abi.decode_message(ctx, { Serialized = json.decode(tu.events_abi) }, encoded.message)
+            local encoded = tt:create_encoded_message(ctx, { WithKeys = tt.keys })
+            local result = abi.decode_message(ctx, { Serialized = json.decode(tt.events_abi) }, encoded.message)
 
             assert.equals("constructor", result.name)
         end)
@@ -28,13 +28,13 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.attach_signature", function()
         it("should return a signed message", function()
-            local encoded = tu:create_encoded_message(
-                ctx, { External = tu.keys.public }, 1599458364291, 1599458404)
-            local signature = crypto.nacl_sign_detached(ctx, encoded.message, tu.keys.public .. tu.keys.secret).signature
+            local encoded = tt:create_encoded_message(
+                ctx, { External = tt.keys.public }, 1599458364291, 1599458404)
+            local signature = crypto.nacl_sign_detached(ctx, encoded.message, tt.keys.public .. tt.keys.secret).signature
             local result = abi.attach_signature(
                 ctx,
-                { Serialized = json.decode(tu.events_abi) },
-                tu.keys.public,
+                { Serialized = json.decode(tt.events_abi) },
+                tt.keys.public,
                 encoded.message,
                 signature)
 
@@ -46,11 +46,11 @@ describe("an abi test suite #abi", function()
         it("should return a BOC", function()
             local result = abi.encode_message(
                 ctx,
-                { Serialized = json.decode(tu.events_abi) },
+                { Serialized = json.decode(tt.events_abi) },
                 nil,
-                { tvc = tu.tvc },
-                { function_name = "constructor", header = { pubkey = tu.keys.public } },
-                { WithKeys = tu.keys })
+                { tvc = tt.tvc },
+                { function_name = "constructor", header = { pubkey = tt.keys.public } },
+                { WithKeys = tt.keys })
 
             assert.is_not_nil(result.address)
             assert.is_not_nil(result.message)
