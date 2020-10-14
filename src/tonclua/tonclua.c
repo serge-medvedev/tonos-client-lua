@@ -1,7 +1,6 @@
 #include <threads.h>
 #include <stdatomic.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,35 +11,14 @@
 #include "khash.h"
 #include "klist.h"
 
-atomic_uint_least32_t rid = 0;
-mtx_t guard;
-cnd_t cbcv;
-FILE * flog;
-
-#define LOG(format, ...) \
-    fprintf(flog, format __VA_OPT__(,) __VA_ARGS__); \
-    fflush(flog);
-
-#define LOCK() \
-    LOG("%s :: lock\n", __func__); \
-    mtx_lock(&guard);
-
-#define UNLOCK() \
-    LOG("%s :: unlock\n", __func__); \
-    mtx_unlock(&guard);
-
-#define WAIT_FOR_DATA() cnd_wait(&cbcv, &guard)
-
-#define NOTIFY_OF_DATA() cnd_signal(&cbcv)
-
-#define dummy_destructor(x)
-
 typedef struct {
     uint32_t request_id;
     tc_string_data_t params_json;
     uint32_t response_type;
     bool finished;
 } response_data_t;
+
+#define dummy_destructor(x)
 
 KLIST_INIT(rdata, response_data_t, dummy_destructor)
 
@@ -50,6 +28,10 @@ typedef struct {
 } request_data_t;
 
 KHASH_MAP_INIT_INT64(rdata, request_data_t)
+
+atomic_uint_least32_t rid = 0;
+mtx_t guard;
+cnd_t cbcv;
 
 khash_t(rdata) * requests_data;
 
@@ -81,10 +63,8 @@ int request(lua_State *L) {
     const char * method_ = luaL_checkstring(L, 2);
     uint32_t request_id = next_rid();
 
-    LOG("method: %s", method_);
-
     {
-        LOCK();
+        mtx_lock(&guard);
 
         int ret;
         khiter_t k = kh_put(rdata, requests_data, request_id, &ret);
@@ -92,7 +72,7 @@ int request(lua_State *L) {
 
         kh_val(requests_data, k) = data;
 
-        UNLOCK();
+        mtx_unlock(&guard);
     }
 
     const char * params_json_ = luaL_checkstring(L, 3);
@@ -142,12 +122,12 @@ int fetch_response_data(lua_State *L) {
     uint32_t request_id = luaL_checkinteger(L, 1);
 
     {
-        LOCK();
+        mtx_lock(&guard);
 
         khiter_t k = kh_get(rdata, requests_data, request_id);
 
         if (k == kh_end(requests_data)) {
-            UNLOCK();
+            mtx_unlock(&guard);
 
             lua_pushinteger(L, request_id);
 
@@ -158,7 +138,7 @@ int fetch_response_data(lua_State *L) {
         kliter_t(rdata) * p = kl_begin(rd);
 
         while (p == kl_end(rd)) {
-            WAIT_FOR_DATA(); // TODO: consider using timeout
+            cnd_wait(&cbcv, &guard); // TODO: consider using timeout
 
             p = kl_begin(rd);
         }
@@ -180,7 +160,7 @@ int fetch_response_data(lua_State *L) {
             kh_del(rdata, requests_data, k);
         }
 
-        UNLOCK();
+        mtx_unlock(&guard);
     }
 
     return lua_yield(L, 4);
@@ -197,8 +177,6 @@ static const struct luaL_Reg functions [] = {
 };
 
 int luaopen_tonclua(lua_State *L) {
-    flog = fopen("/tmp/tonclua.log", "w+");
-
     mtx_init(&guard, mtx_plain);
     cnd_init(&cbcv);
 
@@ -218,12 +196,12 @@ static uint32_t next_rid() {
 
 static void on_response(uint32_t request_id, tc_string_data_t params_json, uint32_t response_type, bool finished) {
     {
-        LOCK();
+        mtx_lock(&guard);
 
         khiter_t k = kh_get(rdata, requests_data, request_id);
 
         if (k == kh_end(requests_data)) {
-            UNLOCK();
+            mtx_unlock(&guard);
 
             return;
         }
@@ -238,9 +216,9 @@ static void on_response(uint32_t request_id, tc_string_data_t params_json, uint3
 
         *kl_pushp(rdata, rd) = data; // TODO: consider limiting its length
 
-        UNLOCK();
+        mtx_unlock(&guard);
     }
 
-    NOTIFY_OF_DATA();
+    cnd_signal(&cbcv);
 }
 
