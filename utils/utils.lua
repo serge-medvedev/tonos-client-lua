@@ -1,19 +1,15 @@
-local tc = require "tonclua"
-local check_sync_response = require "check_sync_response"
+local tc_await = require "tc_await"
 local json = require "dkjson"
 
 local utils = {}
 
 function utils.convert_address(ctx, address, output_format)
-    local params_json = json.encode({ address = address, output_format = output_format })
-    local response_handle = tc.request_sync(ctx, "utils.convert_address", params_json)
-    local successful, result = pcall(check_sync_response, response_handle)
+    local params_json = json.encode({
+        address = address,
+        output_format = output_format
+    })
 
-    if not successful then
-        error(result)
-    end
-
-    return result
+    return tc_await(ctx, "utils.convert_address", params_json)
 end
 
 return utils

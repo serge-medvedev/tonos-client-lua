@@ -2,7 +2,6 @@ describe("a net test suite #net", function()
     local context = require "context"
     local net = require "net"
     local json = require "dkjson"
-    local tu = require "testutils"
 
     local ctx
 
@@ -20,7 +19,7 @@ describe("a net test suite #net", function()
         it("should return positive account balance", function()
             local addr = "0:7866e5e4edc40639331140807d2a2dc7d4bc53005bb34d71428cdd250c91b404"
             local result = net.query_collection(ctx, "accounts", { id = { eq = addr } }, "balance")
-            local balance = tonumber(tu.lookup(result, "result", 1, "balance") or -1)
+            local balance = tonumber(result[1].balance, 16)
 
             assert.is_true(balance > 0)
         end)
@@ -52,9 +51,8 @@ describe("a net test suite #net", function()
     describe("a net.wait_for_collection", function()
         it("should wait for an incoming message", function()
             local result = net.wait_for_collection(ctx, "messages", {}, "id", 10000)
-            local id = tu.lookup(result, "result", "id")
 
-            assert.is_not_nil(id)
+            assert.is_not_nil(string.match(result.id, "^[0-9a-zA-Z]+$"))
         end)
     end)
 end)

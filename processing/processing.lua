@@ -1,4 +1,3 @@
-local tc = require "tonclua"
 local async_iterator_factory = require "async_iterator_factory"
 local json = require "dkjson"
 

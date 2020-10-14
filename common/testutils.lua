@@ -14,17 +14,6 @@ function tu.timestamp()
     return os.time()
 end
 
-function tu.lookup(t, ...)
-    for _, k in ipairs{...} do
-        t = t[k]
-        if not t then
-            return nil
-        end
-    end
-
-    return t
-end
-
 tu.inspect = inspect
 
 tu.funding_wallet_address = "0:e745f4d86672dccd4c6270bfb23be02481aa65814a40f7edd74d3940f7a891fb"
@@ -98,7 +87,7 @@ function tu:fund_account(ctx, account, value)
                 local data = net.wait_for_collection(
                     ctx, "transactions", { in_msg = { eq = m.id } }, "id", 60000)
 
-                funded = self.lookup(data, "result", "id") ~= nil
+                funded = data.id ~= nil
             end
         end
     end

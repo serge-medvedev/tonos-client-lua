@@ -1,17 +1,20 @@
 local tc = require "tonclua"
-local check_sync_response = require "check_sync_response"
+local json = require "dkjson"
 
 local context = {}
 
 function context.create(config)
     local response_handle = tc.create_context(config)
-    local successful, result = pcall(check_sync_response, response_handle)
+    local result = tc.read_string(response_handle)
+    local decoded = json.decode(result)
 
-    if not successful then
-        error(result)
+    if decoded == nil then
+        error("empty response")
+    elseif decoded.error then
+        error(decoded.error)
     end
 
-    return result
+    return decoded.result
 end
 
 function context.destroy(handle)
