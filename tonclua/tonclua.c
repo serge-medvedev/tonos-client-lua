@@ -159,7 +159,7 @@ int fetch_response_data(lua_State *L) {
         kliter_t(rdata) * p = kl_begin(rd);
 
         while (p == kl_end(rd)) {
-            WAIT_FOR_DATA(); // TODO: use timeout
+            WAIT_FOR_DATA(); // TODO: consider using timeout
 
             p = kl_begin(rd);
         }
@@ -237,7 +237,7 @@ static void on_response(uint32_t request_id, tc_string_data_t params_json, uint3
 
         data.params_json.content = content;
 
-        *kl_pushp(rdata, rd) = data;
+        *kl_pushp(rdata, rd) = data; // TODO: consider limiting its length
 
         UNLOCK();
     }

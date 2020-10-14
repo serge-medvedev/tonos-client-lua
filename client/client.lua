@@ -1,6 +1,6 @@
 local tc = require "tonclua"
 local check_sync_response = require "check_sync_response"
-local json = require "json"
+local json = require "dkjson"
 
 local client = {}
 

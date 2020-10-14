@@ -1,7 +1,7 @@
 local tc = require "tonclua"
 local async_iterator_factory = require "async_iterator_factory"
 local check_sync_response = require "check_sync_response"
-local json = require "json"
+local json = require "dkjson"
 
 local net = {}
 

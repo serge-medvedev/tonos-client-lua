@@ -1,8 +1,8 @@
 describe("a net test suite #net", function()
     local context = require "context"
     local net = require "net"
+    local json = require "dkjson"
     local tu = require "testutils"
-    local json = require "json"
 
     local ctx
 
@@ -42,7 +42,7 @@ describe("a net test suite #net", function()
                 end
 
                 if cb_calls == max_cb_calls then
-                    net.unsubscribe(ctx, subscription_handle)
+                    net.unsubscribe(ctx, subscription_handle) -- without this the loop is infinite
                 end
             end
 

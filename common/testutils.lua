@@ -1,7 +1,7 @@
 local abi = require "abi"
 local net = require "net"
 local processing = require "processing"
-local json = require "json"
+local json = require "dkjson"
 local inspect = require "inspect"
 
 local tu = {}

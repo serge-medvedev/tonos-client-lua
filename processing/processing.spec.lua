@@ -3,7 +3,7 @@ describe("a processing test suite #processing #slow", function()
     local processing = require "processing"
     local client = require "client"
     local crypto = require "crypto"
-    local json = require "json"
+    local json = require "dkjson"
     local tu = require "testutils"
 
     local ctx, encoded

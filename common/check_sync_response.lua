@@ -1,5 +1,5 @@
 local tc = require "tonclua"
-local json = require "json"
+local json = require "dkjson"
 
 return function (response_handle)
     local _, result = tc.read_string(response_handle)

@@ -1,5 +1,5 @@
 local tc = require "tonclua"
-local json = require "json"
+local json = require "dkjson"
 
 local tvm = {}
 
