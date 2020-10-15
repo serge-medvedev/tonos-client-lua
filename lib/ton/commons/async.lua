@@ -16,9 +16,10 @@ function async.iterator_factory(ctx, method, params_json)
         end)
     }
     local iterator_factory = setmetatable({}, meta)
+    local result_path = {}
 
-    function iterator_factory.pick(field)
-        iterator_factory.result = field
+    function iterator_factory.pick(...)
+        result_path = { ... }
 
         return iterator_factory
     end
@@ -32,11 +33,13 @@ function async.iterator_factory(ctx, method, params_json)
                     error(decoded, 2) -- blame the caller
                 end
 
-                if iterator_factory.result then
-                    return decoded[iterator_factory.result]
-                else
-                    return decoded
+                for _, p in ipairs(result_path) do
+                    if (decoded[p] == nil) then return end
+
+                    decoded = decoded[p]
                 end
+
+                return decoded
             end
         end
     end
