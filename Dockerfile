@@ -44,7 +44,8 @@ WORKDIR /usr/src
 COPY . .
 
 RUN luarocks make \
-    && luarocks test -- --pattern='.+%.spec.lua' --run=fast .
+    && luarocks show ton-client \
+    && luarocks test -- --pattern='.+_spec.lua' --run=fast .
 
 ENTRYPOINT /bin/bash
 
