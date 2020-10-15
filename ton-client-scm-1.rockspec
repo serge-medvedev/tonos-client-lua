@@ -23,6 +23,7 @@ build = {
         ["ton.crypto"] = "lib/ton/crypto.lua",
         ["ton.net"] = "lib/ton/net.lua",
         ["ton.processing"] = "lib/ton/processing.lua",
+        ["ton.tvm"] = "lib/ton/tvm.lua",
         ["ton.utils"] = "lib/ton/utils.lua",
 
         ["ton.context"] = "lib/ton/context.lua",
