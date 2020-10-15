@@ -17,7 +17,7 @@ describe("a client test suite #client", function()
 
     describe("a client.version", function()
         it("should return SDK version", function()
-            local result = client.version(ctx)
+            local result = client.version(ctx).await()
 
             assert.equals("1.0.0", result.version)
         end)
@@ -25,7 +25,7 @@ describe("a client test suite #client", function()
 
     describe("a client.get_api_reference", function()
         it("should return the API Reference", function()
-            local result = client.get_api_reference(ctx)
+            local result = client.get_api_reference(ctx).await()
 
             -- print(json.encode(result, { indent = true }))
 

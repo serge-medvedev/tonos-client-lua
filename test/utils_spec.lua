@@ -19,7 +19,7 @@ describe("a utils test suite #utils", function()
             local result = utils.convert_address(
                 ctx,
                 "0:b453e53ae4ae0d8104592c1127298aecb637bb70a0bcd56322cf7731a66ce1d2",
-                { Base64 = { url = false, test = false, bounce = true } })
+                { Base64 = { url = false, test = false, bounce = true } }).await()
 
             assert.equals("EQC0U+U65K4NgQRZLBEnKYrstje7cKC81WMiz3cxpmzh0sJJ", result.address)
         end)

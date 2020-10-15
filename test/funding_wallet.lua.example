@@ -1,0 +1,11 @@
+local funding_wallet = {}
+
+funding_wallet.address = "0:...."
+funding_wallet.keys = {
+    public = "....",
+    secret = "...."
+}
+funding_wallet.abi = '{"ABI version":2,"header":["pubkey","time","expire"],"functions":[{"name":"sendTransaction","inputs":[{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"bounce","type":"bool"},{"name":"flags","type":"uint8"},{"name":"payload","type":"cell"}],"outputs":[]}],"data":[],"events":[]}'
+
+return funding_wallet
+

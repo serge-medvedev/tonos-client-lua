@@ -7,6 +7,12 @@ return {
     },
     slow = {
         tags = "slow"
+    },
+    free = {
+        ["exclude-tags"] = "paid"
+    },
+    paid = {
+        tags = "paid"
     }
 }
 

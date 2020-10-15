@@ -1,7 +1,6 @@
-describe("a processing test suite #processing #slow", function()
+describe("a processing test suite #processing #slow #paid", function()
     local context = require "ton.context"
     local processing = require "ton.processing"
-    local client = require "ton.client"
     local crypto = require "ton.crypto"
     local json = require "dkjson"
     local tt = require "test.tools"
@@ -15,11 +14,11 @@ describe("a processing test suite #processing #slow", function()
     end)
 
     before_each(function()
-        local keys = crypto.generate_random_sign_keys(ctx)
+        local keys = crypto.generate_random_sign_keys(ctx).await()
 
-        encoded = tt:create_encoded_message(ctx, { WithKeys = keys })
+        encoded = tt:create_encoded_message(ctx, { WithKeys = keys }).await()
 
-        tt:fund_account(ctx, encoded.address)
+        tt.fund_account(ctx, encoded.address)
     end)
 
     teardown(function()
@@ -62,7 +61,7 @@ describe("a processing test suite #processing #slow", function()
             local received = false
 
             for request_id, params_json, response_type, finished
-                in processing.wait_for_transaction(ctx, tt.abi, encoded.message, shard_block_id, true) do
+                in processing.wait_for_transaction(ctx, encoded.message, tt.abi, shard_block_id, true) do
 
                 local result = json.decode(params_json)
 
@@ -80,7 +79,7 @@ describe("a processing test suite #processing #slow", function()
             local DidSend, TransactionReceived
 
             for request_id, params_json, response_type, finished
-                in processing.process_message(ctx, { message = encoded.message, abi = tt.abi }, true) do
+                in processing.process_message(ctx, encoded.message, tt.abi, true) do
 
                 local result = json.decode(params_json)
 

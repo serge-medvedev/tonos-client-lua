@@ -18,7 +18,7 @@ describe("a net test suite #net", function()
     describe("a net.query_collection", function()
         it("should return positive account balance", function()
             local addr = "0:7866e5e4edc40639331140807d2a2dc7d4bc53005bb34d71428cdd250c91b404"
-            local result = net.query_collection(ctx, "accounts", { id = { eq = addr } }, "balance")
+            local result = net.query_collection(ctx, "accounts", { id = { eq = addr } }, "balance").await()
             local balance = tonumber(result[1].balance, 16)
 
             assert.is_true(balance > 0)
@@ -39,18 +39,18 @@ describe("a net test suite #net", function()
                 end
 
                 if cb_calls == max_cb_calls then
-                    net.unsubscribe(ctx, subscription_handle) -- without this the loop is infinite
+                    net.unsubscribe(ctx, subscription_handle).await() -- without this the loop is infinite
                 end
             end
 
             assert.is_not_nil(subscription_handle)
-            assert.is_true(cb_calls >= max_cb_calls) -- events might have been queued before subscription was canceled
+            assert.is_true(cb_calls >= max_cb_calls) -- more events could have been queued before subscription was canceled
         end)
     end)
 
     describe("a net.wait_for_collection", function()
         it("should wait for an incoming message", function()
-            local result = net.wait_for_collection(ctx, "messages", {}, "id", 10000)
+            local result = net.wait_for_collection(ctx, "messages", {}, "id", 10000).await()
 
             assert.is_not_nil(string.match(result.id, "^[0-9a-zA-Z]+$"))
         end)

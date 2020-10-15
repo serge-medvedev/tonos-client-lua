@@ -4,35 +4,44 @@ local json = require "dkjson"
 local async = {}
 
 function async.iterator_factory(ctx, method, params_json)
-    return coroutine.wrap(function()
-        local request_id, id = tc.request(ctx, method, params_json)
+    local request_id = tc.request(
+        ctx, method, json.encode(params_json) or "")
+    local meta = {
+        __call = coroutine.wrap(function()
+            local id
 
-        while request_id ~= id do
-            id = tc.fetch_response_data(request_id) -- yields on the C-side, returns request_id when finished
-        end
-    end)
-end
-
-function async.wait(ctx, method, params_json, result_field)
-    params_json = params_json or ""
-
-    for request_id, params_json, response_type, finished
-        in async.iterator_factory(ctx, method, params_json) do
-
-        if finished then
-            local decoded = json.decode(params_json)
-
-            if response_type ~= 0 then
-                error(decoded, 2) -- blame the caller
+            while request_id ~= id do
+                id = tc.fetch_response_data(request_id) -- yields on the C-side, returns request_id when finished
             end
+        end)
+    }
+    local iterator_factory = setmetatable({}, meta)
 
-            if result_field then
-                return decoded[result_field]
-            else
-                return decoded
+    function iterator_factory.pick(field)
+        iterator_factory.result = field
+
+        return iterator_factory
+    end
+
+    function iterator_factory.await()
+        for request_id, params_json, response_type, finished in iterator_factory do
+            if finished then
+                local decoded = json.decode(params_json)
+
+                if response_type == 1 then
+                    error(decoded, 2) -- blame the caller
+                end
+
+                if iterator_factory.result then
+                    return decoded[iterator_factory.result]
+                else
+                    return decoded
+                end
             end
         end
     end
+
+    return iterator_factory
 end
 
 return async

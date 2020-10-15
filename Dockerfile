@@ -14,7 +14,6 @@ RUN cd TON-SDK \
     && cargo update \
     && cargo build --release --manifest-path ton_client/client/Cargo.toml
 
-
 FROM debian:buster
 
 COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib/
@@ -45,7 +44,7 @@ COPY . .
 
 RUN luarocks make \
     && luarocks show ton-client \
-    && luarocks test -- --pattern='.+_spec.lua' --run=fast .
+    && luarocks test -- --pattern='.+_spec.lua' --run=free .
 
 ENTRYPOINT /bin/bash
 
