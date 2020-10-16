@@ -20,8 +20,8 @@ local tt = {
     }
 }
 
-function tt:create_encoded_message(ctx, signer, time, expire)
-    local pubkey = self.keys.public
+function tt.create_encoded_message(ctx, signer, time, expire)
+    local pubkey = tt.keys.public
 
     if signer.WithKeys then
         pubkey = signer.WithKeys.public
@@ -29,45 +29,48 @@ function tt:create_encoded_message(ctx, signer, time, expire)
         pubkey = signer.External
     end
 
-    return abi.encode_message(
-        ctx,
-        { Serialized = json.decode(tt.events.abi) },
-        nil,
-        { tvc = tt.events.tvc },
-        { function_name = "constructor",
-          header = { pubkey = pubkey, time = time, expire = expire } },
-        signer)
-end
+    local encode_message_params = {
+        abi = { Serialized = json.decode(tt.events.abi) },
+        deploy_set = { tvc = tt.events.tvc },
+        call_set = {
+            function_name = "constructor",
+            header = {
+                pubkey = pubkey,
+                time = time,
+                expire = expire
+            }
+        },
+        signer = signer
+    }
 
-function tt.print_callback_args(request_id, params_json, response_type, finished)
-    print(inspect({
-        request_id = request_id,
-        params_json = params_json,
-        response_type = response_type,
-        finished = finished
-    }))
+    return abi.encode_message(ctx, encode_message_params).await()
 end
 
 function tt.fund_account(ctx, account, value)
-    local Abi = { Serialized = json.decode(funding_wallet.abi) }
-    local address = funding_wallet.address
-    local deploy_set = nil
-    local call_set = {
-        function_name = "sendTransaction",
-        input = {
-            dest = account,
-            value = value or 5e8,
-            bounce = false,
-            flags = 0,
-            payload = ""
-        }
+    local encode_message_params = {
+        abi = { Serialized = json.decode(funding_wallet.abi) },
+        address = funding_wallet.address,
+        call_set = {
+            function_name = "sendTransaction",
+            input = {
+                dest = account,
+                value = value or 5e8,
+                bounce = false,
+                flags = 0,
+                payload = ""
+            }
+        },
+        signer = { WithKeys = funding_wallet.keys }
     }
-    local signer = { WithKeys = funding_wallet.keys }
-    local encoded = abi.encode_message(ctx, Abi, address, deploy_set, call_set, signer).await()
+    local encoded = abi.encode_message(ctx, encode_message_params).await()
     local funded = false
+    local process_message_params = {
+        message = { Encoded = { message = encoded.message, abi = Abi } },
+        send_events = false
+    }
 
     for request_id, params_json, response_type, finished
-        in processing.process_message(ctx, encoded.message, Abi, false) do
+        in processing.process_message(ctx, process_message_params) do
 
         local result = json.decode(params_json)
 
@@ -75,8 +78,13 @@ function tt.fund_account(ctx, account, value)
 
         for _, m in pairs(result.out_messages or {}) do
             if m.msg_type_name == "internal" then
-                local data = net.wait_for_collection(
-                    ctx, "transactions", { in_msg = { eq = m.id } }, "id", 60000).await()
+                local wait_for_collection_params = {
+                    collection = "transactions",
+                    filter = { in_msg = { eq = m.id } },
+                    result = "id",
+                    timeout = 60000
+                }
+                local data = net.wait_for_collection(ctx, wait_for_collection_params).await()
 
                 funded = data.id ~= nil
             end
@@ -89,8 +97,13 @@ function tt.fund_account(ctx, account, value)
 end
 
 function tt.fetch_account(ctx, account)
-    local result = net.wait_for_collection(
-        ctx, "accounts", { id = { eq = account } }, "id boc", 60000).await()
+    local wait_for_collection_params = {
+        collection = "accounts",
+        filter = { id = { eq = account } },
+        result = "id boc",
+        timeout = 60000
+    }
+    local result = net.wait_for_collection(ctx, wait_for_collection_params).await()
 
     return result
 end

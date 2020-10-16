@@ -17,7 +17,7 @@ describe("a processing test suite #processing #slow #paid", function()
     before_each(function()
         local keys = crypto.generate_random_sign_keys(ctx).await()
 
-        encoded = tt:create_encoded_message(ctx, { WithKeys = keys }).await()
+        encoded = tt.create_encoded_message(ctx, { WithKeys = keys })
 
         tt.fund_account(ctx, encoded.address)
     end)
@@ -29,9 +29,14 @@ describe("a processing test suite #processing #slow #paid", function()
     describe("a processing.send_message", function()
         it("should send a message and receive a sequence of responses", function()
             local sent, shard_block_id = false
+            local send_message_params = {
+                message = encoded.message,
+                abi = tt.abi,
+                send_events = true
+            }
 
             for request_id, params_json, response_type, finished
-                in processing.send_message(ctx, encoded.message, tt.abi, true) do
+                in processing.send_message(ctx, send_message_params) do
 
                 if shard_block_id == nil and response_type == 0 then
                     shard_block_id = json.decode(params_json).shard_block_id
@@ -41,16 +46,21 @@ describe("a processing test suite #processing #slow #paid", function()
             end
 
             assert.is_true(sent)
-            assert.is_not_nil(string.match(shard_block_id, "^[0-9a-zA-Z]+$"))
+            assert.is_not_nil(string.match(shard_block_id, "^[0-9a-f]+$"))
         end)
     end)
 
     describe("a processing.wait_for_transaction", function()
         it("should receive a transaction confirmation", function()
             local shard_block_id
+            local send_message_params = {
+                message = encoded.message,
+                abi = tt.abi,
+                send_events = true
+            }
 
             for request_id, params_json, response_type, finished
-                in processing.send_message(ctx, encoded.message, tt.abi, true) do
+                in processing.send_message(ctx, send_message_params) do
 
                 if shard_block_id == nil and response_type == 0 then
                     shard_block_id = json.decode(params_json).shard_block_id
@@ -60,9 +70,15 @@ describe("a processing test suite #processing #slow #paid", function()
             end
 
             local received = false
+            local wait_for_transaction_params = {
+                message = encoded.message,
+                abi = tt.abi,
+                shard_block_id = shard_block_id,
+                send_events = true
+            }
 
             for request_id, params_json, response_type, finished
-                in processing.wait_for_transaction(ctx, encoded.message, tt.abi, shard_block_id, true) do
+                in processing.wait_for_transaction(ctx, wait_for_transaction_params) do
 
                 local result = json.decode(params_json)
 
@@ -78,9 +94,13 @@ describe("a processing test suite #processing #slow #paid", function()
     describe("a processing.process_message", function()
         it("should process a message in stages", function()
             local DidSend, TransactionReceived
+            local process_message_params = {
+                message = { Encoded = { message = encoded.message, abi = tt.abi } },
+                send_events = true
+            }
 
             for request_id, params_json, response_type, finished
-                in processing.process_message(ctx, encoded.message, tt.abi, true) do
+                in processing.process_message(ctx, process_message_params) do
 
                 local result = json.decode(params_json)
 

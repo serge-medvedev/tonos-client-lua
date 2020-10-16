@@ -19,7 +19,12 @@ describe("a net test suite #net", function()
     describe("a net.query_collection", function()
         it("should return positive account balance", function()
             local addr = "0:7866e5e4edc40639331140807d2a2dc7d4bc53005bb34d71428cdd250c91b404"
-            local result = net.query_collection(ctx, "accounts", { id = { eq = addr } }, "balance").await()
+            local query_collection_params = {
+                collection = "accounts",
+                filter = { id = { eq = addr } },
+                result = "balance"
+            }
+            local result = net.query_collection(ctx, query_collection_params).await()
             local balance = tonumber(result[1].balance, 16)
 
             assert.is_true(balance > 0)
@@ -29,9 +34,13 @@ describe("a net test suite #net", function()
     describe("a net.subscribe_collection #slow", function()
         it("should receive incoming messages being subscribed", function()
             local cb_calls, max_cb_calls, subscription_handle = 0, 3
+            local subscribe_collection_params = {
+                collection = "messages",
+                result = "id"
+            }
 
             for request_id, params_json, response_type, finished
-                in net.subscribe_collection(ctx, "messages", {}, "id") do
+                in net.subscribe_collection(ctx, subscribe_collection_params) do
 
                 cb_calls = cb_calls + 1
 
@@ -40,7 +49,7 @@ describe("a net test suite #net", function()
                 end
 
                 if cb_calls == max_cb_calls then
-                    net.unsubscribe(ctx, subscription_handle).await() -- without this the loop is infinite
+                    net.unsubscribe(ctx, { handle = subscription_handle }).await() -- without this the loop is infinite
                 end
             end
 
@@ -51,9 +60,14 @@ describe("a net test suite #net", function()
 
     describe("a net.wait_for_collection", function()
         it("should wait for an incoming message", function()
-            local result = net.wait_for_collection(ctx, "messages", {}, "id", 10000).await()
+            local wait_for_collection_params = {
+                collection = "messages",
+                result = "id",
+                timeout = 10000
+            }
+            local result = net.wait_for_collection(ctx, wait_for_collection_params).await()
 
-            assert.is_not_nil(string.match(result.id, "^[0-9a-zA-Z]+$"))
+            assert.is_not_nil(string.match(result.id, "^[0-9a-f]+$"))
         end)
     end)
 end)
