@@ -8,24 +8,15 @@ local events = require "events"
 local subscription = require "subscription"
 local _, funding_wallet = pcall(require, "funding_wallet")
 
-local tt = {}
-
-function tt.sleep(n)
-    os.execute("sleep " .. tonumber(n))
-end
-
-function tt.timestamp()
-    return os.time()
-end
-
-tt.inspect = inspect
-tt.elector = elector
-tt.events = events
-tt.subscription = subscription
-
-tt.keys = {
-    public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
-    secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d"
+local tt = {
+    inspect = inspect,
+    elector = elector,
+    events = events,
+    subscription = subscription,
+    keys = {
+        public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
+        secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d"
+    }
 }
 
 function tt:create_encoded_message(ctx, signer, time, expire)
