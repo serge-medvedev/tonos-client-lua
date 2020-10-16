@@ -1,6 +1,7 @@
-local abi = require "ton.abi"
-local net = require "ton.net"
-local processing = require "ton.processing"
+local lib = require "ton.client"
+local abi = lib.abi
+local net = lib.net
+local processing = lib.processing
 local json = require "dkjson"
 local inspect = require "inspect"
 local elector = require "elector"

@@ -1,6 +1,7 @@
 describe("a client test suite #client", function()
-    local context = require "ton.context"
-    local client= require "ton.client"
+    local lib = require "ton.client"
+    local context = lib.context
+    local client = lib.client
     local json = require "dkjson"
 
     local ctx

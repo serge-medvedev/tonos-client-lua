@@ -1,9 +1,10 @@
 describe("a tvm test suite #tvm", function()
-    local context = require "ton.context"
-    local tvm = require "ton.tvm"
-    local abi = require "ton.abi"
-    local crypto = require "ton.crypto"
-    local processing = require "ton.processing"
+    local lib = require "ton.client"
+    local context = lib.context
+    local tvm = lib.tvm
+    local abi = lib.abi
+    local crypto = lib.crypto
+    local processing = lib.processing
     local json = require "dkjson"
     local tt = require "test.tools"
 

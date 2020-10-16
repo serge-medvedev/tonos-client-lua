@@ -1,6 +1,7 @@
 describe("a crypto test suite #crypto", function()
-    local context = require "ton.context"
-    local crypto = require "ton.crypto"
+    local lib = require "ton.client"
+    local context = lib.context
+    local crypto = lib.crypto
     local tt = require "test.tools"
 
     function count_words(s)

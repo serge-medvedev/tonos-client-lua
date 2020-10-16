@@ -17,19 +17,7 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
-        ["ton.abi"] = "lib/ton/abi.lua",
-        ["ton.boc"] = "lib/ton/boc.lua",
         ["ton.client"] = "lib/ton/client.lua",
-        ["ton.crypto"] = "lib/ton/crypto.lua",
-        ["ton.net"] = "lib/ton/net.lua",
-        ["ton.processing"] = "lib/ton/processing.lua",
-        ["ton.tvm"] = "lib/ton/tvm.lua",
-        ["ton.utils"] = "lib/ton/utils.lua",
-
-        ["ton.context"] = "lib/ton/context.lua",
-
-        ["ton.commons.async"] = "lib/ton/commons/async.lua",
-
         tonclua = {
             sources = { "src/tonclua/tonclua.c" },
             incdirs = { "src/tonclua/include" },
