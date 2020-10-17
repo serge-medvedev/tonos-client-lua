@@ -43,26 +43,35 @@ processing.process_message(context, params).await()
 
 Under the hood it uses coroutines, being initiated and resumed on the Lua-side and yielding on the C-side when new data is received via callback function. When all the events are fetched on the Lua-side, request-related data is automatically and safely dropped on the C-side.
 
+## Building
+
+The simplest way to be able to run the tests and play with the library is to have Docker installed.
+
+When ready, build the image:
+```shell
+$ docker build -t ton-client-lua .
+```
+
 ## Testing
 
-There are four groups of tests:
+There are four categories of tests:
 - fast & slow
 - free & paid
 
-All __fast__ tests are __free__ and all __paid__ tests are __slow__.
+And it's also good to know that:
+- all __fast__ tests are __free__ and all __paid__ tests are __slow__
+- all __free__ tests are being run automatically as a Docker image build step
+- some tests depend on either DevNet or MainNet accessibility
 
-By __paid__ tests I mean those which require account funding, e.g. for successful contract deployment.
-To run those, you have to:
+The __paid__ tests are those which require account funding, e.g. for successful contract deployment. To run them, you need to:
 - have a wallet on the [DevNet](https://net.ton.dev) with some tokens in it
 - create a file called _funding_wallet.lua_ under the _test_ directory based on [funding_wallet.lua.example](test/funding_wallet.lua.example)
 
-Then you can run __paid__ tests like this:
+When ready, do the following:
 ```shell
-$ luarocks test -- --pattern='.+_spec.lua' --run=paid .
+$ docker run --rm ton-client-lua busted --run=paid
 ```
 
-All the __free__ tests are run automatically as a Docker image build step.
-
-TODO
+### TODO
 
 - negative tests (to check error messages?)
