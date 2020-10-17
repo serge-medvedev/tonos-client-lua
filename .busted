@@ -1,6 +1,6 @@
 return {
     _all = {
-        lpath = "./test/?.lua"
+        lpath = "./spec/?.lua"
     },
     fast = {
         ["exclude-tags"] = "slow"

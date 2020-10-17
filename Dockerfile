@@ -18,6 +18,7 @@ FROM debian:buster
 
 COPY --from=sdk /usr/src/TON-SDK/target/release/libton_client.so /usr/lib/
 COPY --from=sdk /usr/src/TON-SDK/ton_client/client/tonclient.h /usr/include/
+COPY --from=sdk /usr/src/TON-SDK/tools/api.json /tmp/
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
@@ -36,15 +37,16 @@ RUN wget https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && ./configure && make && make install \
     && rm -fr luarocks-${LUAROCKS_VERSION}
 
-RUN luarocks install busted
+RUN luarocks install dkjson \
+    && luarocks install lustache
 
 WORKDIR /usr/src
 
 COPY . .
 
+RUN tools/codegen.lua /tmp/api.json
+
 RUN luarocks make \
     && luarocks show ton-client \
-    && luarocks test -- --pattern='.+_spec.lua' --run=free .
-
-ENTRYPOINT /bin/bash
+    && luarocks test
 

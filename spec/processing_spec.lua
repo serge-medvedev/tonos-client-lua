@@ -4,7 +4,7 @@ describe("a processing test suite #processing #slow #paid", function()
     local processing = lib.processing
     local crypto = lib.crypto
     local json = require "dkjson"
-    local tt = require "test.tools"
+    local tt = require "spec.tools"
 
     local ctx, encoded
 
@@ -17,7 +17,7 @@ describe("a processing test suite #processing #slow #paid", function()
     before_each(function()
         local keys = crypto.generate_random_sign_keys(ctx).await()
 
-        encoded = tt.create_encoded_message(ctx, { WithKeys = keys })
+        encoded = tt.create_encoded_message(ctx, { type = "Keys", keys = keys })
 
         tt.fund_account(ctx, encoded.address)
     end)

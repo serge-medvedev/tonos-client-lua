@@ -24,7 +24,7 @@ describe("a net test suite #net", function()
                 filter = { id = { eq = addr } },
                 result = "balance"
             }
-            local result = net.query_collection(ctx, query_collection_params).await()
+            local result = net.query_collection(ctx, query_collection_params).await().result
             local balance = tonumber(result[1].balance, 16)
 
             assert.is_true(balance > 0)
@@ -65,7 +65,7 @@ describe("a net test suite #net", function()
                 result = "id",
                 timeout = 10000
             }
-            local result = net.wait_for_collection(ctx, wait_for_collection_params).await()
+            local result = net.wait_for_collection(ctx, wait_for_collection_params).await().result
 
             assert.is_not_nil(string.match(result.id, "^[0-9a-f]+$"))
         end)

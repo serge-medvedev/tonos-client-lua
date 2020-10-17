@@ -23,14 +23,14 @@ local tt = {
 function tt.create_encoded_message(ctx, signer, time, expire)
     local pubkey = tt.keys.public
 
-    if signer.WithKeys then
-        pubkey = signer.WithKeys.public
-    elseif signer.External then
-        pubkey = signer.External
+    if signer.type == "Keys" then
+        pubkey = signer.keys.public
+    elseif signer.type == "External" then
+        pubkey = signer.public_key
     end
 
     local encode_message_params = {
-        abi = { Serialized = json.decode(tt.events.abi) },
+        abi = { type = "Serialized", value = json.decode(tt.events.abi) },
         deploy_set = { tvc = tt.events.tvc },
         call_set = {
             function_name = "constructor",
@@ -48,7 +48,7 @@ end
 
 function tt.fund_account(ctx, account, value)
     local encode_message_params = {
-        abi = { Serialized = json.decode(funding_wallet.abi) },
+        abi = { type = "Serialized", value = json.decode(funding_wallet.abi) },
         address = funding_wallet.address,
         call_set = {
             function_name = "sendTransaction",
@@ -60,7 +60,7 @@ function tt.fund_account(ctx, account, value)
                 payload = ""
             }
         },
-        signer = { WithKeys = funding_wallet.keys }
+        signer = { type = "Keys", keys = funding_wallet.keys }
     }
     local encoded = abi.encode_message(ctx, encode_message_params).await()
     local funded = false
@@ -84,7 +84,7 @@ function tt.fund_account(ctx, account, value)
                     result = "id",
                     timeout = 60000
                 }
-                local data = net.wait_for_collection(ctx, wait_for_collection_params).await()
+                local data = net.wait_for_collection(ctx, wait_for_collection_params).await().result
 
                 funded = data.id ~= nil
             end
@@ -103,7 +103,7 @@ function tt.fetch_account(ctx, account)
         result = "id boc",
         timeout = 60000
     }
-    local result = net.wait_for_collection(ctx, wait_for_collection_params).await()
+    local result = net.wait_for_collection(ctx, wait_for_collection_params).await().result
 
     return result
 end

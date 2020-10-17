@@ -4,7 +4,7 @@ describe("an abi test suite #abi", function()
     local abi= lib.abi
     local crypto = lib.crypto
     local json = require "dkjson"
-    local tt = require "test.tools"
+    local tt = require "spec.tools"
 
     local ctx
 
@@ -20,9 +20,9 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.decode_message", function()
         it("should return decoded data", function()
-            local encoded = tt.create_encoded_message(ctx, { WithKeys = tt.keys })
+            local encoded = tt.create_encoded_message(ctx, { type = "Keys", keys = tt.keys })
             local result = abi.decode_message(ctx, {
-                abi = { Serialized = json.decode(tt.events.abi) },
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
                 message = encoded.message
             }).await()
 
@@ -32,14 +32,15 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.attach_signature", function()
         it("should return a signed message", function()
-            local encoded = tt.create_encoded_message(ctx, { External = tt.keys.public }, 1599458364291, 1599458404)
+            local encoded = tt.create_encoded_message(
+                ctx, { type = "External", public_key = tt.keys.public }, 1599458364291, 1599458404)
             local nacl_sign_detached_params = {
                 unsigned = encoded.message,
                 secret = tt.keys.public .. tt.keys.secret
             }
             local signature = crypto.nacl_sign_detached(ctx, nacl_sign_detached_params).await().signature
             local result = abi.attach_signature(ctx, {
-                abi = { Serialized = json.decode(tt.events.abi) },
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
                 public_key = tt.keys.public,
                 message = encoded.message,
                 signature = signature
@@ -52,18 +53,23 @@ describe("an abi test suite #abi", function()
     describe("an abi.encode_message", function()
         it("should return a BOC", function()
             local encode_message_params = {
-                abi = { Serialized = json.decode(tt.events.abi) },
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
                 deploy_set = { tvc = tt.events.tvc },
                 call_set = {
                     function_name = "constructor",
                     header = { pubkey = tt.keys.public }
                 },
-                signer = { WithKeys = tt.keys }
+                signer = { type = "Keys", keys = tt.keys }
             }
             local result = abi.encode_message(ctx, encode_message_params).await()
 
             assert.is_not_nil(result.address)
             assert.is_not_nil(result.message)
+        end)
+    end)
+
+    pending("an abi.encode_message_body", function()
+        it("should return a BOC", function()
         end)
     end)
 

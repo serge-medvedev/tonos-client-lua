@@ -14,10 +14,17 @@ dependencies = {
     "lua >= 5.1",
     "dkjson >= 2.5"
 }
+build_dependencies = {
+    "busted"
+}
+test = {
+    type = "busted",
+    flags = { "--run", "free" }
+}
 build = {
     type = "builtin",
     modules = {
-        ["ton.client"] = "lib/ton/client.lua",
+        ["ton.client"] = "build/generated/client.lua",
         tonclua = {
             sources = { "src/tonclua/tonclua.c" },
             incdirs = { "src/tonclua/include" },

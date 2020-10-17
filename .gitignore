@@ -1,2 +1,5 @@
 *.log
-test/funding_wallet.lua
+spec/funding_wallet.lua
+
+build/
+
