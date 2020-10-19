@@ -19,7 +19,7 @@ describe("a utils test suite #utils", function()
         it("should convert the address to the format specified", function()
             local convert_address_params = {
                 address = "0:b453e53ae4ae0d8104592c1127298aecb637bb70a0bcd56322cf7731a66ce1d2",
-                output_format = { Base64 = { url = false, test = false, bounce = true } }
+                output_format = { type = "Base64", url = false, test = false, bounce = true }
             }
             local result = utils.convert_address(ctx, convert_address_params).await()
 

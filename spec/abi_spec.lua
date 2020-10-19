@@ -76,7 +76,7 @@ describe("an abi test suite #abi", function()
     describe("an abi.encode_account", function()
         it("should return encoded account data", function()
             local elector_encoded = abi.encode_account(ctx, {
-                state_init = { StateInit = { code = tt.elector.code, data = tt.elector.data } }
+                state_init = { type = "StateInit", code = tt.elector.code, data = tt.elector.data }
             }).await()
 
             assert.equals("1089829edf8ad38e474ce9e93123b3281e52c3faff0214293cbb5981ee7b3092", elector_encoded.id)

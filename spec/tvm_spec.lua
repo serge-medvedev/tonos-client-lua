@@ -15,7 +15,7 @@ describe("a tvm test suite #tvm", function()
 
         ctx = context.create(config)
         elector_encoded = abi.encode_account(ctx, {
-            state_init = { StateInit = { code = tt.elector.code, data = tt.elector.data } }
+            state_init = { type = "StateInit", code = tt.elector.code, data = tt.elector.data }
         }).await()
     end)
 
@@ -41,7 +41,7 @@ describe("a tvm test suite #tvm", function()
             tt.fund_account(ctx, encoded.address)
 
             local process_message_params = {
-                message = { Encoded = { message = encoded.message } },
+                message = { type = "Encoded", message = encoded.message },
                 send_events = false
             }
 
@@ -49,12 +49,11 @@ describe("a tvm test suite #tvm", function()
 
             local execute_message_params = {
                 message = {
-                    EncodingParams = {
-                        address = encoded.address,
-                        abi = { type = "Serialized", value = json.decode(tt.subscription.abi) },
-                        call_set = { function_name = "getWallet" },
-                        signer = { type = "Keys", keys = keys }
-                    }
+                    type = "EncodingParams",
+                    address = encoded.address,
+                    abi = { type = "Serialized", value = json.decode(tt.subscription.abi) },
+                    call_set = { function_name = "getWallet" },
+                    signer = { type = "Keys", keys = keys }
                 },
                 account = tt.fetch_account(ctx, encoded.address).boc,
                 mode = "TvmOnly"

@@ -62,8 +62,14 @@ describe("a processing test suite #processing #slow #paid", function()
             for request_id, params_json, response_type, finished
                 in processing.send_message(ctx, send_message_params) do
 
+                local result = json.decode(params_json)
+
+                if response_type == 1 then
+                    error(params_decoded)
+                end
+
                 if shard_block_id == nil and response_type == 0 then
-                    shard_block_id = json.decode(params_json).shard_block_id
+                    shard_block_id = result.shard_block_id
 
                     break
                 end
@@ -82,8 +88,12 @@ describe("a processing test suite #processing #slow #paid", function()
 
                 local result = json.decode(params_json)
 
+                if response_type == 1 then
+                    error(params_decoded)
+                end
+
                 if result and not received then
-                    received = result.TransactionReceived ~= nil
+                    received = (result.type == "TransactionReceived")
                 end
             end
 
@@ -95,7 +105,7 @@ describe("a processing test suite #processing #slow #paid", function()
         it("should process a message in stages", function()
             local DidSend, TransactionReceived
             local process_message_params = {
-                message = { Encoded = { message = encoded.message, abi = tt.abi } },
+                message = { type = "Encoded", message = encoded.message, abi = tt.abi },
                 send_events = true
             }
 
@@ -104,12 +114,16 @@ describe("a processing test suite #processing #slow #paid", function()
 
                 local result = json.decode(params_json)
 
+                if response_type == 1 then
+                    error(result)
+                end
+
                 if result and not DidSend then
-                    DidSend = result.DidSend ~= nil
+                    DidSend = (result.type == "DidSend")
                 end
 
                 if result and not TransactionReceived then
-                    TransactionReceived = result.TransactionReceived ~= nil
+                    TransactionReceived = (result.type == "TransactionReceived")
                 end
             end
 

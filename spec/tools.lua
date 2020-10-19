@@ -65,7 +65,7 @@ function tt.fund_account(ctx, account, value)
     local encoded = abi.encode_message(ctx, encode_message_params).await()
     local funded = false
     local process_message_params = {
-        message = { Encoded = { message = encoded.message, abi = Abi } },
+        message = { type = "Encoded", message = encoded.message, abi = Abi },
         send_events = false
     }
 
@@ -73,6 +73,10 @@ function tt.fund_account(ctx, account, value)
         in processing.process_message(ctx, process_message_params) do
 
         local result = json.decode(params_json)
+
+        if response_type == 1 then
+            error(result)
+        end
 
         if not result then result = {} end
 
