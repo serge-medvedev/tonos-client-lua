@@ -31,7 +31,6 @@ describe("a processing test suite #processing #slow #paid", function()
             local sent, shard_block_id = false
             local send_message_params = {
                 message = encoded.message,
-                abi = tt.abi,
                 send_events = true
             }
 
@@ -55,7 +54,6 @@ describe("a processing test suite #processing #slow #paid", function()
             local shard_block_id
             local send_message_params = {
                 message = encoded.message,
-                abi = tt.abi,
                 send_events = true
             }
 
@@ -78,7 +76,6 @@ describe("a processing test suite #processing #slow #paid", function()
             local received = false
             local wait_for_transaction_params = {
                 message = encoded.message,
-                abi = tt.abi,
                 shard_block_id = shard_block_id,
                 send_events = true
             }
@@ -105,7 +102,11 @@ describe("a processing test suite #processing #slow #paid", function()
         it("should process a message in stages", function()
             local DidSend, TransactionReceived
             local process_message_params = {
-                message = { type = "Encoded", message = encoded.message, abi = tt.abi },
+                message = {
+                    type = "Encoded",
+                    message = encoded.message,
+                    abi = { type = "Serialized", value = json.decode(tt.events.abi) }
+                },
                 send_events = true
             }
 
