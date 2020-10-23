@@ -1,5 +1,6 @@
 local lib = require "ton.client"
 local abi = lib.abi
+local boc = lib.boc
 local net = lib.net
 local processing = lib.processing
 local json = require "dkjson"
@@ -80,7 +81,9 @@ function tt.fund_account(ctx, account, value)
 
         if not result then result = {} end
 
-        for _, m in pairs(result.out_messages or {}) do
+        for _, out_message in pairs(result.out_messages or {}) do
+            local m = boc.parse_message(ctx, { boc = out_message }).await().parsed
+
             if m.msg_type_name == "internal" then
                 local wait_for_collection_params = {
                     collection = "transactions",
