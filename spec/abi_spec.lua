@@ -68,11 +68,6 @@ describe("an abi test suite #abi", function()
         end)
     end)
 
-    pending("an abi.encode_message_body", function()
-        it("should return a BOC", function()
-        end)
-    end)
-
     describe("an abi.encode_account", function()
         it("should return encoded account data", function()
             local elector_encoded = abi.encode_account(ctx, {
@@ -80,6 +75,37 @@ describe("an abi test suite #abi", function()
             }).await()
 
             assert.equals("1089829edf8ad38e474ce9e93123b3281e52c3faff0214293cbb5981ee7b3092", elector_encoded.id)
+        end)
+    end)
+
+    pending("an abi.encode_message_body", function()
+        it("should return a BOC", function()
+        end)
+    end)
+
+    pending("an abi.attach_signature_to_message_body", function()
+    end)
+
+    describe("an abi.decode_message_body", function()
+        it("should ...", function()
+            local expected = {
+                body_type = "Input",
+                header = {
+                    expire = 1599458404,
+                    time = 1599458364291,
+                    pubkey = "4c7c408ff1ddebb8d6405ee979c716a14fdd6cc08124107a61d3c25597099499"
+                },
+                name = "returnValue",
+                value = { id = "0x0" }
+            }
+            local decode_message_body_params = {
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                body = "te6ccgEBAgEAlgAB4a3f2/jCeWWvgMoAXOakv3VSD56sQrDPT76n1cbrSvpZ0BCs0KEUy2Duvo3zPExePONW3TYy0MCA1i+FFRXcSIXTHxAj/Hd67jWQF7peccWoU/dbMCBJBB6YdPCVZcJlJkAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                is_internal = false
+            }
+            local result = abi.decode_message_body(ctx, decode_message_body_params).await()
+
+            assert.same(expected, result)
         end)
     end)
 end)
