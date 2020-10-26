@@ -48,25 +48,23 @@ function tt.create_encoded_message(ctx, signer, time, expire)
 end
 
 function tt.fund_account(ctx, account, value)
-    local encode_message_params = {
-        abi = { type = "Serialized", value = json.decode(funding_wallet.abi) },
-        address = funding_wallet.address,
-        call_set = {
-            function_name = "sendTransaction",
-            input = {
-                dest = account,
-                value = value or 5e8,
-                bounce = false,
-                flags = 0,
-                payload = ""
-            }
-        },
-        signer = { type = "Keys", keys = funding_wallet.keys }
-    }
-    local encoded = abi.encode_message(ctx, encode_message_params).await()
     local funded = false
     local process_message_params = {
-        message = { type = "Encoded", message = encoded.message, abi = Abi },
+        message_encode_params = {
+            abi = { type = "Serialized", value = json.decode(funding_wallet.abi) },
+            address = funding_wallet.address,
+            call_set = {
+                function_name = "sendTransaction",
+                input = {
+                    dest = account,
+                    value = value or 5e8,
+                    bounce = false,
+                    flags = 0,
+                    payload = ""
+                }
+            },
+            signer = { type = "Keys", keys = funding_wallet.keys }
+        },
         send_events = false
     }
 
