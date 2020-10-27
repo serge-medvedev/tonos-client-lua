@@ -3,7 +3,7 @@ package = "ton-client"
 version = "scm-1"
 source = {
     url = "git://github.com:serge-medvedev/ton-client-lua.git",
-    tag = "1.0.0-rc"
+    tag = "1.0.0"
 }
 description = {
     summary = "Lua bindings to TON SDK's Core Client Library",

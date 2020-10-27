@@ -68,7 +68,10 @@ describe("a tvm test suite #tvm", function()
             local run_executor_params = {
                 message = encoded.message,
                 abi = subscription_abi,
-                account = account
+                account = {
+                    type = "Account",
+                    boc = account
+                }
             }
             local result = tvm.run_executor(ctx, run_executor_params).await()
 
@@ -118,7 +121,7 @@ describe("a tvm test suite #tvm", function()
             }
             local result = tvm.run_get(ctx, run_get_params).await().output
 
-            assert.equal(0, tonumber(result[1], 16))
+            assert.equal(0, tonumber(result[1]))
         end)
 
         it("should get past elections info from the Elector", function()
@@ -128,7 +131,7 @@ describe("a tvm test suite #tvm", function()
             }
             local result = tvm.run_get(ctx, run_get_params).await().output
 
-            assert.equals(0x5eab0e74, tonumber(result[1][1][1], 16))
+            assert.equals(1588268660, tonumber(result[1][1][1]))
         end)
     end)
 end)

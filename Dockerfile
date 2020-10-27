@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /usr/src
 
-ENV TON_SDK_BRANCH=1.0.0-rc
+ENV TON_SDK_BRANCH=1.0.0
 
 RUN git clone -b $TON_SDK_BRANCH https://github.com/tonlabs/TON-SDK.git
 
@@ -44,7 +44,7 @@ WORKDIR /usr/src
 
 COPY . .
 
-ADD https://raw.githubusercontent.com/tonlabs/TON-SDK/1.0.0-rc/tools/api.json /tmp/api.json
+ADD https://raw.githubusercontent.com/tonlabs/TON-SDK/1.0.0/tools/api.json /tmp/api.json
 
 RUN tools/codegen.lua /tmp/api.json
 

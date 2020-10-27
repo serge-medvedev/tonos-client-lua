@@ -96,7 +96,7 @@ describe("an abi test suite #abi", function()
                     pubkey = "4c7c408ff1ddebb8d6405ee979c716a14fdd6cc08124107a61d3c25597099499"
                 },
                 name = "returnValue",
-                value = { id = "0x0" }
+                value = { id = "0x0000000000000000000000000000000000000000000000000000000000000000" }
             }
             local decode_message_body_params = {
                 abi = { type = "Serialized", value = json.decode(tt.events.abi) },
