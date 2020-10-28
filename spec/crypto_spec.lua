@@ -270,12 +270,13 @@ describe("a crypto test suite #crypto", function()
             assert.same({ "3", "4" }, result.factors)
         end)
 
-        it("should error if a number cannot be factorized", function()
+        it("should return an error if a number cannot be factorized", function()
             local params = {
                 composite = string.format("%016x", 13)
             }
-            local _, err = pcall(crypto.factorize(ctx, params).await)
+            local err = crypto.factorize(ctx, params).await()
 
+            assert.truthy(string.match(err.message, "^Invalid factorize challenge.*"))
             assert.equals(106, err.code)
         end)
     end)

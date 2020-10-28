@@ -69,13 +69,7 @@ local function async_iterator_factory(ctx, method, params_json)
     function iterator_factory.await()
         for request_id, params_json, response_type, finished in iterator_factory do
             if finished then
-                local decoded = json.decode(params_json)
-
-                if response_type == 1 then
-                    error(decoded, 2) -- blame caller
-                end
-
-                return decoded
+                return json.decode(params_json)
             end
         end
     end
