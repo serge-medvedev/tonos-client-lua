@@ -50,7 +50,7 @@ end
 api.modules[#api.modules].last = true
 
 local template = [[
-local tc = require "tonclua"
+local tc = require "tonosclua"
 local json = require "dkjson"
 
 local function async_iterator_factory(ctx, method, params_json)

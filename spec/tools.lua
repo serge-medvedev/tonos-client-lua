@@ -1,4 +1,4 @@
-local lib = require "ton.client"
+local lib = require "tonos.client"
 local abi = lib.abi
 local boc = lib.boc
 local net = lib.net

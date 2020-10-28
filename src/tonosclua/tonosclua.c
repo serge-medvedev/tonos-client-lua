@@ -176,7 +176,7 @@ static const struct luaL_Reg functions [] = {
     { NULL, NULL }
 };
 
-int luaopen_tonclua(lua_State *L) {
+int luaopen_tonosclua(lua_State *L) {
     mtx_init(&guard, mtx_plain);
     cnd_init(&cbcv);
 

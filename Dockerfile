@@ -49,6 +49,6 @@ ADD https://raw.githubusercontent.com/tonlabs/TON-SDK/1.0.0/tools/api.json /tmp/
 RUN tools/codegen.lua /tmp/api.json
 
 RUN luarocks make \
-    && luarocks show ton-client \
+    && luarocks show tonos-client \
     && luarocks test
 

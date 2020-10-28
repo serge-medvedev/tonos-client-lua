@@ -1,14 +1,14 @@
 rockspec_format = "3.0"
-package = "ton-client"
+package = "tonos-client"
 version = "scm-1"
 source = {
-    url = "git://github.com:serge-medvedev/ton-client-lua.git",
+    url = "git://github.com:serge-medvedev/tonos-client-lua.git",
     tag = "1.0.0"
 }
 description = {
-    summary = "Lua bindings to TON SDK's Core Client Library",
+    summary = "Lua bindings to TON OS SDK's Core Client Library",
     license = "MIT",
-    labels = { "ton", "freeton" }
+    labels = { "ton", "tonos" }
 }
 dependencies = {
     "lua >= 5.1",
@@ -24,10 +24,10 @@ test = {
 build = {
     type = "builtin",
     modules = {
-        ["ton.client"] = "build/generated/client.lua",
-        tonclua = {
-            sources = { "src/tonclua/tonclua.c" },
-            incdirs = { "src/tonclua/include" },
+        ["tonos.client"] = "build/generated/client.lua",
+        tonosclua = {
+            sources = { "src/tonosclua/tonosclua.c" },
+            incdirs = { "src/tonosclua/include" },
             libraries = { "ton_client" }
         }
     }

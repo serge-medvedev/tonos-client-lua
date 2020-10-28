@@ -1,5 +1,5 @@
 describe("a crypto test suite #crypto", function()
-    local lib = require "ton.client"
+    local lib = require "tonos.client"
     local context = lib.context
     local crypto = lib.crypto
     local tt = require "spec.tools"

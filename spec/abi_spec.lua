@@ -1,5 +1,5 @@
 describe("an abi test suite #abi", function()
-    local lib = require "ton.client"
+    local lib = require "tonos.client"
     local context = lib.context
     local abi= lib.abi
     local crypto = lib.crypto

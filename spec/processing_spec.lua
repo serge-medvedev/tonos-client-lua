@@ -1,5 +1,5 @@
 describe("a processing test suite #processing #slow #paid", function()
-    local lib = require "ton.client"
+    local lib = require "tonos.client"
     local abi = lib.abi
     local context = lib.context
     local processing = lib.processing
