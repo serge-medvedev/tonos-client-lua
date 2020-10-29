@@ -78,29 +78,82 @@ describe("an abi test suite #abi", function()
         end)
     end)
 
-    pending("an abi.encode_message_body", function()
+    describe("an abi.encode_message_body", function()
         it("should return a BOC", function()
+            local encode_message_body_params = {
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                call_set = {
+                    function_name = "returnValue",
+                    header = {
+                        expire = 1599458404,
+                        time = 1599458364291,
+                        pubkey = tt.keys.public
+                    },
+                    input = { id = 0 }
+                },
+                is_internal = false,
+                signer = { type = "Keys", keys = tt.keys }
+            }
+            local result = abi.encode_message_body(ctx, encode_message_body_params).await()
+            local expected = {
+                body = "te6ccgEBAgEAlgAB4eb6eSBDZAg2YZ4IJ5P+cReLJ2jL1KmQPkzEKKsLLaZRiYUzUBzHX7IgJ0ZqQUGt44+ckKJ1BLDWadBa7O7OQALE0xnkQqgvUQQ4LYjedUXrxPfmboEdkvKBuC6hsc2uAoAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+            }
+
+            assert.same(expected, result)
         end)
     end)
 
-    pending("an abi.attach_signature_to_message_body", function()
+    describe("an abi.attach_signature_to_message_body", function()
+        it("should return a signed message body", function()
+            local encode_message_body_params = {
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                call_set = {
+                    function_name = "returnValue",
+                    header = {
+                        expire = 1599458404,
+                        time = 1599458364291,
+                        pubkey = tt.keys.public
+                    },
+                    input = { id = 0 }
+                },
+                is_internal = false,
+                signer = { type = "External", public_key = tt.keys.public }
+            }
+            local encoded_message_body = abi.encode_message_body(ctx, encode_message_body_params).await().body
+            local nacl_sign_detached_params = {
+                unsigned = encoded_message_body,
+                secret = tt.keys.public .. tt.keys.secret
+            }
+            local signature = crypto.nacl_sign_detached(ctx, nacl_sign_detached_params).await().signature
+            local result = abi.attach_signature_to_message_body(ctx, {
+                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                public_key = tt.keys.public,
+                message = encoded_message_body,
+                signature = signature
+            }).await()
+            local expected = {
+                body = "te6ccgEBAgEAlgAB4ZGDFDDL34KaQtWVQdw9VbXqyPsDmTL38vYPeWLGHxI8T55BvJL5GbVUF8wt7CI1LZWcTBRvkATb3PHDYD/J1QBE0xnkQqgvUQQ4LYjedUXrxPfmboEdkvKBuC6hsc2uAoAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+            }
+
+            assert.same(expected, result)
+        end)
     end)
 
     describe("an abi.decode_message_body", function()
-        it("should ...", function()
+        it("should return a message body decoded", function()
             local expected = {
                 body_type = "Input",
                 header = {
                     expire = 1599458404,
                     time = 1599458364291,
-                    pubkey = "4c7c408ff1ddebb8d6405ee979c716a14fdd6cc08124107a61d3c25597099499"
+                    pubkey = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a"
                 },
                 name = "returnValue",
                 value = { id = "0x0000000000000000000000000000000000000000000000000000000000000000" }
             }
             local decode_message_body_params = {
                 abi = { type = "Serialized", value = json.decode(tt.events.abi) },
-                body = "te6ccgEBAgEAlgAB4a3f2/jCeWWvgMoAXOakv3VSD56sQrDPT76n1cbrSvpZ0BCs0KEUy2Duvo3zPExePONW3TYy0MCA1i+FFRXcSIXTHxAj/Hd67jWQF7peccWoU/dbMCBJBB6YdPCVZcJlJkAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                body = "te6ccgEBAgEAlgAB4eb6eSBDZAg2YZ4IJ5P+cReLJ2jL1KmQPkzEKKsLLaZRiYUzUBzHX7IgJ0ZqQUGt44+ckKJ1BLDWadBa7O7OQALE0xnkQqgvUQQ4LYjedUXrxPfmboEdkvKBuC6hsc2uAoAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
                 is_internal = false
             }
             local result = abi.decode_message_body(ctx, decode_message_body_params).await()
