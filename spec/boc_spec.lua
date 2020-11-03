@@ -2,7 +2,6 @@ describe("a boc test suite #boc", function()
     local lib = require "tonos.client"
     local context = lib.context
     local boc = lib.boc
-    local json = require "dkjson"
 
     local ctx
 
@@ -67,7 +66,7 @@ describe("a boc test suite #boc", function()
             }
             local result = boc.get_blockchain_config(ctx, get_blockchain_config_params).await()
 
-            assert.is_not_nil(result.config_boc) -- TODO: find a way to parse it
+            assert.is_not_nil(result.config_boc)
         end)
     end)
 end)

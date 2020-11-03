@@ -218,8 +218,8 @@ describe("a crypto test suite #crypto", function()
             }
             local result = crypto.sha256(ctx, params).await()
 
-            assert(
-                "5e57221322b9d97b82899341744189761563a2115f31d39d7293ffcf01ad17a8",
+            assert.equals(
+                "da13ae74bb2a3e817715e1f80a8d43047b5d714aa5701ef6a386bacd7e10e664",
                 result.hash)
         end)
     end)
@@ -390,8 +390,8 @@ describe("a crypto test suite #crypto", function()
             }
             local result = crypto.sha512(ctx, params).await()
 
-            assert(
-                "ba0733ab208673e82f52805520e0ca48a6df1ebb75e2360ed02f73df1a069d991aa5006a6e585a75e08ad7e8c8616d281725b9e7a1b9801e3172ccbe20058721",
+            assert.equals(
+                "0a9814b1d5a0c2bfd8b6cd13b8acff110fd1779d2c8b768c847e3bc7fc93209e6e98b12b53174bb0d7688a4ebba600001883ed5951fa1d49e52483eb15f94c2f",
                 result.hash)
         end)
     end)
@@ -408,7 +408,7 @@ describe("a crypto test suite #crypto", function()
             }
             local result = crypto.scrypt(ctx, params).await()
 
-            assert("f507b99bc4e620cb", result.key)
+            assert.equals("bad59a9c2a82ad59", result.key)
         end)
     end)
 
