@@ -1,3 +1,5 @@
+![LuaRocks](https://img.shields.io/luarocks/v/serge-medvedev/tonos-client)
+
 # Lua bindings to TON SDK's Core Client Library
 
 ## Why Lua?
@@ -10,13 +12,38 @@
 
 These are opportunities for a great many possible use cases.
 
+## Usage
+### Prerequisites
+- lua 5.1
+- luarocks 3
+- _libton_client.so_ and _tonclient.h_ are accessible somewhere at well-known locations
+  ```shell
+  $ wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_0_0_linux.gz -O tonclient.gz \
+    && gunzip tonclient.gz \
+    && mv tonclient /usr/lib/libton_client.so \
+    && wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.0.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h
+  ```
+### Example
+```shell
+$ luarocks install tonos-client
+```
+```lua
+local lib = require("tonos.client")
+local context = lib.context
+local client = lib.client
+local config = '{"network":{"server_address":"https://net.ton.dev"}}'
+local ctx = context.create(config)
+local result = client.version(ctx).await()
+
+print(result.version)
+```
+
 ## Features
 
 The bindings code itself is auto-generated, so the main focus is made on uniformity and consistency of user experience.
-To avoid callback hell, implementation abstracts away asynchronous machinery by utilizing a few low-level tricks behind generator-like constructs and Lua's generic __for__ loop.
+To avoid callback hell, the implementation abstracts away asynchronous machinery by utilizing a few low-level tricks behind generator-like constructs and Lua's generic __for__ loop.
 
----
-For example, when we need to monitor all the events (callback calls) initiated by `processing.process_message`, we write the following code:
+For example, when we need to monitor all the events initiated by `processing.process_message`, we write the following code:
 
 ```lua
 for request_id, params_json, response_type, finished
@@ -43,17 +70,16 @@ processing.process_message(context, params).await()
 ```
 A call like that will return whatever the final event's data is (error objects included).
 > NOTE: there's a negative test for `crypto.factorize` which provides an example of dealing with error objects
----
 
 Under the hood there are coroutines, being initiated and resumed on the Lua-side and yielding on the C-side when new data, received via callback function, appears in the queue. When all the events are fetched on the Lua-side, request-related resources are automatically and safely freed on the C-side.
 
 ## Building
 
-The simplest way to be able to run the tests and play with the library is to have Docker installed.
+The simplest way to build the library and run the tests is by having Docker installed.
 
 When ready, build the image:
 ```shell
-$ docker build -t ton-client-lua .
+$ docker build -t tonos-client-lua .
 ```
 
 ## Testing
@@ -75,10 +101,6 @@ The __paid__ tests are those which require account funding, e.g. for successful 
 
 When ready, do the following:
 ```shell
-$ docker run --rm ton-client-lua busted --run=paid
+$ docker run --rm tonos-client-lua busted --run=paid
 ```
 > NOTE: replace "paid" with another name to run specific category of tests. Get rid of "--run" argument to run the whole test suite.
-
-### TODO
-
-- negative tests (to check error messages?)
