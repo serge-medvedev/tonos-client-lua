@@ -149,7 +149,7 @@ describe("an abi test suite #abi", function()
                     pubkey = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a"
                 },
                 name = "returnValue",
-                value = { id = "0x0000000000000000000000000000000000000000000000000000000000000000" }
+                value = { id = 0 }
             }
             local decode_message_body_params = {
                 abi = { type = "Serialized", value = json.decode(tt.events.abi) },
@@ -157,6 +157,10 @@ describe("an abi test suite #abi", function()
                 is_internal = false
             }
             local result = abi.decode_message_body(ctx, decode_message_body_params).await()
+
+            if tt.path(result, 'value', 'id') ~= nil then
+                result.value.id = tonumber(result.value.id, 16)
+            end
 
             assert.same(expected, result)
         end)

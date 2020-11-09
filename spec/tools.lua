@@ -8,7 +8,18 @@ local inspect = require "inspect"
 local elector = require "elector"
 local events = require "events"
 local subscription = require "subscription"
-local _, funding_wallet = pcall(require, "funding_wallet")
+
+local function prequire(m)
+    local ok, x = pcall(require, m)
+
+    if ok then
+        return x
+    else
+        return nil
+    end
+end
+
+local funding_wallet = prequire("funding_wallet")
 
 local tt = {
     inspect = inspect,
@@ -48,6 +59,10 @@ function tt.create_encoded_message(ctx, signer, time, expire)
 end
 
 function tt.fund_account(ctx, account, value)
+    if funding_wallet == nil then
+        error [[funding wallet config is missing - "paid" tests can't be run]]
+    end
+
     local funded = false
     local process_message_params = {
         message_encode_params = {
@@ -111,6 +126,20 @@ function tt.fetch_account(ctx, account)
     local result = net.wait_for_collection(ctx, wait_for_collection_params).await().result
 
     return result
+end
+
+function tt.path(obj, ...)
+    local value, path = obj, {...}
+
+    for i, p in ipairs(path) do
+        if (value[p] == nil) then
+            return
+        end
+
+        value = value[p]
+    end
+
+    return value
 end
 
 return tt

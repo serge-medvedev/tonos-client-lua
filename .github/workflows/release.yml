@@ -1,0 +1,24 @@
+name: "Rock 'n' Roll"
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - uses: ./.github/actions/luarocks
+        id: luarocks
+        env:
+          FUNDING_WALLET_CONFIG: ${{ secrets.FUNDING_WALLET_CONFIG }}
+        with:
+          luarocks-api-key: ${{ secrets.LUAROCKS_API_KEY }}
+          version: ${{ steps.vars.outputs.tag }}
+

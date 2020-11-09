@@ -2,8 +2,7 @@ rockspec_format = "3.0"
 package = "tonos-client"
 version = "scm-1"
 source = {
-    url = "git://github.com/serge-medvedev/tonos-client-lua",
-    branch = "main"
+    url = "file:///usr/src/tonos-client.zip"
 }
 description = {
     summary = "Lua bindings to TON OS SDK's Core Client Library",

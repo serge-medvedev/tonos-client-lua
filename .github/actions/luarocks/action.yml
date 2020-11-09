@@ -1,0 +1,15 @@
+name: 'luarocks'
+description: 'Builds a rock and uploads it to luarocks.org'
+author: 'serge-medvedev'
+inputs:
+  luarocks-api-key:
+    description: 'API key to access luarocks.org'
+  version:
+    description: 'Rock version to be published'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.luarocks-api-key }}
+    - ${{ inputs.version }}
+

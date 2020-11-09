@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:buster-slim
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates \
@@ -26,16 +26,9 @@ RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1
     && mv tonclient /usr/lib/libton_client.so
 
 RUN luarocks install dkjson \
-    && luarocks install lustache \
-    && luarocks install busted
+    && luarocks install lustache
 
-WORKDIR /usr/src
+COPY entrypoint.sh /entrypoint.sh
 
-COPY . .
-
-RUN tools/codegen.lua /tmp/api.json
-
-RUN luarocks make \
-    && luarocks show tonos-client \
-    && luarocks test
+ENTRYPOINT ["/entrypoint.sh"]
 

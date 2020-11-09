@@ -29,6 +29,7 @@ describe("a processing test suite #processing #slow #paid", function()
             },
             signer = { type = "Keys", keys = keys }
         }
+
         encoded = abi.encode_message(ctx, message_encode_params).await()
 
         tt.fund_account(ctx, encoded.address)
