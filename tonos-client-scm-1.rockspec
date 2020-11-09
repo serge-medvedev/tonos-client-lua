@@ -2,8 +2,8 @@ rockspec_format = "3.0"
 package = "tonos-client"
 version = "scm-1"
 source = {
-    url = "git://github.com:serge-medvedev/tonos-client-lua.git",
-    tag = "1.0.0"
+    url = "git://github.com/serge-medvedev/tonos-client-lua",
+    branch = "main"
 }
 description = {
     summary = "Lua bindings to TON OS SDK's Core Client Library",
@@ -11,7 +11,7 @@ description = {
     labels = { "ton", "tonos" }
 }
 dependencies = {
-    "lua >= 5.1",
+    "lua ~> 5.1",
     "dkjson >= 2.5"
 }
 build_dependencies = {
