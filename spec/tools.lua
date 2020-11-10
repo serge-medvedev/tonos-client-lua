@@ -5,9 +5,7 @@ local net = lib.net
 local processing = lib.processing
 local json = require "dkjson"
 local inspect = require "inspect"
-local elector = require "elector"
-local events = require "events"
-local subscription = require "subscription"
+local test_data = require "test_data"
 
 local function prequire(m)
     local ok, x = pcall(require, m)
@@ -23,13 +21,11 @@ local funding_wallet = prequire("funding_wallet")
 
 local tt = {
     inspect = inspect,
-    elector = elector,
-    events = events,
-    subscription = subscription,
     keys = {
         public = "134c67910aa0bd4410e0b62379d517af13df99ba04764bca06e0ba86c736b80a",
         secret = "ddf87be7c470ea26811e5ef86391cb97d79afb35098753c2f990c2b0aef5223d"
-    }
+    },
+    data = test_data
 }
 
 function tt.create_encoded_message(ctx, signer, time, expire)
@@ -42,8 +38,8 @@ function tt.create_encoded_message(ctx, signer, time, expire)
     end
 
     local encode_message_params = {
-        abi = { type = "Serialized", value = json.decode(tt.events.abi) },
-        deploy_set = { tvc = tt.events.tvc },
+        abi = { type = "Json", value = tt.data.events.abi },
+        deploy_set = { tvc = tt.data.events.tvc },
         call_set = {
             function_name = "constructor",
             header = {
@@ -66,7 +62,7 @@ function tt.fund_account(ctx, account, value)
     local funded = false
     local process_message_params = {
         message_encode_params = {
-            abi = { type = "Serialized", value = json.decode(funding_wallet.abi) },
+            abi = { type = "Json", value = funding_wallet.abi },
             address = funding_wallet.address,
             call_set = {
                 function_name = "sendTransaction",

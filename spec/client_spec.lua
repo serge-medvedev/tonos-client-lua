@@ -20,7 +20,7 @@ describe("a client test suite #client", function()
         it("should return SDK version", function()
             local result = client.version(ctx).await()
 
-            assert.equals("1.0.0", result.version)
+            assert.equals("1.1.0", result.version)
         end)
     end)
 
@@ -31,6 +31,14 @@ describe("a client test suite #client", function()
             -- print(json.encode(result, { indent = true }))
 
             assert.is_not_nil(result.api)
+        end)
+    end)
+
+    describe("a client.build_info", function()
+        it("should return the build info", function()
+            local result = client.build_info(ctx).await()
+
+            assert.is_not_nil(result.build_number)
         end)
     end)
 end)

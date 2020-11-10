@@ -383,6 +383,30 @@ describe("a crypto test suite #crypto", function()
         end)
     end)
 
+    describe("a crypto.chacha20", function()
+        it("should encrypt and decrypt data", function()
+            local key = string.rep("01", 32)
+            local nonce = string.rep("ff", 12)
+            local encryption_params = {
+                data = "VE9OIFNESyB2MS4xLjA=",
+                key = key,
+                nonce = nonce
+            }
+            local encrypted = crypto.chacha20(ctx, encryption_params).await()
+
+            assert.equals("2r4zSfBLWzboGlQZD9s=", encrypted.data)
+
+            local decryption_params = {
+                data = encrypted.data,
+                key = key,
+                nonce = nonce
+            }
+            local decrypted = crypto.chacha20(ctx, decryption_params).await()
+
+            assert.equals("VE9OIFNESyB2MS4xLjA=", decrypted.data)
+        end)
+    end)
+
     describe("a crypto.sha512", function()
         it("should return sha512 sum", function()
             local params = {

@@ -15,7 +15,11 @@ describe("a tvm test suite #tvm", function()
 
         ctx = context.create(config)
         elector_encoded = abi.encode_account(ctx, {
-            state_init = { type = "StateInit", code = tt.elector.code, data = tt.elector.data }
+            state_init = {
+                type = "StateInit",
+                code = tt.data.elector.code,
+                data = tt.data.elector.data
+            }
         }).await()
     end)
 
@@ -25,7 +29,7 @@ describe("a tvm test suite #tvm", function()
 
     describe("heavy tvm.run_* methods #slow #paid", function()
         it("should subscribe and check subscription", function()
-            local subscription_abi = { type = "Serialized", value = json.decode(tt.subscription.abi) }
+            local subscription_abi = { type = "Json", value = tt.data.subscription.abi }
             local signer = {
                 type = "Keys",
                 keys = crypto.generate_random_sign_keys(ctx).await()
@@ -33,7 +37,7 @@ describe("a tvm test suite #tvm", function()
             local wallet_address = "0:2222222222222222222222222222222222222222222222222222222222222222"
             local encode_message_params = {
                 abi = subscription_abi,
-                deploy_set = { tvc = tt.subscription.tvc },
+                deploy_set = { tvc = tt.data.subscription.tvc },
                 call_set = {
                     function_name = "constructor",
                     input = { wallet = wallet_address }
@@ -56,7 +60,7 @@ describe("a tvm test suite #tvm", function()
             encode_message_params = {
                 abi = subscription_abi,
                 address = encoded.address,
-                deploy_set = { tvc = tt.subscription.tvc },
+                deploy_set = { tvc = tt.data.subscription.tvc },
                 call_set = {
                     function_name = "subscribe",
                     input = subscribe_params
@@ -117,7 +121,7 @@ describe("a tvm test suite #tvm", function()
             local run_get_params = {
                 account = elector_encoded.account,
                 function_name = "compute_returned_stake",
-                input = string.format("0x%s", string.match(tt.elector.address, "-1:([0-9a-fA-F]+)"))
+                input = string.format("0x%s", string.match(tt.data.elector.address, "-1:([0-9a-fA-F]+)"))
             }
             local result = tvm.run_get(ctx, run_get_params).await().output
 

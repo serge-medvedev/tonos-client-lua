@@ -19,8 +19,8 @@ describe("a processing test suite #processing #slow #paid", function()
         local keys = crypto.generate_random_sign_keys(ctx).await()
 
         message_encode_params = {
-            abi = { type = "Serialized", value = json.decode(tt.events.abi) },
-            deploy_set = { tvc = tt.events.tvc },
+            abi = { type = "Json", value = tt.data.events.abi },
+            deploy_set = { tvc = tt.data.events.tvc },
             call_set = {
                 function_name = "constructor",
                 header = {
@@ -68,7 +68,7 @@ describe("a processing test suite #processing #slow #paid", function()
                 message = encoded.message,
                 shard_block_id = shard_block_id,
                 send_events = true,
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) }
+                abi = { type = "Json", value = tt.data.events.abi }
             }
 
             for request_id, params_json, response_type, finished

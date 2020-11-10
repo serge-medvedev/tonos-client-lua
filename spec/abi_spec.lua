@@ -6,6 +6,7 @@ describe("an abi test suite #abi", function()
     local json = require "dkjson"
     local tt = require "spec.tools"
 
+    local events_abi = { type = "Json", value = tt.data.events.abi }
     local ctx
 
     setup(function()
@@ -22,7 +23,7 @@ describe("an abi test suite #abi", function()
         it("should return decoded data", function()
             local encoded = tt.create_encoded_message(ctx, { type = "Keys", keys = tt.keys })
             local result = abi.decode_message(ctx, {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 message = encoded.message
             }).await()
 
@@ -40,7 +41,7 @@ describe("an abi test suite #abi", function()
             }
             local signature = crypto.nacl_sign_detached(ctx, nacl_sign_detached_params).await().signature
             local result = abi.attach_signature(ctx, {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 public_key = tt.keys.public,
                 message = encoded.message,
                 signature = signature
@@ -53,8 +54,8 @@ describe("an abi test suite #abi", function()
     describe("an abi.encode_message", function()
         it("should return a BOC", function()
             local encode_message_params = {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
-                deploy_set = { tvc = tt.events.tvc },
+                abi = events_abi,
+                deploy_set = { tvc = tt.data.events.tvc },
                 call_set = {
                     function_name = "constructor",
                     header = { pubkey = tt.keys.public }
@@ -71,7 +72,11 @@ describe("an abi test suite #abi", function()
     describe("an abi.encode_account", function()
         it("should return encoded account data", function()
             local elector_encoded = abi.encode_account(ctx, {
-                state_init = { type = "StateInit", code = tt.elector.code, data = tt.elector.data }
+                state_init = {
+                    type = "StateInit",
+                    code = tt.data.elector.code,
+                    data = tt.data.elector.data
+                }
             }).await()
 
             assert.equals("1089829edf8ad38e474ce9e93123b3281e52c3faff0214293cbb5981ee7b3092", elector_encoded.id)
@@ -81,7 +86,7 @@ describe("an abi test suite #abi", function()
     describe("an abi.encode_message_body", function()
         it("should return a BOC", function()
             local encode_message_body_params = {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 call_set = {
                     function_name = "returnValue",
                     header = {
@@ -106,7 +111,7 @@ describe("an abi test suite #abi", function()
     describe("an abi.attach_signature_to_message_body", function()
         it("should return a signed message body", function()
             local encode_message_body_params = {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 call_set = {
                     function_name = "returnValue",
                     header = {
@@ -126,7 +131,7 @@ describe("an abi test suite #abi", function()
             }
             local signature = crypto.nacl_sign_detached(ctx, nacl_sign_detached_params).await().signature
             local result = abi.attach_signature_to_message_body(ctx, {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 public_key = tt.keys.public,
                 message = encoded_message_body,
                 signature = signature
@@ -152,7 +157,7 @@ describe("an abi test suite #abi", function()
                 value = { id = 0 }
             }
             local decode_message_body_params = {
-                abi = { type = "Serialized", value = json.decode(tt.events.abi) },
+                abi = events_abi,
                 body = "te6ccgEBAgEAlgAB4eb6eSBDZAg2YZ4IJ5P+cReLJ2jL1KmQPkzEKKsLLaZRiYUzUBzHX7IgJ0ZqQUGt44+ckKJ1BLDWadBa7O7OQALE0xnkQqgvUQQ4LYjedUXrxPfmboEdkvKBuC6hsc2uAoAAAF0ZyXLg19VzGQVviwSgAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
                 is_internal = false
             }
