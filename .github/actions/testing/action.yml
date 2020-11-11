@@ -1,0 +1,7 @@
+name: 'testing'
+description: 'Runs default test suite'
+author: 'serge-medvedev'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+

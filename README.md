@@ -1,4 +1,5 @@
 ![LuaRocks](https://img.shields.io/luarocks/v/serge-medvedev/tonos-client)
+![Testing](https://github.com/serge-medvedev/tonos-client-lua/workflows/tests/badge.svg)
 
 # Lua bindings to TON SDK's Core Client Library
 
