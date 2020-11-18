@@ -28,5 +28,5 @@ WORKDIR /usr/src
 
 COPY . .
 
-CMD ./basic.lua
+CMD ./example.lua
 
