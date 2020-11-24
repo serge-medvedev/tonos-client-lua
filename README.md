@@ -18,14 +18,14 @@ These are opportunities for a great many possible use cases.
 - lua 5.1
 - luarocks 3
 - _libton_client.so_ and _tonclient.h_ are accessible somewhere at well-known locations
-  ```shell
-  $ wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_0_0_linux.gz -O tonclient.gz \
-    && gunzip tonclient.gz \
-    && mv tonclient /usr/lib/libton_client.so \
-    && wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.0.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h
+  ```console
+  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.1.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
+    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_1_0_linux.gz -O /usr/lib/libton_client.so.gz \
+    && gunzip /usr/lib/libton_client.so.gz
   ```
+
 ### Example
-```shell
+```console
 $ luarocks install tonos-client
 ```
 ```lua
@@ -79,7 +79,7 @@ Under the hood there are coroutines, being initiated and resumed on the Lua-side
 The simplest way to build the library and run the tests is by having Docker installed.
 
 When ready, build the image:
-```shell
+```console
 $ docker build -t tonos-client-lua .
 ```
 
@@ -101,7 +101,7 @@ The __paid__ tests are those which require account funding, e.g. for successful 
 - create a file called _funding_wallet.lua_ under the _spec_ directory based on [funding_wallet.lua.example](spec/funding_wallet.lua.example)
 
 When ready, do the following:
-```shell
+```console
 $ docker run --rm tonos-client-lua busted --run=paid
 ```
 > NOTE: replace "paid" with another name to run specific category of tests. Get rid of "--run" argument to run the whole test suite.
