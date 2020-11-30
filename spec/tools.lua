@@ -85,6 +85,8 @@ function tt.fund_account(ctx, account, value)
         local result = json.decode(params_json)
 
         if response_type == 1 then
+            print(json.encode(process_message_params, { indent = true }))
+
             error(result)
         end
 
@@ -136,6 +138,34 @@ function tt.path(obj, ...)
     end
 
     return value
+end
+
+function tt.clone(obj, shallow)
+    if type(obj) ~= 'table' then return obj end
+    local _obj = {}
+    for i,v in pairs(obj) do
+        if type(v) == 'table' then
+            if not shallow then
+                _obj[i] = clone(v,shallow)
+            else _obj[i] = v
+            end
+        else
+            _obj[i] = v
+        end
+    end
+    return _obj
+end
+
+function tt.fromhex(s)
+    return (s:gsub('..', function (cc)
+        return string.char(tonumber(cc, 16))
+    end))
+end
+
+function tt.tohex(s)
+    return (s:gsub('.', function (c)
+        return string.format('%02X', string.byte(c))
+    end))
 end
 
 return tt
