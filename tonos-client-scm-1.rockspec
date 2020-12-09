@@ -14,7 +14,8 @@ dependencies = {
     "dkjson >= 2.5"
 }
 build_dependencies = {
-    "busted"
+    "busted",
+    "lumen"
 }
 test = {
     type = "busted",

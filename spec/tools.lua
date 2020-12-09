@@ -1,8 +1,5 @@
 local lib = require "tonos.client"
-local abi = lib.abi
-local boc = lib.boc
-local net = lib.net
-local processing = lib.processing
+local abi, boc, net, processing = lib.abi, lib.boc, lib.net, lib.processing
 local json = require "dkjson"
 local inspect = require "inspect"
 local test_data = require "test_data"
@@ -104,7 +101,7 @@ function tt.fund_account(ctx, account, value)
                 }
                 local data = net.wait_for_collection(ctx, wait_for_collection_params).await().result
 
-                funded = data.id ~= nil
+                funded = (data ~= nil and data.id ~= nil)
             end
         end
     end
@@ -146,7 +143,7 @@ function tt.clone(obj, shallow)
     for i,v in pairs(obj) do
         if type(v) == 'table' then
             if not shallow then
-                _obj[i] = clone(v,shallow)
+                _obj[i] = tt.clone(v,shallow)
             else _obj[i] = v
             end
         else

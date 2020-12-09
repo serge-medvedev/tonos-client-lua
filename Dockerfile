@@ -26,7 +26,8 @@ RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1
 
 RUN luarocks install dkjson \
     && luarocks install lustache \
-    && luarocks install busted
+    && luarocks install busted \
+    && luarocks install --deps-mode=none lumen
 
 WORKDIR /usr/src
 

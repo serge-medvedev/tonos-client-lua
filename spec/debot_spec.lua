@@ -1,4 +1,4 @@
-local say = require("say")
+local say = require "say"
 
 local function multimatch(state, arguments)
     if not type(arguments) == "table" or #arguments ~= 2 then
@@ -28,16 +28,12 @@ say:set("assertion.multimatch.positive", "Expected '%s' to match '%s'")
 say:set("assertion.multimatch.negative", "Expected '%s' to not match '%s'")
 assert:register("assertion", "multimatch", multimatch, "assertion.multimatch.positive", "assertion.multimatch.negative")
 
-describe("a debot test suite #debot #slow #paid", function()
-    local lib = require "tonos.client"
-    local abi = lib.abi
-    local client = lib.client
-    local context = lib.context
-    local debot = lib.debot
-    local crypto = lib.crypto
-    local processing = lib.processing
+describe("a debot test suite #debot #heavy #paid", function()
     local json = require "dkjson"
+    local sched = require "lumen.sched"
     local tt = require "spec.tools"
+    local lib = require "tonos.client"
+    local abi, client, context, crypto, debot, processing = lib.abi, lib.client, lib.context, lib.crypto, lib.debot, lib.processing
 
     local function init_debot(ctx)
         local keys = crypto.generate_random_sign_keys(ctx).await()
@@ -80,71 +76,68 @@ describe("a debot test suite #debot #slow #paid", function()
 
     local ctx, debot_addr, target_addr, keys
 
-    setup(function()
+    before_each(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
         ctx = context.create(config)
-    end)
 
-    before_each(function()
         debot_addr, target_addr, keys = init_debot(ctx)
     end)
 
-    teardown(function()
+    after_each(function()
         context.destroy(ctx)
     end)
 
-    local function check(steps)
-        -- local steps = tt.clone(steps)
-        local available_actions, outputs, step = {}, {}
+    local function prune(t)
+        while next(t) do
+            table.remove(t)
+        end
+    end
 
-        local co_debot_start = coroutine.create(function()
+    local function check(steps)
+        local function invoke_debot(inputs, outputs, available_actions, address, start_or_fetch)
             local debot_handle
 
             for request_id, params_json, response_type, finished
-                in debot.start(ctx, { address = debot_addr }) do
+                in debot[start_or_fetch](ctx, { address = address }) do
+
+                -- print(json.encode({
+                --     request_id = request_id,
+                --     params_json = params_json,
+                --     response_type = response_type,
+                --     finished = finished
+                -- }, { indent = true }))
 
                 local params = json.decode(params_json)
 
-                if response_type == 4 then -- AppNotify
-                    if params.type == "Log" then
-                        table.insert(outputs, params.msg)
-                    elseif params.type == "Switch" then
-                        if params.context_id == 255 then -- STATE_EXIT
-                            debot.remove(ctx, { debot_handle = debot_handle }).await()
-                        end
+                if response_type == 0 then
+                    debot_handle = params.debot_handle
 
-                        available_actions = {}
-                    elseif params.type == "ShowAction" then
-                        table.insert(available_actions, params.action)
-                    else
-                        error(string.format("invalid notification %s", params_json))
-                    end
-
-                    if debot_handle then
-                        coroutine.yield({})
-                    end
+                    sched.schedule_signal("debot_handle", debot_handle)
+                elseif response_type == 2 then
+                    -- do nothing
                 elseif response_type == 3 then -- AppRequest
                     local result = {}
 
                     if params.request_data.type == "Input" then
-                        result.type = "Input"
-                        result.value = step.inputs[1]
+                        local value = table.remove(inputs, 1)
 
-                        table.remove(step.inputs, 1)
+                        result.type = "Input"
+                        result.value = value
                     elseif params.request_data.type == "GetSigningBox" then
                         local signing_box = crypto.get_signing_box(ctx, keys).await()
 
                         result.type = "GetSigningBox"
                         result.signing_box = signing_box.handle
                     elseif params.request_data.type == "InvokeDebot" then
-                        -- TODO: finish it
+                        sched.schedule_signal("invocation", params.request_data)
+
                         result.type = "InvokeDebot"
                     else
                         error(string.format("invalid call %s", params_json))
                     end
 
-                    local params = {
+                    local resolve_app_request_params = {
                         app_request_id = params.app_request_id,
                         result = {
                             type = "Ok",
@@ -152,60 +145,94 @@ describe("a debot test suite #debot #slow #paid", function()
                         }
                     }
 
-                    -- print(string.format("resolve app request with %s", json.encode(params, { indent = true })))
+                    -- print(string.format("resolving app request with %s", json.encode(resolve_app_request_params, { indent = true })))
 
-                    client.resolve_app_request(ctx, params).await()
-
-                    coroutine.yield({ app_request_id = params.app_request_id })
-                elseif response_type == 0 then
-                    debot_handle = params.debot_handle
-
-                    coroutine.yield({ debot_handle = debot_handle })
+                    client.resolve_app_request(ctx, resolve_app_request_params).await()
+                elseif response_type == 4 then -- AppNotify
+                    if params.type == "Log" then
+                        table.insert(outputs, params.msg)
+                    elseif params.type == "Switch" then
+                        prune(available_actions)
+                    elseif params.type == "ShowAction" then
+                        table.insert(available_actions, params.action)
+                    else
+                        error(string.format("invalid notification %s", params_json))
+                    end
                 else
-                    error("Wrong response type")
+                    error(string.format("Wrong response type [response_type = %u]", response_type))
+                end
+
+                if not finished then
+                    sched.wait()
                 end
             end
-        end)
+        end
 
-        local status, result = coroutine.resume(co_debot_start)
-        local debot_handle = result.debot_handle
+        local function walk(inputs, outputs, available_actions, steps)
+            local _, debot_handle = sched.wait({ "debot_handle" })
+            local finishers = {}
 
-        while status do
-            step = steps[1]
+            while steps[1] do
+                local step = table.remove(steps, 1)
 
-            if step then
-                while status and (#available_actions < step.choice) do
-                    status, result = coroutine.resume(co_debot_start)
+                -- print("step:", json.encode(step, { indent = true }))
+
+                while not available_actions[step.choice] do
+                    sched.wait()
                 end
 
                 local action = available_actions[step.choice]
 
-                if action then
-                    print(string.format("action to execute: %s", json.encode(action)))
+                -- print(string.format("action to execute: %s", json.encode(action)))
 
-                    outputs = {}
-
-                    local handle = debot.execute(ctx, { debot_handle = debot_handle, action = action }) -- non-blocking, needs completion
-
-                    while status and ((#step.inputs > 0 and result.app_request_id == nil) or (#outputs < #step.outputs)) do
-                        status, result = coroutine.resume(co_debot_start)
-                    end
-
-                    handle.await() -- completion
-
-                    table.foreachi(step.outputs, function(i, t)
-                        print(string.format("expected output: %s", json.encode(t)))
-                        print(string.format("current output: %s", json.encode(outputs[i])))
-                    end)
-
-                    assert.multimatch(step.outputs, outputs)
-
-                    table.remove(steps, 1)
+                for _, input in ipairs(step.inputs) do
+                    table.insert(inputs, input)
                 end
-            else
-                status, result = coroutine.resume(co_debot_start)
+
+                prune(outputs)
+
+                -- async call, must be await'ed for the clean up
+                -- TODO: come up with a way of dealing with dangling return values automatically (__gc hook?)
+                local f = debot.execute(ctx, { debot_handle = debot_handle, action = action })
+
+                table.insert(finishers, f)
+
+                while #outputs < #step.outputs do
+                    sched.wait()
+                end
+
+                assert.multimatch(step.outputs, outputs)
+
+                if step.invokes then
+                    local _, request_data = sched.wait({ "invocation" })
+                    local inputs, outputs, available_actions = {}, {}, { request_data.action }
+
+                    sched.run(function()
+                        invoke_debot(inputs, outputs, available_actions, request_data.debot_addr, "fetch")
+                    end)
+                    sched.run(function()
+                        walk(inputs, outputs, available_actions, tt.clone(step.invokes[1]))
+                    end)
+                end
+            end
+
+            debot.remove(ctx, { debot_handle = debot_handle }).await()
+
+            for _, f in ipairs(finishers) do
+                f.await()
             end
         end
+
+        local inputs, outputs, available_actions = {}, {}, {}
+
+        sched.run(function()
+            invoke_debot(inputs, outputs, available_actions, debot_addr, "start")
+        end)
+        sched.run(function()
+            walk(inputs, outputs, available_actions, tt.clone(steps))
+        end)
+
+        sched.loop()
     end
 
     describe("a few debot usage scenarios", function()
@@ -272,7 +299,7 @@ describe("a debot test suite #debot #slow #paid", function()
             check(steps)
         end)
 
-        pending("debot.invoke_debot", function()
+        it("debot.invoke_debot", function()
             local steps = {
                 { choice = 6, inputs = { debot_addr }, outputs = { "Test Invoke Debot Action", "enter debot address:" } },
                 {
