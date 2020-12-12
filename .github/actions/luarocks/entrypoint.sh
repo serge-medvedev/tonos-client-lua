@@ -10,7 +10,7 @@ printf "%s" "$FUNDING_WALLET_CONFIG" > spec/funding_wallet.lua
 tools/codegen.lua /tmp/api.json
 
 luarocks make
-luarocks test -- --run=_all
+luarocks test -- --run=ci
 
 zip -r /usr/src/tonos-client.zip \
     CHANGELOG.md \

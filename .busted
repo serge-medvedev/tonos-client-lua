@@ -3,16 +3,19 @@ return {
         lpath = "./spec/?.lua"
     },
     fast = {
-        ["exclude-tags"] = "slow"
+        ["exclude-tags"] = "slow,heavy"
     },
     slow = {
-        tags = "slow"
+        tags = "slow,heavy"
     },
     free = {
         ["exclude-tags"] = "paid"
     },
     paid = {
         tags = "paid"
+    },
+    ci = {
+        ["exclude-tags"] = "heavy"
     }
 }
 

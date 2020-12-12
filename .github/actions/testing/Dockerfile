@@ -20,12 +20,13 @@ RUN curl -LO https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && rm -fr luarocks-${LUAROCKS_VERSION}
 
 RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1.2.0/tools/api.json \
-    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.2.0/ton_client/client/tonclient.h \
+    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.2.0/ton_client/tonclient.h \
     && curl -L -o /usr/lib/libton_client.so.gz http://sdkbinaries-ws.tonlabs.io/tonclient_1_2_0_linux.gz \
     && gunzip /usr/lib/libton_client.so.gz
 
 RUN luarocks install dkjson \
-    && luarocks install lustache
+    && luarocks install lustache \
+    && luarocks install --deps-mode=none lumen
 
 COPY entrypoint.sh /entrypoint.sh
 
