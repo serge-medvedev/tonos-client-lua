@@ -1,8 +1,9 @@
 describe("a crypto test suite #crypto", function()
-    local lib = require "tonos.client"
-    local context = lib.context
-    local crypto = lib.crypto
+    local json = require "dkjson"
+    local sched = require "lumen.sched"
     local tt = require "spec.tools"
+    local lib = require "tonos.client"
+    local client, context, crypto = lib.client, lib.context, lib.crypto
 
     local function count_words(s)
         local _, n = string.gsub(s, "%S+", "")
@@ -448,6 +449,87 @@ describe("a crypto test suite #crypto", function()
             assert.equals(
                 "xprv9umdhXwHgt9GyXA6NRKgaj9CeRPNgF6kZHnt49GQNTxoFuZ18CoLxHW22SkU7FoUfSa6eoirTVVtv7rkKeAobNPZ2FTQVbtdZ36qXdCqWfc",
                 result.xprv)
+        end)
+    end)
+
+    describe("a signing box sub-suite #sbox", function()
+        it("perfoms all the necessary checks", function()
+            local keys = crypto.generate_random_sign_keys(ctx).await()
+            local keybox_handle = crypto.get_signing_box(ctx, keys).await().handle
+            local extbox_handle
+
+            local function register_signing_box()
+                for request_id, params_json, response_type, finished
+                    in crypto.register_signing_box(ctx) do
+
+                    local params = json.decode(params_json) or {}
+
+                    if response_type == 0 then
+                        extbox_handle = params.handle
+                    elseif response_type == 3 then
+                        local result = {}
+
+                        if params.request_data.type == "GetPublicKey" then
+                            local pubkey = crypto.signing_box_get_public_key(
+                                ctx, { handle = keybox_handle }).await().pubkey
+
+                            result.type = "GetPublicKey"
+                            result.public_key = pubkey
+                        elseif params.request_data.type == "Sign" then
+                            local unsigned = params.request_data.unsigned
+                            local signature = crypto.signing_box_sign(
+                                ctx, { signing_box = keybox_handle, unsigned = unsigned }).await().signature
+
+                            result.type = "Sign"
+                            result.signature = signature
+                        end
+
+                        local resolve_app_request_params = {
+                            app_request_id = params.app_request_id,
+                            result = {
+                                type = "Ok",
+                                result = result
+                            }
+                        }
+
+                        client.resolve_app_request(ctx, resolve_app_request_params).await()
+                    end
+
+                    if not finished then
+                        sched.wait()
+                    end
+                end
+            end
+
+            local function check()
+                local f = crypto.signing_box_get_public_key(ctx, { handle = extbox_handle })
+
+                sched.wait()
+
+                local result = f.await()
+
+                assert.equals(keys.public, result.pubkey)
+
+                local unsigned = "VE9OIFNESyB2MS4yLjAK"
+                local signature = crypto.sign(ctx, { unsigned = unsigned, keys = keys }).await().signature
+
+                f = crypto.signing_box_sign(ctx, { signing_box = extbox_handle, unsigned = unsigned })
+
+                sched.wait()
+
+                result = f.await()
+
+                assert.equals(signature, result.signature)
+
+                crypto.remove_signing_box(ctx, { handle = extbox_handle }).await()
+            end
+
+            sched.run(register_signing_box)
+            sched.run(check)
+
+            sched.loop()
+
+            crypto.remove_signing_box(ctx, { handle = keybox_handle }).await()
         end)
     end)
 end)
