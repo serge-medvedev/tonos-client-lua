@@ -60,7 +60,7 @@ local function async_iterator_factory(ctx, method, params_json)
             local id
 
             while request_id ~= id do
-                id = tc.fetch_response_data(request_id) -- yields on the C-side, returns request_id when finished
+                id = tc.fetch_response_data(ctx, request_id) -- yields on the C-side, returns request_id when finished
             end
         end)
     }
@@ -82,17 +82,7 @@ end
 local context = {}
 
 function context.create(config)
-    local response_handle = tc.create_context(config)
-    local result = tc.read_string(response_handle)
-    local decoded = json.decode(result)
-
-    if decoded == nil then
-        error("response is empty")
-    elseif decoded.error then
-        error(decoded.error)
-    end
-
-    return decoded.result
+    return tc.create_context(config)
 end
 
 function context.destroy(handle)
