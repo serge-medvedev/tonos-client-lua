@@ -18,7 +18,11 @@ zip -r /usr/src/tonos-client.zip \
     build/generated \
     src
 
-ROCKSPEC=`luarocks new_version --tag "$VERSION" | grep Wrote | awk '{print $2}'`
+if [ -z "$VERSION" ]; then
+    luarocks upload --force --api-key "$LUAROCKS_API_KEY"
+else
+    ROCKSPEC=`luarocks new_version --tag "$VERSION" | grep Wrote | awk '{print $2}'`
 
-luarocks upload --force --api-key "$LUAROCKS_API_KEY" "$ROCKSPEC"
+    luarocks upload --force --api-key "$LUAROCKS_API_KEY" "$ROCKSPEC"
+fi
 

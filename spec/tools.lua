@@ -76,16 +76,15 @@ function tt.fund_account(ctx, account, value)
         send_events = false
     }
 
+    local err
+
     for request_id, params_json, response_type, finished
         in processing.process_message(ctx, process_message_params) do
 
         local result = json.decode(params_json)
 
         if response_type == 1 then
-            print(json.encode(process_message_params, { indent = true }))
-
-            error(string.format("fund_account - message processing failed, params %s",
-                json.encode(result, { indent = true })))
+            err = result
         end
 
         if not result then result = {} end
@@ -108,7 +107,8 @@ function tt.fund_account(ctx, account, value)
     end
 
     if not funded then
-        error("failed to fund the account")
+        error(string.format("fund_account - failed, error %s",
+            json.encode(err, { indent = true })))
     end
 end
 

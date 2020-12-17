@@ -13,7 +13,7 @@ dependencies = {
     "lua ~> 5.1",
     "dkjson >= 2.5"
 }
-build_dependencies = {
+test_dependencies = {
     "busted",
     "lumen"
 }
@@ -27,6 +27,7 @@ build = {
         ["tonos.client"] = "build/generated/client.lua",
         tonosclua = {
             sources = { "src/tonosclua/tonosclua.c" },
+            defines = { "NDEBUG" },
             incdirs = { "src/tonosclua/include" },
             libraries = { "ton_client" }
         }

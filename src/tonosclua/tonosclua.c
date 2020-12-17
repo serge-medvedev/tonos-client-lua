@@ -49,7 +49,7 @@ FILE * flog;
     fprintf(flog, __VA_ARGS__); \
     fflush(flog);
 #else
-#define LOG(...)
+#define LOG(...) ((void)0)
 #endif
 
 // --------------------------------------------------------------------------------

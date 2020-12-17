@@ -25,19 +25,31 @@ describe("a net test suite #net", function()
         end)
     end)
 
-    describe("suspending and resuming of net operations #slow #susres", function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
-        local ctx = context.create(config)
-        local keys = crypto.generate_random_sign_keys(ctx).await()
-        local message_encode_params = {
-            abi = { type = "Json", value = tt.data.hello.abi },
-            deploy_set = { tvc = tt.data.hello.tvc },
-            call_set = { function_name = "constructor" },
-            signer = { type = "Keys", keys = keys }
-        }
-        local msg = abi.encode_message(ctx, message_encode_params).await()
+    describe("suspending and resuming of net operations #slow #paid #susres", function()
+        local main_ctx, sub_ctx, keys, message_encode_params, msg
 
-        local function subscribe_collection(sub_ctx, txs)
+        setup(function()
+            local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+
+            main_ctx = context.create(config)
+            sub_ctx = context.create(config)
+
+            keys = crypto.generate_random_sign_keys(main_ctx).await()
+            message_encode_params = {
+                abi = { type = "Json", value = tt.data.hello.abi },
+                deploy_set = { tvc = tt.data.hello.tvc },
+                call_set = { function_name = "constructor" },
+                signer = { type = "Keys", keys = keys }
+            }
+            msg = abi.encode_message(main_ctx, message_encode_params).await()
+        end)
+
+        teardown(function()
+            context.destroy(sub_ctx)
+            context.destroy(main_ctx)
+        end)
+
+        local function subscribe_collection(txs)
             local subscribe_collection_params = {
                 collection = "transactions",
                 filter = {
@@ -74,18 +86,18 @@ describe("a net test suite #net", function()
             end
         end
 
-        local function check(sub_ctx, txs)
+        local function check(txs)
             local _, subscription_handle = sched.wait({ "subscription_handle" })
 
             -- this transaction is gonna be recorded
-            tt.fund_account(ctx, msg.address)
+            tt.fund_account(main_ctx, msg.address)
 
             net.suspend(sub_ctx).await()
 
             sched.wait()
 
             -- this transaction is NOT gonna be recorded due to network operations being suspended
-            processing.process_message(ctx, {
+            processing.process_message(main_ctx, {
                 message_encode_params = message_encode_params,
                 send_events = false
             }).await()
@@ -95,7 +107,7 @@ describe("a net test suite #net", function()
             net.resume(sub_ctx).await()
 
             -- this transaction is gonna be recorded since network operations are resumed
-            processing.process_message(ctx, {
+            processing.process_message(main_ctx, {
                 message_encode_params = {
                     abi = { type = "Json", value = tt.data.hello.abi },
                     address = msg.address,
@@ -115,14 +127,13 @@ describe("a net test suite #net", function()
         end
 
         it("subscribes to transactions with addresses", function()
-            local sub_ctx = context.create(config)
             local txs = {}
 
             sched.run(function()
-                subscribe_collection(sub_ctx, txs)
+                subscribe_collection(txs)
             end)
             sched.run(function()
-                check(sub_ctx, txs)
+                check(txs)
             end)
             sched.loop()
         end)

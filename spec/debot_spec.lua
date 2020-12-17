@@ -28,7 +28,7 @@ say:set("assertion.multimatch.positive", "Expected '%s' to match '%s'")
 say:set("assertion.multimatch.negative", "Expected '%s' to not match '%s'")
 assert:register("assertion", "multimatch", multimatch, "assertion.multimatch.positive", "assertion.multimatch.negative")
 
-describe("a debot test suite #debot #heavy #paid", function()
+describe("a debot test suite #debot #paid #heavy", function()
     local json = require "dkjson"
     local sched = require "lumen.sched"
     local tt = require "spec.tools"
@@ -76,15 +76,17 @@ describe("a debot test suite #debot #heavy #paid", function()
 
     local ctx, debot_addr, target_addr, keys
 
-    before_each(function()
+    setup(function()
         local config = '{"network": {"server_address": "https://net.ton.dev"}}'
 
         ctx = context.create(config)
+    end)
 
+    before_each(function()
         debot_addr, target_addr, keys = init_debot(ctx)
     end)
 
-    after_each(function()
+    teardown(function()
         context.destroy(ctx)
     end)
 
