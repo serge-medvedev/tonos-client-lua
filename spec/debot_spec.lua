@@ -194,7 +194,7 @@ describe("a debot test suite #debot #paid #heavy", function()
 
                 prune(outputs)
 
-                -- async call, must be await'ed for the clean up
+                -- non-blocking call, must be await'ed for the clean up
                 -- TODO: come up with a way of dealing with dangling return values automatically (__gc hook?)
                 local f = debot.execute(ctx, { debot_handle = debot_handle, action = action })
 
