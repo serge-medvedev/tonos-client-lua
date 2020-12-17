@@ -65,7 +65,7 @@ function tt.fund_account(ctx, account, value)
                 function_name = "sendTransaction",
                 input = {
                     dest = account,
-                    value = value or 5e8,
+                    value = value or 500000000,
                     bounce = false,
                     flags = 0,
                     payload = ""
@@ -84,7 +84,8 @@ function tt.fund_account(ctx, account, value)
         if response_type == 1 then
             print(json.encode(process_message_params, { indent = true }))
 
-            error(result)
+            error(string.format("fund_account - message processing failed, params %s",
+                json.encode(result, { indent = true })))
         end
 
         if not result then result = {} end

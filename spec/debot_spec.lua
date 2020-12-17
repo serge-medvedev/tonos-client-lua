@@ -159,7 +159,8 @@ describe("a debot test suite #debot #heavy #paid", function()
                         error(string.format("invalid notification %s", params_json))
                     end
                 else
-                    error(string.format("Wrong response type [response_type = %u]", response_type))
+                    error(string.format("Wrong response type [response_type = %u] - %s",
+                        response_type, json.encode(params, { indent = true })))
                 end
 
                 if not finished then

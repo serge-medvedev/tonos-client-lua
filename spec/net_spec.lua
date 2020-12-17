@@ -1,8 +1,9 @@
 describe("a net test suite #net", function()
-    local lib = require "tonos.client"
-    local context = lib.context
-    local net = lib.net
     local json = require "dkjson"
+    local sched = require "lumen.sched"
+    local tt = require "spec.tools"
+    local lib = require "tonos.client"
+    local abi, context, crypto, net, processing = lib.abi, lib.context, lib.crypto, lib.net, lib.processing
 
     local ctx
 
@@ -14,6 +15,117 @@ describe("a net test suite #net", function()
 
     teardown(function()
         context.destroy(ctx)
+    end)
+
+    describe("a net.query", function()
+        it("should perform a graphql query the same way playground does", function()
+            local result = net.query(ctx, { query = "query{info{version}}"}).await().result
+
+            assert.is_not_nil(string.match(result.data.info.version, "[0-9]+\.[0-9]+\.[0-9]+"))
+        end)
+    end)
+
+    describe("suspending and resuming of net operations #slow #susres", function()
+        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local ctx = context.create(config)
+        local keys = crypto.generate_random_sign_keys(ctx).await()
+        local message_encode_params = {
+            abi = { type = "Json", value = tt.data.hello.abi },
+            deploy_set = { tvc = tt.data.hello.tvc },
+            call_set = { function_name = "constructor" },
+            signer = { type = "Keys", keys = keys }
+        }
+        local msg = abi.encode_message(ctx, message_encode_params).await()
+
+        local function subscribe_collection(sub_ctx, txs)
+            local subscribe_collection_params = {
+                collection = "transactions",
+                filter = {
+                    account_addr = { eq = msg.address },
+                    status = { eq = 3 } -- Finalized
+                },
+                result = "id account_addr"
+            }
+            local subscription_handle
+
+            for request_id, params_json, response_type, finished
+                in net.subscribe_collection(sub_ctx, subscribe_collection_params) do
+
+                -- print(json.encode({
+                --     request_id = request_id,
+                --     params_json = params_json,
+                --     response_type = response_type,
+                --     finished = finished
+                -- }, { indent = true }))
+
+                local params = json.decode(params_json)
+
+                if response_type == 0 then
+                    subscription_handle = params.handle
+
+                    sched.schedule_signal("subscription_handle", subscription_handle)
+                elseif params and params.result then
+                    assert.equals(msg.address, params.result.account_addr)
+
+                    table.insert(txs, params.result)
+                end
+
+                sched.wait()
+            end
+        end
+
+        local function check(sub_ctx, txs)
+            local _, subscription_handle = sched.wait({ "subscription_handle" })
+
+            -- this transaction is gonna be recorded
+            tt.fund_account(ctx, msg.address)
+
+            net.suspend(sub_ctx).await()
+
+            sched.wait()
+
+            -- this transaction is NOT gonna be recorded due to network operations being suspended
+            processing.process_message(ctx, {
+                message_encode_params = message_encode_params,
+                send_events = false
+            }).await()
+
+            assert.equals(1, #txs)
+
+            net.resume(sub_ctx).await()
+
+            -- this transaction is gonna be recorded since network operations are resumed
+            processing.process_message(ctx, {
+                message_encode_params = {
+                    abi = { type = "Json", value = tt.data.hello.abi },
+                    address = msg.address,
+                    call_set = { function_name = "touch" },
+                    signer = { type = "Keys", keys = keys }
+                },
+                send_events = false
+            }).await()
+
+            sched.wait()
+
+            -- two different transactions recorded
+            assert.equals(2, #txs)
+            assert.is_not_equal(txs[1].id, txs[2].id)
+
+            net.unsubscribe(sub_ctx, { handle = subscription_handle }).await()
+        end
+
+        it("subscribes to transactions with addresses", function()
+            local sub_ctx = context.create(config)
+            local txs = {}
+
+            sched.run(function()
+                subscribe_collection(sub_ctx, txs)
+            end)
+            sched.run(function()
+                check(sub_ctx, txs)
+            end)
+            sched.loop()
+        end)
     end)
 
     describe("a net.query_collection", function()

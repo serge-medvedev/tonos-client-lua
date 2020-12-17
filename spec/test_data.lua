@@ -31,11 +31,17 @@ debot.tvc = "te6ccgECYQEAGPoAAgE0AwEBAcACAEPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 debot.target.abi = [===[{"ABI version":2,"header":["time","expire"],"functions":[{"name":"constructor","inputs":[],"outputs":[]},{"name":"getData","inputs":[{"name":"key","type":"uint32"}],"outputs":[{"name":"num","type":"uint256"}]},{"name":"setData","inputs":[{"name":"key","type":"uint32"},{"name":"val","type":"uint256"}],"outputs":[]}],"data":[],"events":[]}]===]
 debot.target.tvc = "te6ccgECEwEAAm0AAgE0AwEBAcACAEPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAib/APSkICLAAZL0oOGK7VNYMPShCAQBCvSkIPShBQIDzsAHBgAt12omhp/+mf6YB6Avw1P/ww/DN8MfwxQAL/fCFkZf/8IeeFn/wjZ4WAfCUA+gBk9qpAIBIAwJAQL/CgH+fyHtRNAg10nCAY4T0//TP9MA9AX4an/4Yfhm+GP4Yo4b9AVt+GpwAYBA9A7yvdcL//hicPhjcPhmf/hh4tMAAY4SgQIA1xgg+QFY+EIg+GX5EPKo3tM/AY4e+EMhuSCfMCD4I4ED6KiCCBt3QKC53pL4Y+CANPI02NMfAfgjvAsANPK50x8hwQMighD////9vLHyfAHwAfhHbvJ8AgEgDg0A571Fqvn/wgt0cd9qJoEGuk4QDHCen/6Z/pgHoC/DU//DD8M3wx/DFHDfoCtvw1OADAIHoHeV7rhf/8MTh8Mbh8Mz/8MPFvfCN5Obj8M2j8ADj8JUCAQGRl/6zAEHohkHw1OQDAIGRl/6zAEHoh/DV4Ab/8M8AgEgEg8CAVgREABptkCDOj4QW6S8ATe0x/T/9H4RSBukjBw3vhCuvLgZPgAIfhKIsjL/1mAIPRD+Gpb8AN/+GeAArba8qZ9+EFukvAE3tMf0XAh+EqAIPQOk9cL/5Fw4jEBMCHA/44qI9DTAfpAMDHIz4cgzo0EAAAAAAAAAAAAAAAACy8qZ9jPFiHPC//JcfsA3jDwA3/4Z4ABU3XAi0NcLA6k4ANwhxwDcIdMfId0hwQMighD////9vLHyfAHwAfhHbvJ8"
 
+local hello = {}
+
+hello.abi = '{"ABI version":2,"header":["time","expire"],"functions":[{"name":"constructor","inputs":[],"outputs":[]},{"name":"touch","inputs":[],"outputs":[]},{"name":"sayHello","inputs":[],"outputs":[{"name":"value0","type":"uint32"}]},{"name":"sendAllMoney","inputs":[{"name":"dest_addr","type":"address"}],"outputs":[]}],"events":[]}'
+hello.tvc = "te6ccgECHAEABDkAAgE0BgEBAcACAgPPIAUDAQHeBAAD0CAAQdgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAIm/wD0pCAiwAGS9KDhiu1TWDD0oQkHAQr0pCD0oQgAAAIBIAwKAej/fyHTAAGOJoECANcYIPkBAXDtRND0BYBA9A7yitcL/wHtRyJvde1XAwH5EPKo3u1E0CDXScIBjhb0BNM/0wDtRwFvcQFvdgFvcwFvcu1Xjhj0Be1HAW9ycG9zcG92yIAgz0DJ0G9x7Vfi0z8B7UdvEyG5IAsAYJ8wIPgjgQPoqIIIG3dAoLneme1HIW9TIO1XMJSANPLw4jDTHwH4I7zyudMfAfFAAQIBIBgNAgEgEQ4BCbqLVfP4DwH67UdvYW6OO+1E0CDXScIBjhb0BNM/0wDtRwFvcQFvdgFvcwFvcu1Xjhj0Be1HAW9ycG9zcG92yIAgz0DJ0G9x7Vfi3u1HbxaS8jOX7Udxb1btV+IA+ADR+CO1H+1HIG8RMAHIyx/J0G9R7VftR28SyPQA7UdvE88LP+1HbxYQABzPCwDtR28RzxbJ7VRwagIBahUSAQm0ABrWwBMB/O1Hb2FujjvtRNAg10nCAY4W9ATTP9MA7UcBb3EBb3YBb3MBb3LtV44Y9AXtRwFvcnBvc3BvdsiAIM9AydBvce1X4t7tR29lIG6SMHDecO1HbxKAQPQO8orXC/+68uBk+AD6QNEgyMn7BIED6HCBAIDIcc8LASLPCgBxz0D4KBQAjs8WJM8WI/oCcc9AcPoCcPoCgEDPQPgjzwsfcs9AIMki+wBfBTDtR28SyPQA7UdvE88LP+1HbxbPCwDtR28RzxbJ7VRwatswAQm0ZfaLwBYB+O1Hb2FujjvtRNAg10nCAY4W9ATTP9MA7UcBb3EBb3YBb3MBb3LtV44Y9AXtRwFvcnBvc3BvdsiAIM9AydBvce1X4t7R7UdvEdcLH8iCEFDL7ReCEIAAAACxzwsfIc8LH8hzzwsB+CjPFnLPQPglzws/gCHPQCDPNSLPMbwXAHiWcc9AIc8XlXHPQSHN4iDJcfsAWyHA/44e7UdvEsj0AO1HbxPPCz/tR28WzwsA7UdvEc8Wye1U3nFq2zACASAbGQEJu3MS5FgaAPjtR29hbo477UTQINdJwgGOFvQE0z/TAO1HAW9xAW92AW9zAW9y7VeOGPQF7UcBb3Jwb3Nwb3bIgCDPQMnQb3HtV+Le+ADR+CO1H+1HIG8RMAHIyx/J0G9R7VftR28SyPQA7UdvE88LP+1HbxbPCwDtR28RzxbJ7VRwatswAMrdcCHXSSDBII4rIMAAjhwj0HPXIdcLACDAAZbbMF8H2zCW2zBfB9sw4wTZltswXwbbMOME2eAi0x80IHS7II4VMCCCEP////+6IJkwIIIQ/////rrf35bbMF8H2zDgIyHxQAFfBw=="
+
 return {
     elector = elector,
     events = events,
     subscription = subscription,
     boc = boc,
-    debot = debot
+    debot = debot,
+    hello = hello
 }
 
