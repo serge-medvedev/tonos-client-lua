@@ -19,8 +19,12 @@ zip -r /usr/src/tonos-client.zip \
     src
 
 if [ -z "$VERSION" ]; then
-    luarocks upload --force --api-key "$LUAROCKS_API_KEY"
+    echo 'Uploading the snapshot...'
+
+    luarocks upload --force --api-key "$LUAROCKS_API_KEY" -- tonos-client-scm-1.rockspec
 else
+    echo 'Uploading the package...'
+
     ROCKSPEC=`luarocks new_version --tag "$VERSION" | grep Wrote | awk '{print $2}'`
 
     luarocks upload --force --api-key "$LUAROCKS_API_KEY" "$ROCKSPEC"
