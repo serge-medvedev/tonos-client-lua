@@ -76,7 +76,9 @@ describe("a net test suite #net", function()
                     subscription_handle = params.handle
 
                     sched.schedule_signal("subscription_handle", subscription_handle)
-                elseif params and params.result then
+                elseif response_type == 101 then
+                    -- TODO: count notifications
+                elseif response_type == 100 then
                     assert.equals(msg.address, params.result.account_addr)
 
                     table.insert(txs, params.result)
@@ -117,13 +119,13 @@ describe("a net test suite #net", function()
                 send_events = false
             }).await()
 
-            sched.wait()
+            net.unsubscribe(sub_ctx, { handle = subscription_handle }).await()
+
+            sched.wait({ sched.EVENT_FINISH }) -- wait for subscribe_collection task is finished
 
             -- two different transactions recorded
             assert.equals(2, #txs)
             assert.is_not_equal(txs[1].id, txs[2].id)
-
-            net.unsubscribe(sub_ctx, { handle = subscription_handle }).await()
         end
 
         it("subscribes to transactions with addresses", function()
