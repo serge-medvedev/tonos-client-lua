@@ -19,9 +19,9 @@ RUN curl -LO https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && ./configure && make && make install \
     && rm -fr luarocks-${LUAROCKS_VERSION}
 
-RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1.5.2/tools/api.json \
-    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.5.2/ton_client/tonclient.h \
-    && curl -L -o /usr/lib/libton_client.so.gz http://sdkbinaries-ws.tonlabs.io/tonclient_1_5_2_linux.gz \
+RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1.6.2/tools/api.json \
+    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.6.2/ton_client/tonclient.h \
+    && curl -L -o /usr/lib/libton_client.so.gz http://sdkbinaries-ws.tonlabs.io/tonclient_1_6_2_linux.gz \
     && gunzip /usr/lib/libton_client.so.gz
 
 RUN luarocks install dkjson \

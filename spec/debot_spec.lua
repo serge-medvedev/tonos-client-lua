@@ -157,6 +157,8 @@ describe("a debot test suite #debot #paid #heavy", function()
                         prune(available_actions)
                     elseif params.type == "ShowAction" then
                         table.insert(available_actions, params.action)
+                    elseif params.type == "SwitchCompleted" then
+                        -- TODO: utilize it
                     else
                         error(string.format("invalid notification %s", params_json))
                     end
