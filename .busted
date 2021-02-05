@@ -15,7 +15,7 @@ return {
         tags = "paid"
     },
     ci = {
-        ["exclude-tags"] = "heavy"
+        ["exclude-tags"] = "paid" -- TODO: expand the test set
     }
 }
 
