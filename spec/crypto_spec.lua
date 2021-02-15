@@ -66,7 +66,7 @@ describe("a crypto test suite #crypto", function()
             local result = crypto.hdkey_public_from_xprv(ctx, params).await()
 
             assert.equals(
-                "033675d6aaa8ebef3adab9ac79af58eb975b10dd46067c904747018b46bc88f956",
+                "64bf9f1f883ec5e6cb79a1eb95eca0ab1875425cfd5485e9d8e1d47a34de477b",
                 result.public)
         end)
     end)
