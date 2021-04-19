@@ -96,5 +96,110 @@ describe("a boc test suite #boc", function()
             assert.is_not_nil(result.config_boc)
         end)
     end)
-end)
 
+    describe("a boc.encode_boc", function()
+        local json = require "dkjson"
+
+        it("should create a valid boc out of parts", function()
+            local write_b = function(value)
+                return {
+                    type = "Integer",
+                    size = 1,
+                    value = value
+                }
+            end
+
+            local write_u128 = function(value) -- expects string
+                return {
+                    type = "Integer",
+                    size = 128,
+                    value = value
+                }
+            end
+
+            local write_i = function(value, size)
+                return {
+                    type = "Integer",
+                    size = size,
+                    value = value
+                }
+            end
+
+            local write_i8 = function(value)
+                return write_i(value, 8)
+            end
+
+            local write_u8 = write_i8
+
+            local write_bitstring = function(value)
+                return {
+                    type = "BitString",
+                    value = value
+                }
+            end
+
+            local write_cell = function(write)
+                return {
+                    type = "Cell",
+                    builder = write
+                }
+            end
+
+            local expected_boc = "te6ccgEBAgEAKQABL7/f4EAAAAAAAAAAAG2m0us0F8ViiEjLZAEAF7OJx0AnACRgJH/bsA=="
+
+            local params = {
+                builder = {
+                    write_b(1),
+                    write_b(0),
+                    write_u8(255),
+                    write_i8(127),
+                    write_i8(-127),
+                    write_u128("123456789123456789"),
+                    write_bitstring("8A_"),
+                    write_bitstring("x{8A0_}"),
+                    write_bitstring("123"),
+                    write_bitstring("x2d9_"),
+                    write_bitstring("80_"),
+                    write_cell({
+                        write_bitstring("n101100111000"),
+                        write_bitstring("N100111000"),
+                        write_i(-1, 3),
+                        write_i(2, 3),
+                        write_i(312, 16),
+                        write_i("0x123", 16),
+                        write_i("0x123", 16),
+                        write_i("-0x123", 16),
+                    })
+                }
+            }
+
+            local result = boc.encode_boc(ctx, params).await()
+
+            assert.equals(expected_boc, result.boc)
+
+            params = {
+                builder = {
+                    write_b(1),
+                    write_b(0),
+                    write_u8(255),
+                    write_i8(127),
+                    write_i8(-127),
+                    write_u128("123456789123456789"),
+                    write_bitstring("8A_"),
+                    write_bitstring("x{8A0_}"),
+                    write_bitstring("123"),
+                    write_bitstring("x2d9_"),
+                    write_bitstring("80_"),
+                    {
+                        type = "CellBoc",
+                        boc = "te6ccgEBAQEADgAAF7OJx0AnACRgJH/bsA=="
+                    }
+                }
+            }
+
+            result = boc.encode_boc(ctx, params).await()
+
+            assert.equals(expected_boc, result.boc)
+        end)
+    end)
+end)
