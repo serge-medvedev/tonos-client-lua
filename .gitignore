@@ -1,5 +1,2 @@
 *.log
 spec/funding_wallet.lua
-
-build/
-
