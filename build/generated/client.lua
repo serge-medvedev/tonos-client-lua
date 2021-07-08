@@ -437,6 +437,30 @@ function net.query_transaction_tree(ctx, params_json)
     return async_iterator_factory(ctx, "net.query_transaction_tree", params_json)
 end
 
+function net.create_block_iterator(ctx, params_json)
+    return async_iterator_factory(ctx, "net.create_block_iterator", params_json)
+end
+
+function net.resume_block_iterator(ctx, params_json)
+    return async_iterator_factory(ctx, "net.resume_block_iterator", params_json)
+end
+
+function net.create_transaction_iterator(ctx, params_json)
+    return async_iterator_factory(ctx, "net.create_transaction_iterator", params_json)
+end
+
+function net.resume_transaction_iterator(ctx, params_json)
+    return async_iterator_factory(ctx, "net.resume_transaction_iterator", params_json)
+end
+
+function net.iterator_next(ctx, params_json)
+    return async_iterator_factory(ctx, "net.iterator_next", params_json)
+end
+
+function net.remove_iterator(ctx, params_json)
+    return async_iterator_factory(ctx, "net.remove_iterator", params_json)
+end
+
 ---------- debot:[UNSTABLE](UNSTABLE.md) Module for working with debot.
 
 local debot = {}
