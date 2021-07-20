@@ -269,6 +269,10 @@ function abi.encode_account(ctx, params_json)
     return async_iterator_factory(ctx, "abi.encode_account", params_json)
 end
 
+function abi.decode_account_data(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.decode_account_data", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
@@ -343,6 +347,10 @@ local utils = {}
 
 function utils.convert_address(ctx, params_json)
     return async_iterator_factory(ctx, "utils.convert_address", params_json)
+end
+
+function utils.get_address_type(ctx, params_json)
+    return async_iterator_factory(ctx, "utils.get_address_type", params_json)
 end
 
 function utils.calc_storage_fee(ctx, params_json)
