@@ -20,7 +20,7 @@ describe("a client test suite #client", function()
         it("should return SDK version", function()
             local result = client.version(ctx).await()
 
-            assert.equals("1.20.1", result.version)
+            assert.equals("1.21.2", result.version)
         end)
     end)
 

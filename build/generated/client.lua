@@ -233,6 +233,10 @@ function crypto.encryption_box_decrypt(ctx, params_json)
     return async_iterator_factory(ctx, "crypto.encryption_box_decrypt", params_json)
 end
 
+function crypto.create_encryption_box(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.create_encryption_box", params_json)
+end
+
 ---------- abi:Provides message encoding and decoding according to the ABI specification.
 
 local abi = {}
