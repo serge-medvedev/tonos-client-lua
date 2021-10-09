@@ -277,6 +277,14 @@ function abi.decode_account_data(ctx, params_json)
     return async_iterator_factory(ctx, "abi.decode_account_data", params_json)
 end
 
+function abi.update_initial_data(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.update_initial_data", params_json)
+end
+
+function abi.decode_initial_data(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.decode_initial_data", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
@@ -327,6 +335,26 @@ end
 
 function boc.encode_boc(ctx, params_json)
     return async_iterator_factory(ctx, "boc.encode_boc", params_json)
+end
+
+function boc.get_code_salt(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.get_code_salt", params_json)
+end
+
+function boc.set_code_salt(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.set_code_salt", params_json)
+end
+
+function boc.decode_tvc(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.decode_tvc", params_json)
+end
+
+function boc.encode_tvc(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.encode_tvc", params_json)
+end
+
+function boc.get_compiler_version(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.get_compiler_version", params_json)
 end
 
 ---------- processing:Message processing module.
