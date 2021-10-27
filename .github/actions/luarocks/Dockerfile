@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates \
@@ -19,9 +19,9 @@ RUN curl -LO https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && ./configure && make && make install \
     && rm -fr luarocks-${LUAROCKS_VERSION}
 
-RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1.23.0/tools/api.json \
-    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.23.0/ton_client/tonclient.h \
-    && curl -L -o /usr/lib/libton_client.so.gz http://sdkbinaries-ws.tonlabs.io/tonclient_1_23_0_linux.gz \
+RUN curl -L -o /tmp/api.json https://raw.githubusercontent.com/tonlabs/TON-SDK/1.24.0/tools/api.json \
+    && curl -L -o /usr/include/tonclient.h https://raw.githubusercontent.com/tonlabs/TON-SDK/1.24.0/ton_client/tonclient.h \
+    && curl -L -o /usr/lib/libton_client.so.gz http://sdkbinaries-ws.tonlabs.io/tonclient_1_24_0_linux.gz \
     && gunzip /usr/lib/libton_client.so.gz
 
 RUN luarocks install dkjson \

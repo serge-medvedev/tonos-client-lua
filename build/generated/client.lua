@@ -317,6 +317,10 @@ function boc.get_boc_hash(ctx, params_json)
     return async_iterator_factory(ctx, "boc.get_boc_hash", params_json)
 end
 
+function boc.get_boc_depth(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.get_boc_depth", params_json)
+end
+
 function boc.get_code_from_tvc(ctx, params_json)
     return async_iterator_factory(ctx, "boc.get_code_from_tvc", params_json)
 end
