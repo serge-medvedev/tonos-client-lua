@@ -285,6 +285,10 @@ function abi.decode_initial_data(ctx, params_json)
     return async_iterator_factory(ctx, "abi.decode_initial_data", params_json)
 end
 
+function abi.decode_boc(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.decode_boc", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
@@ -533,6 +537,18 @@ function debot.remove(ctx, params_json)
     return async_iterator_factory(ctx, "debot.remove", params_json)
 end
 
+---------- proofs:[UNSTABLE](UNSTABLE.md) Module for proving data, retrieved from TONOS API.
+
+local proofs = {}
+
+function proofs.proof_block_data(ctx, params_json)
+    return async_iterator_factory(ctx, "proofs.proof_block_data", params_json)
+end
+
+function proofs.proof_transaction_data(ctx, params_json)
+    return async_iterator_factory(ctx, "proofs.proof_transaction_data", params_json)
+end
+
 return {
     context = context,
     client = client,
@@ -543,6 +559,7 @@ return {
     utils = utils,
     tvm = tvm,
     net = net,
-    debot = debot
+    debot = debot,
+    proofs = proofs
 }
 
