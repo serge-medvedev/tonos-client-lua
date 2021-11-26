@@ -549,6 +549,10 @@ function proofs.proof_transaction_data(ctx, params_json)
     return async_iterator_factory(ctx, "proofs.proof_transaction_data", params_json)
 end
 
+function proofs.proof_message_data(ctx, params_json)
+    return async_iterator_factory(ctx, "proofs.proof_message_data", params_json)
+end
+
 return {
     context = context,
     client = client,
