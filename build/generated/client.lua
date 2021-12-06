@@ -281,6 +281,10 @@ function abi.update_initial_data(ctx, params_json)
     return async_iterator_factory(ctx, "abi.update_initial_data", params_json)
 end
 
+function abi.encode_initial_data(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.encode_initial_data", params_json)
+end
+
 function abi.decode_initial_data(ctx, params_json)
     return async_iterator_factory(ctx, "abi.decode_initial_data", params_json)
 end
