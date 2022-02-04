@@ -293,6 +293,10 @@ function abi.decode_boc(ctx, params_json)
     return async_iterator_factory(ctx, "abi.decode_boc", params_json)
 end
 
+function abi.encode_boc(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.encode_boc", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
