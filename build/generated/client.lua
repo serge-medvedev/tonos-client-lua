@@ -369,6 +369,10 @@ function boc.encode_tvc(ctx, params_json)
     return async_iterator_factory(ctx, "boc.encode_tvc", params_json)
 end
 
+function boc.encode_external_in_message(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.encode_external_in_message", params_json)
+end
+
 function boc.get_compiler_version(ctx, params_json)
     return async_iterator_factory(ctx, "boc.get_compiler_version", params_json)
 end
@@ -459,6 +463,10 @@ end
 
 function net.subscribe_collection(ctx, params_json)
     return async_iterator_factory(ctx, "net.subscribe_collection", params_json)
+end
+
+function net.subscribe(ctx, params_json)
+    return async_iterator_factory(ctx, "net.subscribe", params_json)
 end
 
 function net.suspend(ctx, params_json)
