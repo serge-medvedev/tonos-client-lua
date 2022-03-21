@@ -193,6 +193,34 @@ function crypto.chacha20(ctx, params_json)
     return async_iterator_factory(ctx, "crypto.chacha20", params_json)
 end
 
+function crypto.create_crypto_box(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.create_crypto_box", params_json)
+end
+
+function crypto.remove_crypto_box(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.remove_crypto_box", params_json)
+end
+
+function crypto.get_crypto_box_info(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.get_crypto_box_info", params_json)
+end
+
+function crypto.get_crypto_box_seed_phrase(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.get_crypto_box_seed_phrase", params_json)
+end
+
+function crypto.get_signing_box_from_crypto_box(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.get_signing_box_from_crypto_box", params_json)
+end
+
+function crypto.get_encryption_box_from_crypto_box(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.get_encryption_box_from_crypto_box", params_json)
+end
+
+function crypto.clear_crypto_box_secret_cache(ctx, params_json)
+    return async_iterator_factory(ctx, "crypto.clear_crypto_box_secret_cache", params_json)
+end
+
 function crypto.register_signing_box(ctx, params_json)
     return async_iterator_factory(ctx, "crypto.register_signing_box", params_json)
 end

@@ -19,8 +19,8 @@ These are opportunities for a great many possible use cases.
 - luarocks 3
 - _libton_client.so_ and _tonclient.h_ are accessible somewhere at well-known locations
   ```console
-  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.30.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
-    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_30_0_linux.gz -O /usr/lib/libton_client.so.gz \
+  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.31.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
+    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_31_0_linux.gz -O /usr/lib/libton_client.so.gz \
     && gunzip /usr/lib/libton_client.so.gz
   ```
 
