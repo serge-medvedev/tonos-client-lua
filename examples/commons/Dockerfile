@@ -18,8 +18,8 @@ RUN wget https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && ./configure && make && make install \
     && rm -fr luarocks-${LUAROCKS_VERSION}
 
-RUN wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.31.0/ton_client/tonclient.h -O /usr/include/tonclient.h \
-    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_31_0_linux.gz -O /usr/lib/libton_client.so.gz \
+RUN wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.32.0/ton_client/tonclient.h -O /usr/include/tonclient.h \
+    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_32_0_linux.gz -O /usr/lib/libton_client.so.gz \
     && gunzip /usr/lib/libton_client.so.gz
 
 RUN luarocks install tonos-client
