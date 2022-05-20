@@ -49,6 +49,10 @@ function client.version(ctx, params_json)
     return async_iterator_factory(ctx, "client.version", params_json)
 end
 
+function client.config(ctx, params_json)
+    return async_iterator_factory(ctx, "client.config", params_json)
+end
+
 function client.build_info(ctx, params_json)
     return async_iterator_factory(ctx, "client.build_info", params_json)
 end
