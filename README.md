@@ -19,8 +19,8 @@ These are opportunities for a great many possible use cases.
 - luarocks 3
 - _libton_client.so_ and _tonclient.h_ are accessible somewhere at well-known locations
   ```console
-  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.34.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
-    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_34_0_linux.gz -O /usr/lib/libton_client.so.gz \
+  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.34.2/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
+    && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_34_2_linux.gz -O /usr/lib/libton_client.so.gz \
     && gunzip /usr/lib/libton_client.so.gz
   ```
 
@@ -31,7 +31,7 @@ $ luarocks install tonos-client
 ```lua
 local lib = require("tonos.client")
 local context, client = lib.context, lib.client
-local ctx = context.create('{"network":{"server_address":"https://net.ton.dev"}}')
+local ctx = context.create('{"network":{"endpoints":["eri01.net.everos.dev"]}}')
 local result = client.version(ctx).await()
 
 print(result.version)
