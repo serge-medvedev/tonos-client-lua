@@ -329,6 +329,10 @@ function abi.encode_boc(ctx, params_json)
     return async_iterator_factory(ctx, "abi.encode_boc", params_json)
 end
 
+function abi.calc_function_id(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.calc_function_id", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
