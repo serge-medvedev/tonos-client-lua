@@ -10,7 +10,7 @@ describe("an abi test suite #abi", function()
     local ctx
 
     setup(function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
     end)

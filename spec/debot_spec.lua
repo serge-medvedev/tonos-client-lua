@@ -77,7 +77,7 @@ describe("a debot test suite #debot #paid #heavy", function()
     local ctx, debot_addr, target_addr, keys
 
     setup(function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
     end)

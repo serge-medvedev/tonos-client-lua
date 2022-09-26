@@ -8,7 +8,7 @@ describe("a net test suite #net", function()
     local ctx
 
     setup(function()
-        local config = '{"network": {"server_address": "https://main.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://mainnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
     end)
@@ -29,7 +29,7 @@ describe("a net test suite #net", function()
         local main_ctx, sub_ctx, keys, message_encode_params, msg
 
         setup(function()
-            local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+            local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
             main_ctx = context.create(config)
             sub_ctx = context.create(config)

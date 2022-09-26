@@ -11,7 +11,7 @@ describe("a tvm test suite #tvm", function()
     local ctx, elector_encoded
 
     setup(function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
         elector_encoded = abi.encode_account(ctx, {

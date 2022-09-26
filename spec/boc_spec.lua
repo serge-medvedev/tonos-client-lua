@@ -7,7 +7,7 @@ describe("a boc test suite #boc", function()
     local ctx
 
     setup(function()
-        local config = '{"network": {"server_address": "https://main.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://mainnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
     end)

@@ -18,7 +18,7 @@ describe("a crypto test suite #crypto", function()
     local ctx, signed, unsigned
 
     setup(function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
         unsigned = tt.create_encoded_message(

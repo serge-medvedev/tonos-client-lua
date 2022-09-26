@@ -7,7 +7,7 @@ describe("a client test suite #client", function()
     local ctx
 
     setup(function()
-        local config = '{"network": {"server_address": "https://net.ton.dev"}}'
+        local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
     end)
@@ -20,7 +20,7 @@ describe("a client test suite #client", function()
         it("should return SDK version", function()
             local result = client.version(ctx).await()
 
-            assert.equals("1.37.0", result.version)
+            assert.equals("1.37.2", result.version)
         end)
     end)
 
