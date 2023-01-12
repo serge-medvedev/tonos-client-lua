@@ -333,6 +333,10 @@ function abi.calc_function_id(ctx, params_json)
     return async_iterator_factory(ctx, "abi.calc_function_id", params_json)
 end
 
+function abi.get_signature_data(ctx, params_json)
+    return async_iterator_factory(ctx, "abi.get_signature_data", params_json)
+end
+
 ---------- boc:BOC manipulation module.
 
 local boc = {}
