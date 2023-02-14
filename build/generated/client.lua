@@ -565,6 +565,10 @@ function net.remove_iterator(ctx, params_json)
     return async_iterator_factory(ctx, "net.remove_iterator", params_json)
 end
 
+function net.get_signature_id(ctx, params_json)
+    return async_iterator_factory(ctx, "net.get_signature_id", params_json)
+end
+
 ---------- debot:[UNSTABLE](UNSTABLE.md) Module for working with debot.
 
 local debot = {}
