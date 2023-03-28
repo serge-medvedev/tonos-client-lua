@@ -421,6 +421,26 @@ end
 
 local processing = {}
 
+function processing.monitor_messages(ctx, params_json)
+    return async_iterator_factory(ctx, "processing.monitor_messages", params_json)
+end
+
+function processing.get_monitor_info(ctx, params_json)
+    return async_iterator_factory(ctx, "processing.get_monitor_info", params_json)
+end
+
+function processing.fetch_next_monitor_results(ctx, params_json)
+    return async_iterator_factory(ctx, "processing.fetch_next_monitor_results", params_json)
+end
+
+function processing.cancel_monitor(ctx, params_json)
+    return async_iterator_factory(ctx, "processing.cancel_monitor", params_json)
+end
+
+function processing.send_messages(ctx, params_json)
+    return async_iterator_factory(ctx, "processing.send_messages", params_json)
+end
+
 function processing.send_message(ctx, params_json)
     return async_iterator_factory(ctx, "processing.send_message", params_json)
 end
