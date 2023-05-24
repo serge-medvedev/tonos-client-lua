@@ -1,7 +1,7 @@
 ![LuaRocks](https://img.shields.io/luarocks/v/serge-medvedev/tonos-client)
 ![Testing](https://github.com/serge-medvedev/tonos-client-lua/workflows/tests/badge.svg)
 
-# Lua bindings to TON SDK's Core Client Library
+# Lua bindings to EVER SDK's Core Client Library
 
 ## Why Lua?
 - Nginx and Apache HTTP Server can use Lua for configuration
@@ -19,7 +19,7 @@ These are opportunities for a great many possible use cases.
 - luarocks 3
 - _libton_client.so_ and _tonclient.h_ are accessible somewhere at well-known locations
   ```console
-  $ wget https://raw.githubusercontent.com/tonlabs/TON-SDK/1.43.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
+  $ wget https://raw.githubusercontent.com/tonlabs/EVER-SDK/1.43.0/ton_client/client/tonclient.h -O /usr/include/tonclient.h \
     && wget http://sdkbinaries-ws.tonlabs.io/tonclient_1_43_0_linux.gz -O /usr/lib/libton_client.so.gz \
     && gunzip /usr/lib/libton_client.so.gz
   ```
