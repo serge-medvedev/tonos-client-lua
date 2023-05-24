@@ -341,6 +341,10 @@ end
 
 local boc = {}
 
+function boc.decode_tvc(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.decode_tvc", params_json)
+end
+
 function boc.parse_message(ctx, params_json)
     return async_iterator_factory(ctx, "boc.parse_message", params_json)
 end
@@ -401,12 +405,12 @@ function boc.set_code_salt(ctx, params_json)
     return async_iterator_factory(ctx, "boc.set_code_salt", params_json)
 end
 
-function boc.decode_tvc(ctx, params_json)
-    return async_iterator_factory(ctx, "boc.decode_tvc", params_json)
+function boc.decode_state_init(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.decode_state_init", params_json)
 end
 
-function boc.encode_tvc(ctx, params_json)
-    return async_iterator_factory(ctx, "boc.encode_tvc", params_json)
+function boc.encode_state_init(ctx, params_json)
+    return async_iterator_factory(ctx, "boc.encode_state_init", params_json)
 end
 
 function boc.encode_external_in_message(ctx, params_json)
