@@ -593,7 +593,7 @@ function net.get_signature_id(ctx, params_json)
     return async_iterator_factory(ctx, "net.get_signature_id", params_json)
 end
 
----------- debot:[UNSTABLE](UNSTABLE.md) Module for working with debot.
+---------- debot:[UNSTABLE](UNSTABLE.md) [DEPRECATED](DEPRECATED.md) Module for working with debot.
 
 local debot = {}
 
@@ -621,7 +621,7 @@ function debot.remove(ctx, params_json)
     return async_iterator_factory(ctx, "debot.remove", params_json)
 end
 
----------- proofs:[UNSTABLE](UNSTABLE.md) Module for proving data, retrieved from TONOS API.
+---------- proofs:[UNSTABLE](UNSTABLE.md) [DEPRECATED](DEPRECATED.md) Module for proving data, retrieved from TONOS API.
 
 local proofs = {}
 
