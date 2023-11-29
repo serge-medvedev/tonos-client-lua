@@ -2,6 +2,7 @@ describe("an abi test suite #abi", function()
     local lib = require "tonos.client"
     local context = lib.context
     local abi= lib.abi
+    local boc = lib.boc
     local crypto = lib.crypto
     local json = require "dkjson"
     local tt = require "spec.tools"
@@ -71,13 +72,12 @@ describe("an abi test suite #abi", function()
 
     describe("an abi.encode_account", function()
         it("should return encoded account data", function()
-            local elector_encoded = abi.encode_account(ctx, {
-                state_init = {
-                    type = "StateInit",
-                    code = tt.data.elector.code,
-                    data = tt.data.elector.data
-                }
+            local params = boc.encode_state_init(ctx, {
+                type = "StateInit",
+                code = tt.data.elector.code,
+                data = tt.data.elector.data
             }).await()
+            local elector_encoded = abi.encode_account(ctx, params).await()
 
             assert.equals("1089829edf8ad38e474ce9e93123b3281e52c3faff0214293cbb5981ee7b3092", elector_encoded.id)
         end)

@@ -3,6 +3,7 @@ describe("a tvm test suite #tvm", function()
     local context = lib.context
     local tvm = lib.tvm
     local abi = lib.abi
+    local boc = lib.boc
     local crypto = lib.crypto
     local processing = lib.processing
     local json = require "dkjson"
@@ -14,13 +15,14 @@ describe("a tvm test suite #tvm", function()
         local config = '{"network": {"server_address": "https://devnet.evercloud.dev/d61ac7417de44bdbb5446a4efe0690c7"}}'
 
         ctx = context.create(config)
-        elector_encoded = abi.encode_account(ctx, {
-            state_init = {
-                type = "StateInit",
-                code = tt.data.elector.code,
-                data = tt.data.elector.data
-            }
+
+        local params = boc.encode_state_init(ctx, {
+            type = "StateInit",
+            code = tt.data.elector.code,
+            data = tt.data.elector.data
         }).await()
+
+        elector_encoded = abi.encode_account(ctx, params).await()
     end)
 
     teardown(function()
